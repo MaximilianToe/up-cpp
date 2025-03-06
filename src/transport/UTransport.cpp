@@ -88,9 +88,8 @@ UTransport::HandleOrStatus UTransport::registerListener(
 
 	if (status.code() == v1::UCode::OK) {
 		return std::move(handle);
-	} else {
-		return utils::Unexpected(std::move(status));
 	}
+	return utils::Unexpected(std::move(status));
 }
 
 // NOTE: deprecated
@@ -106,11 +105,10 @@ UTransport::registerListener(const v1::UUri& sink_filter,
 		// registerListener(), which is then called with sink_filter unset.
 		return registerListener(std::move(listener), sink_filter,
 		                        std::move(source_filter));
-	} else {
-		v1::UUri sink_filter_copy = sink_filter;
-		return registerListener(std::move(listener), *source_filter,
-		                        std::move(sink_filter_copy));
 	}
+	v1::UUri sink_filter_copy = sink_filter;
+	return registerListener(std::move(listener), *source_filter,
+							std::move(sink_filter_copy));
 }
 
 const v1::UUri& UTransport::getEntityUri() const { return entity_uri_; }

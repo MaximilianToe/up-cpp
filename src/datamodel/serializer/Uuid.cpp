@@ -106,7 +106,7 @@ uprotocol::v1::UUID AsString::deserialize(const std::string& str) {
 
 	// Reconstruct the UUID
 	uuid.set_msb((unix_ts_ms << UUID_TIMESTAMP_SHIFT) |
-	             (ver << UUID_VERSION_SHIFT) | rand_a);
+	             ((static_cast<uint64_t>(ver) << UUID_VERSION_SHIFT)) | rand_a);
 	uuid.set_lsb((static_cast<uint64_t>(var) << UUID_VARIANT_SHIFT) | rand_b);
 
 	return uuid;
@@ -134,7 +134,10 @@ v1::UUID AsBytes::deserialize(const std::vector<uint8_t>& bytes) {
 		throw std::invalid_argument("Invalid UUID byte array size");
 	}
 
-	uint32_t msb_high, msb_low, lsb_high, lsb_low;
+	uint32_t msb_high = 0;
+	uint32_t msb_low = 0;
+	uint32_t lsb_high = 0;
+	uint32_t lsb_low = 0;
 
 	std::memcpy(&msb_high, &bytes[MSB_HIGH_], UUID_PART_SIZE);
 	std::memcpy(&msb_low, &bytes[MSB_LOW__], UUID_PART_SIZE);
