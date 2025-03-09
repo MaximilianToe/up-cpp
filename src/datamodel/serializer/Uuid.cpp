@@ -29,7 +29,7 @@ constexpr size_t LSB_LOW__ = 12;
 
 namespace uprotocol::datamodel::serializer::uuid {
 
-std::string AsString::serialize(const uprotocol::v1::UUID uuid) {
+std::string AsString::serialize(const uprotocol::v1::UUID& uuid) {
 	// Extracting the parts of the UUIDv7
 	uint64_t unix_ts_ms =
 	    (uuid.msb() >> UUID_TIMESTAMP_SHIFT) & UUID_TIMESTAMP_MASK;
@@ -113,7 +113,7 @@ uprotocol::v1::UUID AsString::deserialize(const std::string& str) {
 }
 
 // Serialization function
-std::vector<uint8_t> AsBytes::serialize(const v1::UUID uuid) {
+std::vector<uint8_t> AsBytes::serialize(const v1::UUID& uuid) {
 	std::vector<uint8_t> bytes(UUID_BYTE_SIZE);
 
 	uint32_t msb_high = htonl(static_cast<uint32_t>(uuid.msb() >> 32));

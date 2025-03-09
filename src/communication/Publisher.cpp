@@ -40,7 +40,7 @@ v1::UStatus Publisher::publish(datamodel::builder::Payload&& payload) const {
 		throw transport::NullTransport("transport cannot be null");
 	}
 
-	return transport_->send(std::move(message));
+	return transport_->send(message);
 }
 
 }  // namespace uprotocol::communication

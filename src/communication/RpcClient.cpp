@@ -15,6 +15,7 @@
 
 #include <chrono>
 #include <queue>
+#include <utility>
 
 namespace {
 namespace detail {
@@ -32,7 +33,7 @@ struct PendingRequest {
 
 struct ScrubablePendingQueue
     : public std::priority_queue<PendingRequest, std::vector<PendingRequest>,
-                                 std::greater<PendingRequest>> {
+                                 std::greater<>> {
 	~ScrubablePendingQueue();
 	auto scrub(size_t instance_id);
 	PendingRequest& top();
@@ -41,7 +42,7 @@ struct ScrubablePendingQueue
 struct ExpireWorker {
 	ExpireWorker();
 	~ExpireWorker();
-	void enqueue(PendingRequest&& request);
+	void enqueue(PendingRequest&& pending);
 	void scrub(size_t instance_id);
 	void doWork();
 
@@ -60,9 +61,9 @@ namespace uprotocol::communication {
 
 ////////////////////////////////////////////////////////////////////////////////
 struct RpcClient::ExpireService {
-	ExpireService() : instance_id_(next_instance_id++) {}
+	ExpireService() : instance_id_(next_instance_id_++) {}
 
-	~ExpireService() { worker.scrub(instance_id_); }
+	~ExpireService() { worker_.scrub(instance_id_); }
 
 	void enqueue(std::chrono::steady_clock::time_point when_expire,
 	             transport::UTransport::ListenHandle&& response_listener,
@@ -73,12 +74,12 @@ struct RpcClient::ExpireService {
 		pending.expire = std::move(expire);
 		pending.instance_id = instance_id_;
 
-		worker.enqueue(std::move(pending));
+		worker_.enqueue(std::move(pending));
 	}
 
 private:
-	static inline std::atomic<size_t> next_instance_id{0};
-	static inline detail::ExpireWorker worker;
+	static inline std::atomic<size_t> next_instance_id_{0};
+	static inline detail::ExpireWorker worker_;
 	size_t instance_id_;
 };
 
@@ -89,7 +90,7 @@ RpcClient::RpcClient(std::shared_ptr<transport::UTransport> transport,
                      std::optional<v1::UPayloadFormat> payload_format,
                      std::optional<uint32_t> permission_level,
                      std::optional<std::string> token)
-    : transport_(transport),
+    : transport_(std::move(transport)),
       ttl_(ttl),
       builder_(datamodel::builder::UMessageBuilder::request(
           std::move(method), v1::UUri(transport_->getEntityUri()), priority,
@@ -160,7 +161,7 @@ RpcClient::InvokeHandle RpcClient::invokeMethod(v1::UMessage&& request,
 	auto expire = [callable, callback_once](v1::UStatus&& reason) mutable {
 		std::call_once(
 		    *callback_once, [&callable, reason = std::move(reason)]() {
-			    callable(utils::Unexpected<v1::UStatus>(std::move(reason)));
+			    callable(utils::Unexpected<v1::UStatus>(reason));
 		    });
 	};
 	///////////////////////////////////////////////////////////////////////////
@@ -204,7 +205,7 @@ RpcClient::InvokeFuture RpcClient::invokeMethod(
 	auto promise = std::make_shared<std::promise<MessageOrStatus>>();
 	auto future = promise->get_future();
 	auto handle = invokeMethod(
-	    std::move(payload), [promise](MessageOrStatus maybe_message) mutable {
+	    std::move(payload), [promise](const MessageOrStatus& maybe_message) mutable {
 		    promise->set_value(maybe_message);
 	    });
 
@@ -219,14 +220,14 @@ RpcClient::InvokeFuture RpcClient::invokeMethod() {
 	auto promise = std::make_shared<std::promise<MessageOrStatus>>();
 	auto future = promise->get_future();
 	auto handle =
-	    invokeMethod([promise](MessageOrStatus maybe_message) mutable {
+	    invokeMethod([promise](const MessageOrStatus& maybe_message) mutable {
 		    promise->set_value(maybe_message);
 	    });
 
 	return {std::move(future), std::move(handle)};
 }
 
-RpcClient::RpcClient(RpcClient&&) = default;
+RpcClient::RpcClient(RpcClient&&) noexcept = default;
 RpcClient::~RpcClient() = default;
 
 RpcClient::InvokeFuture::InvokeFuture() = default;
@@ -285,8 +286,8 @@ auto ScrubablePendingQueue::scrub(size_t instance_id) {
 
 	// TODO - is there a better way to shrink the internal container?
 	// Maybe instead we should enforce a capacity limit
-	constexpr size_t capacity_shrink_threshold = 16;
-	if ((c.capacity() > capacity_shrink_threshold) &&
+	constexpr size_t CAPACITY_SHRINK_THRESHOLD = 16;
+	if ((c.capacity() > CAPACITY_SHRINK_THRESHOLD) &&
 	    (c.size() < c.capacity() / 2)) {
 		c.shrink_to_fit();
 	}

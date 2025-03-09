@@ -57,7 +57,7 @@ public:
 	///
 	/// @see uprotocol::datamodel::validator::uri::isValidEntityUri()
 	/// @see uprotocol::datamodel::validator::uri::InvalidUUri
-	explicit UTransport(const v1::UUri&);
+	explicit UTransport(v1::UUri );
 
 	/// @brief Send a message.
 	///
@@ -276,7 +276,7 @@ private:
 
 struct NullTransport : public std::invalid_argument {
 	template <typename... Args>
-	NullTransport(Args&&... args)
+	explicit NullTransport(Args&&... args)
 	    : std::invalid_argument(std::forward<Args>(args)...) {}
 
 	template <typename... Args>

@@ -20,7 +20,7 @@ RpcServer::RpcServer(std::shared_ptr<transport::UTransport> transport,
                      std::optional<std::chrono::milliseconds> ttl)
     : transport_(std::move(transport)),
       ttl_(ttl),
-      expected_payload_format_(std::move(format)) {
+      expected_payload_format_(format) {
 	if (!transport_) {
 		throw transport::NullTransport("transport cannot be null");
 	}
@@ -96,7 +96,7 @@ v1::UStatus RpcServer::connect(const v1::UUri& method, RpcCallback&& callback) {
 		        datamodel::builder::UMessageBuilder::response(request);
 
 		    // Call the RPC callback method with the request message.
-		    auto payloadData = callback_(request);
+		    auto payload_data = callback_(request);
 
 		    if (ttl_.has_value()) {
 			    builder.withTtl(ttl_.value());
@@ -108,7 +108,7 @@ v1::UStatus RpcServer::connect(const v1::UUri& method, RpcCallback&& callback) {
 
 		    // Check for payload data requirement based on expected format
 		    // presence
-		    if (!payloadData.has_value()) {
+		    if (!payload_data.has_value()) {
 			    // builder.build() verifies if payload format is required
 			    auto response = builder.build();
 			    // Ignoring status code for transport send
@@ -116,7 +116,7 @@ v1::UStatus RpcServer::connect(const v1::UUri& method, RpcCallback&& callback) {
 		    } else {
 			    // builder.build(payloadData) verifies if payload format
 			    // matches the expected
-			    auto response = builder.build(std::move(payloadData).value());
+			    auto response = builder.build(std::move(payload_data).value());
 			    // Ignoring status code for transport send
 			    std::ignore = transport_->send(response);
 		    }
@@ -141,9 +141,8 @@ v1::UStatus RpcServer::connect(const v1::UUri& method, RpcCallback&& callback) {
 		v1::UStatus status;
 		status.set_code(v1::UCode::OK);
 		return status;
-	} else {
-		return result.error();
 	}
+	return result.error();
 }
 
 }  // namespace uprotocol::communication

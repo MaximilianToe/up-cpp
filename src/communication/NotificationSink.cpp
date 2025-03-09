@@ -19,7 +19,7 @@ namespace uprotocol::communication {
 namespace UriValidator = datamodel::validator::uri;
 
 NotificationSink::SinkOrStatus NotificationSink::create(
-    std::shared_ptr<transport::UTransport> transport, ListenCallback&& callback,
+    const std::shared_ptr<transport::UTransport>& transport, ListenCallback&& callback,
     const uprotocol::v1::UUri& source_filter) {
 	// Standard check - transport pointer cannot be null
 	if (!transport) {
@@ -50,7 +50,7 @@ NotificationSink::SinkOrStatus NotificationSink::create(
 
 // NOTE: deprecated
 NotificationSink::SinkOrStatus NotificationSink::create(
-    std::shared_ptr<transport::UTransport> transport,
+    const std::shared_ptr<transport::UTransport>& transport,
     const uprotocol::v1::UUri& sink, ListenCallback&& callback,
     std::optional<uprotocol::v1::UUri>&& source_filter) {
 	// Standard check - transport pointer cannot be null
