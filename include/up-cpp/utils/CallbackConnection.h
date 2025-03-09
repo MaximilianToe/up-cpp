@@ -193,7 +193,7 @@ struct [[nodiscard]] Connection {
 	};
 
 	/// @brief Semi-private constructor. Use the static establish() instead.
-	Connection(std::shared_ptr<Callback> cb, PrivateConstructToken token)
+	Connection(std::shared_ptr<Callback> cb, PrivateConstructToken token [[maybe_unused]])
 	    : callback_(cb) {}
 
 	// Connection is only ever available wrapped in a std::shared_ptr.
@@ -257,7 +257,7 @@ struct [[nodiscard]] CalleeHandle {
 	CalleeHandle(std::shared_ptr<Conn> connection,
 	             std::shared_ptr<typename Conn::Callback> callback,
 	             std::optional<typename Conn::Cleanup>&& cleanup,
-	             typename Conn::PrivateConstructToken)
+	             typename Conn::PrivateConstructToken token [[maybe_unused]])
 	    : connection_(connection),
 	      callback_(callback),
 	      cleanup_(std::move(cleanup)) {
@@ -364,7 +364,7 @@ struct [[nodiscard]] CallerHandle {
 
 	/// @brief Creates a connected handle. Only usable by Connection
 	CallerHandle(std::shared_ptr<Conn> connection,
-	             typename Conn::PrivateConstructToken)
+	             typename Conn::PrivateConstructToken token [[maybe_unused]])
 	    : connection_(connection) {
 		if (!connection_) {
 			throw BadConnection(

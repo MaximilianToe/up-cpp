@@ -274,14 +274,15 @@ private:
 	const v1::UUri entity_uri_;
 };
 
-struct NullTransport : public std::invalid_argument {
+struct NullTransport : std::invalid_argument {
 	template <typename... Args>
 	explicit NullTransport(Args&&... args)
 	    : std::invalid_argument(std::forward<Args>(args)...) {}
 
 	template <typename... Args>
-	NullTransport operator=(Args&&... args) {
-		return std::invalid_argument::operator=(std::forward<Args>(args)...);
+	NullTransport& operator=(Args&&... args) {
+		std::invalid_argument::operator=(std::forward<Args>(args)...);
+		return *this;
 	}
 };
 

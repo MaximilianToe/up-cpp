@@ -40,12 +40,12 @@ NotificationSink::SinkOrStatus NotificationSink::create(
 	    std::move(callback), source_filter, transport->getEntityUri());
 
 	if (!listener) {
-		return uprotocol::utils::Unexpected(listener.error());
+		return SinkOrStatus(uprotocol::utils::Unexpected(listener.error()));
 	}
 
-	return std::make_unique<NotificationSink>(
-	    std::forward<std::shared_ptr<transport::UTransport>>(transport),
-	    std::forward<ListenHandle&&>(std::move(listener).value()));
+	return SinkOrStatus(std::make_unique<NotificationSink>(
+	    transport,
+	    std::forward<ListenHandle&&>(std::move(listener).value())));
 }
 
 // NOTE: deprecated
