@@ -80,7 +80,7 @@ struct Payload {
 	///          will compile out.
 	/// @param data Data to be serialized and stored.
 	template <typename Serializer, typename ValueT>
-	Payload(Serializer s, const ValueT& data) {
+	Payload(Serializer s [[maybe_unused]], const ValueT& data) {
 		auto serialized_data = Serializer::serialize(data);
 		if (!UPayloadFormat_IsValid(
 		        std::get<PayloadType::Format>(serialized_data))) {

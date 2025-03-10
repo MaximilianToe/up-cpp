@@ -20,13 +20,15 @@
 namespace {
 namespace detail {
 
-using namespace uprotocol;
+using uprotocol::v1::UStatus;
+using ListenHandle = uprotocol::transport::UTransport::ListenHandle;
 
 struct PendingRequest {
+private:
 	std::chrono::steady_clock::time_point when_expire;
-	transport::UTransport::ListenHandle response_listener;
-	std::function<void(v1::UStatus)> expire;
-	size_t instance_id;
+	ListenHandle response_listener;
+	std::function<void(UStatus)> expire;
+	size_t instance_id{};
 
 	auto operator>(const PendingRequest& other) const;
 };

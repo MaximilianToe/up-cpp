@@ -45,6 +45,7 @@ protected:
 	static void SetUpTestSuite() {}
 	static void TearDownTestSuite() {}
 
+private:
 	uprotocol::v1::UUri testTopicUUri_;
 	uprotocol::v1::UUri testInvalidTopicUUri_;
 	uprotocol::v1::UUri testDefaultSourceUUri_;

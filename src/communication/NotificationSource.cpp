@@ -13,7 +13,8 @@
 
 namespace uprotocol::communication {
 
-using namespace uprotocol::datamodel::builder;
+using  uprotocol::datamodel::builder::UMessageBuilder;
+
 NotificationSource::NotificationSource(
     std::shared_ptr<transport::UTransport> transport, v1::UUri&& source,
     v1::UUri&& sink, std::optional<v1::UPayloadFormat> payload_format,

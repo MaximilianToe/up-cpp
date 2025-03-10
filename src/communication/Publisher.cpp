@@ -14,7 +14,7 @@
 #include <up-cpp/datamodel/builder/UMessage.h>
 
 namespace uprotocol::communication {
-using namespace uprotocol::datamodel::builder;
+using uprotocol::datamodel::builder::UMessageBuilder;
 
 Publisher::Publisher(std::shared_ptr<transport::UTransport> transport,
                      v1::UUri&& topic, v1::UPayloadFormat format,
