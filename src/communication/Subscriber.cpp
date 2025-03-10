@@ -37,12 +37,12 @@ namespace uri_validator = uprotocol::datamodel::validator::uri;
 	auto handle = transport->registerListener(std::move(callback), topic);
 
 	if (!handle) {
-		return uprotocol::utils::Unexpected(handle.error());
+		return SubscriberOrStatus(uprotocol::utils::Unexpected(handle.error()));
 	}
 
-	return std::make_unique<Subscriber>(
+	return SubscriberOrStatus(std::make_unique<Subscriber>(
 	    std::forward<std::shared_ptr<transport::UTransport>>(transport),
-	    std::forward<ListenHandle&&>(std::move(handle).value()));
+	    std::forward<ListenHandle&&>(std::move(handle).value())));
 }
 
 Subscriber::Subscriber(std::shared_ptr<transport::UTransport> transport,

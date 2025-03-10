@@ -24,7 +24,6 @@ using uprotocol::v1::UStatus;
 using ListenHandle = uprotocol::transport::UTransport::ListenHandle;
 
 struct PendingRequest {
-private:
 	std::chrono::steady_clock::time_point when_expire;
 	ListenHandle response_listener;
 	std::function<void(UStatus)> expire;
@@ -69,7 +68,7 @@ struct RpcClient::ExpireService {
 
 	void enqueue(std::chrono::steady_clock::time_point when_expire,
 	             transport::UTransport::ListenHandle&& response_listener,
-	             std::function<void(v1::UStatus)> expire) {
+	             std::function<void(v1::UStatus)> expire) const {
 		detail::PendingRequest pending;
 		pending.when_expire = when_expire;
 		pending.response_listener = std::move(response_listener);
@@ -247,17 +246,19 @@ RpcClient::InvokeFuture::InvokeFuture(std::future<MessageOrStatus>&& future,
 namespace {
 namespace detail {
 
-using namespace uprotocol;
-using namespace std::chrono_literals;
+using uprotocol::v1::UStatus;
+using uprotocol::v1::UCode;
+// using namespace std::chrono_literals;
+using ListenHandle = uprotocol::transport::UTransport::ListenHandle;
 
 auto PendingRequest::operator>(const PendingRequest& other) const {
 	return when_expire > other.when_expire;
 }
 
 ScrubablePendingQueue::~ScrubablePendingQueue() {
-	const v1::UStatus cancel_reason = []() {
-		v1::UStatus reason;
-		reason.set_code(v1::UCode::INTERNAL);
+	const UStatus cancel_reason = []() {
+		UStatus reason;
+		reason.set_code(UCode::INTERNAL);
 		reason.set_message(
 		    "ERROR: ExpireWorker has shut down while requests are still "
 		    "pending. This should never occur and likely indicates that an "
@@ -273,7 +274,7 @@ ScrubablePendingQueue::~ScrubablePendingQueue() {
 auto ScrubablePendingQueue::scrub(size_t instance_id) {
 	// Collect all the expire lambdas so they can be called without the
 	// lock held.
-	std::vector<std::function<void(v1::UStatus)>> all_expired;
+	std::vector<std::function<void(UStatus)>> all_expired;
 
 	c.erase(
 	    std::remove_if(c.begin(), c.end(),
@@ -286,7 +287,7 @@ auto ScrubablePendingQueue::scrub(size_t instance_id) {
 	                   }),
 	    c.end());
 
-	// TODO - is there a better way to shrink the internal container?
+	// TODO(missing_author) - is there a better way to shrink the internal container?
 	// Maybe instead we should enforce a capacity limit
 	constexpr size_t CAPACITY_SHRINK_THRESHOLD = 16;
 	if ((c.capacity() > CAPACITY_SHRINK_THRESHOLD) &&
@@ -307,29 +308,29 @@ ExpireWorker::ExpireWorker() {
 ExpireWorker::~ExpireWorker() {
 	stop_ = true;
 	{
-		std::lock_guard lock(pending_mtx_);
+		std::lock_guard const lock(pending_mtx_);
 		wake_worker_.notify_one();
 	}
 	worker_.join();
 }
 
 void ExpireWorker::enqueue(PendingRequest&& pending) {
-	std::lock_guard lock(pending_mtx_);
+	std::lock_guard const lock(pending_mtx_);
 	pending_.emplace(std::move(pending));
 	wake_worker_.notify_one();
 }
 
 void ExpireWorker::scrub(size_t instance_id) {
-	std::vector<std::function<void(v1::UStatus)>> all_expired;
+	std::vector<std::function<void(UStatus)>> all_expired;
 	{
-		std::lock_guard lock(pending_mtx_);
+		std::lock_guard const lock(pending_mtx_);
 		all_expired = pending_.scrub(instance_id);
 		wake_worker_.notify_one();
 	}
 
-	static const v1::UStatus cancel_reason = []() {
-		v1::UStatus reason;
-		reason.set_code(v1::UCode::CANCELLED);
+	static const UStatus cancel_reason = []() {
+		UStatus reason;
+		reason.set_code(UCode::CANCELLED);
 		reason.set_message("RpcClient for this request was discarded");
 		return reason;
 	}();
@@ -345,8 +346,8 @@ void ExpireWorker::doWork() {
 		std::optional<decltype(PendingRequest::expire)> maybe_expire;
 
 		{
-			transport::UTransport::ListenHandle expired_handle;
-			std::lock_guard lock(pending_mtx_);
+			ListenHandle expired_handle;
+			std::lock_guard const lock(pending_mtx_);
 			if (!pending_.empty()) {
 				const auto when_expire = pending_.top().when_expire;
 				if (when_expire <= now) {
@@ -361,9 +362,9 @@ void ExpireWorker::doWork() {
 		if (maybe_expire) {
 			auto& expire = *maybe_expire;
 
-			static const v1::UStatus expire_reason = []() {
-				v1::UStatus reason;
-				reason.set_code(v1::UCode::DEADLINE_EXCEEDED);
+			static const UStatus expire_reason = []() {
+				UStatus reason;
+				reason.set_code(UCode::DEADLINE_EXCEEDED);
 				reason.set_message("Request expired before response received");
 				return reason;
 			}();

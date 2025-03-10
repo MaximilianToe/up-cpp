@@ -18,7 +18,10 @@
 namespace uprotocol::datamodel::serializer::uri {
 
 std::string AsString::serialize(const v1::UUri& uri) {
-	using namespace uprotocol::datamodel::validator::uri;
+	using uprotocol::datamodel::validator::uri::isValidFilter;
+	using uprotocol::datamodel::validator::uri::InvalidUUri;
+	using uprotocol::datamodel::validator::uri::isLocal;
+
 	// isValidFilter is the most permissive of the validators
 	auto [valid, reason] = isValidFilter(uri);
 	if (!valid) {

@@ -43,7 +43,7 @@ RpcServer::ServerOrStatus RpcServer::create(
 		v1::UStatus status;
 		status.set_code(v1::UCode::INVALID_ARGUMENT);
 		status.set_message("Invalid rpc URI");
-		return uprotocol::utils::Unexpected(status);
+		return ServerOrStatus(uprotocol::utils::Unexpected(status));
 	}
 
 	// Validate the payload format, if provided.
@@ -53,7 +53,7 @@ RpcServer::ServerOrStatus RpcServer::create(
 			v1::UStatus status;
 			status.set_code(v1::UCode::OUT_OF_RANGE);
 			status.set_message("Invalid payload format");
-			return uprotocol::utils::Unexpected(status);
+			return ServerOrStatus(uprotocol::utils::Unexpected(status));
 		}
 	}
 
@@ -67,10 +67,10 @@ RpcServer::ServerOrStatus RpcServer::create(
 	auto status = server->connect(method_name, std::move(callback));
 	if (status.code() == v1::UCode::OK) {
 		// If connection is successful, return the server instance.
-		return server;
+		return ServerOrStatus(server);
 	} else {
 		// If connection fails, return the error status.
-		return uprotocol::utils::Unexpected(std::move(status));
+		return ServerOrStatus(uprotocol::utils::Unexpected(std::move(status)));
 	}
 }
 

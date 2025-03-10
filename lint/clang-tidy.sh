@@ -58,7 +58,7 @@ if [ -z "$target_source" ]; then
 	shopt -s globstar
 
 	pushd "$PROJECT_ROOT" > /dev/null
-	for f in **/*.h **/*.cpp; do
+	for f in include/**/*.h src/**/*.cpp; do
 		if [[ ! ("$f" =~ "build/") ]]; then
 			echo
 			echo "Checking file '$f'"

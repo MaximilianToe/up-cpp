@@ -15,7 +15,9 @@ namespace {
 
 constexpr size_t AUTHORITY_SPEC_MAX_LENGTH = 128;
 
-using namespace uprotocol::datamodel::validator::uri;
+using uprotocol::datamodel::validator::uri::ValidationResult;
+using uprotocol::datamodel::validator::uri::Reason;
+
 ValidationResult uriCommonValidChecks(const uprotocol::v1::UUri& uuri) {
 	if (uuri.ue_version_major() == 0) {
 		return {false, Reason::RESERVED_VERSION};
