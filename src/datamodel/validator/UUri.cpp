@@ -70,7 +70,7 @@ std::string_view message(Reason reason) {
 }
 
 bool uses_wildcards(const v1::UUri& uuri) {
-	if (uuri.authority_name().find("*") != std::string::npos) {
+	if (uuri.authority_name().find_first_of("*") != std::string::npos) {
 		return true;
 	}
 	if ((uuri.ue_id() & 0xFFFF) == 0xFFFF) {  // service ID

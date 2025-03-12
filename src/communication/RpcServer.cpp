@@ -68,10 +68,9 @@ RpcServer::ServerOrStatus RpcServer::create(
 	if (status.code() == v1::UCode::OK) {
 		// If connection is successful, return the server instance.
 		return ServerOrStatus(server);
-	} else {
-		// If connection fails, return the error status.
-		return ServerOrStatus(uprotocol::utils::Unexpected(std::move(status)));
 	}
+	// If connection fails, return the error status.
+	return ServerOrStatus(uprotocol::utils::Unexpected(std::move(status)));
 }
 
 v1::UStatus RpcServer::connect(const v1::UUri& method, RpcCallback&& callback) {

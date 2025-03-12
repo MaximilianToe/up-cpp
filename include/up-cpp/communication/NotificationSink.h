@@ -82,7 +82,6 @@ struct NotificationSink {
 
 	~NotificationSink() = default;
 
-protected:
 	/// @brief Constructs a notification listener connected to a given
 	///        transport.
 	///

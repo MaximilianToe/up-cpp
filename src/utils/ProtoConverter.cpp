@@ -9,7 +9,7 @@ google::protobuf::Timestamp ProtoConverter::ConvertToProtoTimestamp(
 	    std::chrono::duration_cast<std::chrono::seconds>(duration).count();
 	auto nanoseconds =
 	    std::chrono::duration_cast<std::chrono::nanoseconds>(duration).count() %
-	    1000000000ll;
+	    1000000000LL;
 
 	timestamp.set_seconds(seconds);
 	timestamp.set_nanos(static_cast<int32_t>(nanoseconds));

@@ -110,7 +110,8 @@ uprotocol::v1::UUri AsString::deserialize(const std::string& uri_as_string) {
 	uri.set_resource_id(segmentToUint32(uri_view));
 
 	{
-		using namespace uprotocol::datamodel::validator::uri;
+		using uprotocol::datamodel::validator::uri::isValidFilter;
+		using uprotocol::datamodel::validator::uri::InvalidUUri;
 		// isValidFilter is the most permissive of the validators
 		auto [valid, reason] = isValidFilter(uri);
 		if (!valid) {

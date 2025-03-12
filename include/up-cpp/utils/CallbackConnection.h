@@ -242,7 +242,7 @@ struct BadConnection : public std::runtime_error {
 /// the error appear earlier without waiting for invocation to occur.
 struct EmptyFunctionObject : public std::invalid_argument {
 	template <typename... Args>
-	EmptyFunctionObject(Args&&... args)
+	explicit EmptyFunctionObject(Args&&... args)
 	    : std::invalid_argument(std::forward<Args>(args)...) {}
 };
 

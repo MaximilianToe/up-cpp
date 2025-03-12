@@ -21,10 +21,10 @@
 
 namespace {
 constexpr uint64_t RANDOM_B_SHIFT = 48;
-constexpr size_t MSB_HIGH_ = 0;
-constexpr size_t MSB_LOW__ = 4;
-constexpr size_t LSB_HIGH_ = 8;
-constexpr size_t LSB_LOW__ = 12;
+constexpr size_t MSB_HIGH = 0;
+constexpr size_t MSB_LOW = 4;
+constexpr size_t LSB_HIGH = 8;
+constexpr size_t LSB_LOW = 12;
 }  // namespace
 
 namespace uprotocol::datamodel::serializer::uuid {
@@ -117,14 +117,14 @@ std::vector<uint8_t> AsBytes::serialize(const v1::UUID& uuid) {
 	std::vector<uint8_t> bytes(UUID_BYTE_SIZE);
 
 	uint32_t msb_high = htonl(static_cast<uint32_t>(uuid.msb() >> 32));
-	uint32_t msb_low = htonl(static_cast<uint32_t>(uuid.msb() & MASK_32_BITS));
+	uint32_t msb_low  = htonl(static_cast<uint32_t>(uuid.msb() & MASK_32_BITS));
 	uint32_t lsb_high = htonl(static_cast<uint32_t>(uuid.lsb() >> 32));
 	uint32_t lsb_low = htonl(static_cast<uint32_t>(uuid.lsb() & MASK_32_BITS));
 
-	std::memcpy(&bytes[MSB_HIGH_], &msb_high, UUID_PART_SIZE);
-	std::memcpy(&bytes[MSB_LOW__], &msb_low, UUID_PART_SIZE);
-	std::memcpy(&bytes[LSB_HIGH_], &lsb_high, UUID_PART_SIZE);
-	std::memcpy(&bytes[LSB_LOW__], &lsb_low, UUID_PART_SIZE);
+	std::memcpy(&bytes[MSB_HIGH], &msb_high, UUID_PART_SIZE);
+	std::memcpy(&bytes[MSB_LOW], &msb_low, UUID_PART_SIZE);
+	std::memcpy(&bytes[LSB_HIGH], &lsb_high, UUID_PART_SIZE);
+	std::memcpy(&bytes[LSB_LOW], &lsb_low, UUID_PART_SIZE);
 
 	return bytes;
 }
@@ -139,10 +139,10 @@ v1::UUID AsBytes::deserialize(const std::vector<uint8_t>& bytes) {
 	uint32_t lsb_high = 0;
 	uint32_t lsb_low = 0;
 
-	std::memcpy(&msb_high, &bytes[MSB_HIGH_], UUID_PART_SIZE);
-	std::memcpy(&msb_low, &bytes[MSB_LOW__], UUID_PART_SIZE);
-	std::memcpy(&lsb_high, &bytes[LSB_HIGH_], UUID_PART_SIZE);
-	std::memcpy(&lsb_low, &bytes[LSB_LOW__], UUID_PART_SIZE);
+	std::memcpy(&msb_high, &bytes[MSB_HIGH], UUID_PART_SIZE);
+	std::memcpy(&msb_low, &bytes[MSB_LOW], UUID_PART_SIZE);
+	std::memcpy(&lsb_high, &bytes[LSB_HIGH], UUID_PART_SIZE);
+	std::memcpy(&lsb_low, &bytes[LSB_LOW], UUID_PART_SIZE);
 
 	uint64_t msb =
 	    (static_cast<uint64_t>(ntohl(msb_high)) << 32) | ntohl(msb_low);

@@ -264,7 +264,7 @@ protected:
 	///          connection they represent.
 	///
 	/// @param listener CallerHandle for the connection that has been broken.
-	virtual void cleanupListener(CallableConn listener);
+	virtual void cleanupListener(CallableConn& listener);
 
 private:
 	/// @brief URI for the entity owning this transport.

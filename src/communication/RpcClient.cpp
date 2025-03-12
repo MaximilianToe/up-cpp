@@ -149,7 +149,7 @@ RpcClient::InvokeHandle RpcClient::invokeMethod(v1::UMessage&& request,
 				status.set_message("Received response with !OK commstatus");
 				std::call_once(*callback_once, [&callable,
 				                                status = std::move(status)]() {
-					callable(utils::Unexpected<v1::UStatus>(std::move(status)));
+					callable(utils::Unexpected<v1::UStatus>(status));
 				});
 			}
 		}
