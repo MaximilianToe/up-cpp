@@ -70,19 +70,23 @@ std::string_view message(Reason reason) {
 }
 
 bool uses_wildcards(const v1::UUri& uuri) {
-	if (uuri.authority_name().find_first_of("*") != std::string::npos) {
+	constexpr auto LOWER_8_BIT_MASK = 0xFF;
+	constexpr auto LOWER_16_BIT_MASK = 0xFFFF;
+	constexpr auto UPPER_16_BIT_MASK = 0xFFFF0000;
+
+	if (uuri.authority_name().find_first_of('*') != std::string::npos) {
 		return true;
 	}
-	if ((uuri.ue_id() & 0xFFFF) == 0xFFFF) {  // service ID
+	if ((uuri.ue_id() & LOWER_16_BIT_MASK) == LOWER_16_BIT_MASK) {  // service ID
 		return true;
 	}
-	if ((uuri.ue_id() & 0xFFFF0000) == 0xFFFF0000) {  // service instance ID
+	if ((uuri.ue_id() & UPPER_16_BIT_MASK) == UPPER_16_BIT_MASK) {  // service instance ID
 		return true;
 	}
-	if (uuri.ue_version_major() == 0xFF) {
+	if (uuri.ue_version_major() == LOWER_8_BIT_MASK) {
 		return true;
 	}
-	if (uuri.resource_id() == 0xFFFF) {
+	if (uuri.resource_id() == LOWER_16_BIT_MASK) {
 		return true;
 	}
 	return false;

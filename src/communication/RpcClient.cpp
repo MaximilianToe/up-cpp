@@ -71,7 +71,7 @@ struct RpcClient::ExpireService {
 	             std::function<void(v1::UStatus)> expire) const {
 		detail::PendingRequest pending;
 		pending.when_expire = when_expire;
-		pending.response_listener = std::move(response_listener);
+		pending.response_listener = response_listener;
 		pending.expire = std::move(expire);
 		pending.instance_id = instance_id_;
 
@@ -126,8 +126,10 @@ RpcClient::InvokeHandle RpcClient::invokeMethod(v1::UMessage&& request,
 	// attempt to call the callback succeeds.
 	auto callback_once = std::make_shared<std::once_flag>();
 
-	auto [callback_handle, callable] =
+	auto connected_pair =
 	    Connection::establish(std::move(callback));
+	auto callback_handle = std::get<0>(connected_pair);
+	auto callable = std::get<1>(connected_pair);
 
 	///////////////////////////////////////////////////////////////////////////
 	// Wraps the callback to handle receive filtering and commstatus checking.
@@ -149,7 +151,7 @@ RpcClient::InvokeHandle RpcClient::invokeMethod(v1::UMessage&& request,
 				status.set_message("Received response with !OK commstatus");
 				std::call_once(*callback_once, [&callable,
 				                                status = std::move(status)]() {
-					callable(utils::Unexpected<v1::UStatus>(status));
+					callable(utils::Expected<v1::UMessage,v1::UStatus>(utils::Unexpected<v1::UStatus>(status)));
 				});
 			}
 		}
@@ -162,7 +164,7 @@ RpcClient::InvokeHandle RpcClient::invokeMethod(v1::UMessage&& request,
 	auto expire = [callable, callback_once](v1::UStatus&& reason) mutable {
 		std::call_once(
 		    *callback_once, [&callable, reason = std::move(reason)]() {
-			    callable(utils::Unexpected<v1::UStatus>(reason));
+			    callable(utils::Expected<v1::UMessage,v1::UStatus>(utils::Unexpected<v1::UStatus>(reason)));
 		    });
 	};
 	///////////////////////////////////////////////////////////////////////////
@@ -184,7 +186,7 @@ RpcClient::InvokeHandle RpcClient::invokeMethod(v1::UMessage&& request,
 		}
 	}
 
-	return std::move(callback_handle);
+	return callback_handle;
 }
 
 RpcClient::InvokeHandle RpcClient::invokeMethod(
@@ -238,7 +240,7 @@ RpcClient::InvokeFuture& RpcClient::InvokeFuture::operator=(
 
 RpcClient::InvokeFuture::InvokeFuture(std::future<MessageOrStatus>&& future,
                                       InvokeHandle&& handle) noexcept
-    : callback_handle_(std::move(handle)), future_(std::move(future)) {}
+    : callback_handle_(handle), future_(std::move(future)) {}
 
 }  // namespace uprotocol::communication
 
@@ -353,7 +355,7 @@ void ExpireWorker::doWork() {
 				if (when_expire <= now) {
 					maybe_expire = std::move(pending_.top().expire);
 					expired_handle =
-					    std::move(pending_.top().response_listener);
+					    pending_.top().response_listener;
 					pending_.pop();
 				}
 			}

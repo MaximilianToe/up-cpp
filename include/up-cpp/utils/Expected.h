@@ -61,6 +61,12 @@ public:
 	constexpr explicit Expected(Args&&... args)
 	    : storage_(std::forward<Args>(args)...) {}
 
+	// constexpr explicit Expected(T value)
+	// : storage_(std::move(value)) {}
+	//
+	// constexpr explicit Expected(Unexpected<E> unexpected)
+	// : storage_(std::move(unexpected)) {}
+
 	constexpr Expected(const Expected&) = default;
 	constexpr Expected(Expected&&) noexcept = default;
 
