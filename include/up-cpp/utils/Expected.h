@@ -58,14 +58,9 @@ template <typename T, typename E>
 class Expected {
 public:
 	template <typename... Args>
-	constexpr explicit Expected(Args&&... args)
-	    : storage_(std::forward<Args>(args)...) {}
 
-	// constexpr explicit Expected(T value)
-	// : storage_(std::move(value)) {}
-	//
-	// constexpr explicit Expected(Unexpected<E> unexpected)
-	// : storage_(std::move(unexpected)) {}
+	constexpr explicit Expected(T arg) : storage_(std::forward<T>(arg)) {}
+	constexpr explicit Expected(E arg) : storage_(std::forward<Unexpected<E>>(Unexpected<E>(arg))) {}
 
 	constexpr Expected(const Expected&) = default;
 	constexpr Expected(Expected&&) noexcept = default;
