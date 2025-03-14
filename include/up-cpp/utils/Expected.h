@@ -57,8 +57,6 @@ private:
 template <typename T, typename E>
 class Expected {
 public:
-	template <typename... Args>
-
 	constexpr explicit Expected(T arg) : storage_(std::forward<T>(arg)) {}
 	constexpr explicit Expected(E arg) : storage_(std::forward<Unexpected<E>>(Unexpected<E>(arg))) {}
 

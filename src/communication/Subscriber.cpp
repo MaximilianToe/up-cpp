@@ -37,7 +37,7 @@ namespace uri_validator = uprotocol::datamodel::validator::uri;
 	auto handle = transport->registerListener(std::move(callback), topic);
 
 	if (!handle) {
-		return SubscriberOrStatus(uprotocol::utils::Unexpected(handle.error()));
+		return SubscriberOrStatus(handle.error());
 	}
 
 	return SubscriberOrStatus(std::make_unique<Subscriber>(
