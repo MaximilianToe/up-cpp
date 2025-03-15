@@ -287,16 +287,16 @@ struct [[nodiscard]] CalleeHandle {
 	///
 	/// @post The old handle will be disconnected and the new handle will be
 	///       connected where the old one previously was.
-	// CalleeHandle(CalleeHandle&& other) noexcept = default;
+	CalleeHandle(CalleeHandle&& other) noexcept = default;
 
 	/// @brief Handles can be move assigned
 	///
 	/// @post The old handle will be disconnected and the new handle will be
 	///       connected where the old one previously was.
-	// CalleeHandle& operator=(CalleeHandle&& other) noexcept = default;
+	CalleeHandle& operator=(CalleeHandle&& other) noexcept = default;
 
-	// CalleeHandle(const CalleeHandle&) = delete;
-	// CalleeHandle& operator=(const CalleeHandle&) = delete;
+	CalleeHandle(const CalleeHandle&) = delete;
+	CalleeHandle& operator=(const CalleeHandle&) = delete;
 
 	/// @brief Destructor: severs the connection, waiting until all active
 	///        callbacks have completed.
