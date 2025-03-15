@@ -70,7 +70,7 @@ RpcServer::ServerOrStatus RpcServer::create(
 		return ServerOrStatus(std::move(server));
 	}
 	// If connection fails, return the error status.
-	return ServerOrStatus(std::move(utils::Unexpected<v1::UStatus>(status)));
+	return ServerOrStatus(utils::Unexpected<v1::UStatus>(status));
 }
 
 v1::UStatus RpcServer::connect(const v1::UUri& method, RpcCallback&& callback) {

@@ -43,10 +43,10 @@ Consumer::Consumer(std::shared_ptr<uprotocol::transport::UTransport> transport,
 		if (status.code() == v1::UCode::OK) {
 			return ConsumerOrStatus(std::move(consumer));
 		}
-		return ConsumerOrStatus(std::move(utils::Unexpected<v1::UStatus>(status)));
+		return ConsumerOrStatus(utils::Unexpected<v1::UStatus>(status));
 	}
 	// If connection fails, return the error status.
-	return ConsumerOrStatus(std::move(utils::Unexpected<v1::UStatus>(status)));
+	return ConsumerOrStatus(utils::Unexpected<v1::UStatus>(status));
 }
 
 v1::UStatus Consumer::createNotificationSink() {
