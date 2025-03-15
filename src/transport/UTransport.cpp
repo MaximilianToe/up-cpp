@@ -91,7 +91,7 @@ UTransport::HandleOrStatus UTransport::registerListener(
 	if (status.code() == v1::UCode::OK) {
 		return HandleOrStatus(handle);
 	}
-	return HandleOrStatus(status);
+	return HandleOrStatus(utils::Unexpected<v1::UStatus>(status));
 }
 
 // NOTE: deprecated

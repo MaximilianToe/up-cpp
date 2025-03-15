@@ -58,7 +58,9 @@ template <typename T, typename E>
 class Expected {
 public:
 	constexpr explicit Expected(T arg) : storage_(std::forward<T>(arg)) {}
-	constexpr explicit Expected(E arg) : storage_(std::forward<Unexpected<E>>(Unexpected<E>(arg))) {}
+	//It E and T are the same type, this can cause problems. Previously, this was in use by implicid conversion
+	// constexpr explicit Expected(E arg) : storage_(std::forward<Unexpected<E>>(Unexpected<E>(arg))) {}
+	constexpr explicit Expected(Unexpected<E> arg) : storage_(std::forward<Unexpected<E>>(arg)) {}
 
 	constexpr Expected(const Expected&) = default;
 	constexpr Expected(Expected&&) noexcept = default;

@@ -173,7 +173,7 @@ struct [[nodiscard]] Connection {
 		}
 
 		if constexpr (!std::is_void_v<RT>) {
-			return result;
+			return static_cast<std::optional<RT>>(std::move(result));
 		}
 	}
 

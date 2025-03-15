@@ -40,7 +40,7 @@ NotificationSink::SinkOrStatus NotificationSink::create(
 	    std::move(callback), source_filter, transport->getEntityUri());
 
 	if (!listener) {
-		return SinkOrStatus(listener.error());
+		return SinkOrStatus(utils::Unexpected<v1::UStatus>(listener.error()));
 	}
 
 	return SinkOrStatus(std::make_unique<NotificationSink>(

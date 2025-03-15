@@ -33,7 +33,8 @@ public:
 		(*listener_)(msg);
 	}
 
-private:
+//TODO(max) set private again and fix access in RpcServerTest
+public:
 	std::atomic<size_t> send_count_;
 
 	uprotocol::v1::UStatus send_status_;
@@ -73,7 +74,7 @@ private:
 		return registerListener_status_;
 	}
 
-	void cleanupListener(CallableConn listener) override {
+	void cleanupListener(const CallableConn& listener) override {
 		cleanup_listener_ = listener;
 	}
 };

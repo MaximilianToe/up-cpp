@@ -151,7 +151,7 @@ RpcClient::InvokeHandle RpcClient::invokeMethod(v1::UMessage&& request,
 				status.set_message("Received response with !OK commstatus");
 				std::call_once(*callback_once, [&callable,
 				                                status = std::move(status)]() {
-					callable(utils::Expected<v1::UMessage,v1::UStatus>(status));
+					callable(utils::Expected<v1::UMessage,v1::UStatus>(utils::Unexpected<v1::UStatus>(status)));
 				});
 			}
 		}
@@ -164,7 +164,7 @@ RpcClient::InvokeHandle RpcClient::invokeMethod(v1::UMessage&& request,
 	auto expire = [callable, callback_once](v1::UStatus&& reason) mutable {
 		std::call_once(
 		    *callback_once, [&callable, reason = std::move(reason)]() {
-			    callable(utils::Expected<v1::UMessage,v1::UStatus>(reason));
+			    callable(utils::Expected<v1::UMessage,v1::UStatus>(utils::Unexpected<v1::UStatus>(reason)));
 		    });
 	};
 	///////////////////////////////////////////////////////////////////////////
