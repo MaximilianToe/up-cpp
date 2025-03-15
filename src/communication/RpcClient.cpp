@@ -80,7 +80,9 @@ struct RpcClient::ExpireService {
 
 private:
 	static inline std::atomic<size_t> next_instance_id_{0};
-	static inline detail::ExpireWorker worker_;
+	//constructor for ExpireWorker can throw an exception when trying to create new thread
+	//this can be problematic when used in a static constructor
+	static inline detail::ExpireWorker worker_; //NOLINT
 	size_t instance_id_;
 };
 
