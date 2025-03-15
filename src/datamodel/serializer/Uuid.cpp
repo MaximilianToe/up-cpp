@@ -40,19 +40,19 @@ std::string AsString::serialize(const uprotocol::v1::UUID& uuid) {
 
 	// Formatting the UUIDv8 in the traditional format
 	std::stringstream ss;
-	ss << std::hex << std::setfill('0') << std::setw(8)
+	ss << std::hex << std::setfill('0') << std::setw(LEN_32_BITS_IN_HEX)
 	   << ((unix_ts_ms >> 16) & MASK_32_BITS)  // First 32 bits of timestamp
-	   << "-" << std::setw(4)
+	   << "-" << std::setw(LEN_16_BITS_IN_HEX)
 	   << ((unix_ts_ms)&MASK_16_BITS)  // Next 16 bits of timestamp i.e. last 16
 	                                   // bits of ts
-	   << "-" << std::setw(4)
+	   << "-" << std::setw(LEN_16_BITS_IN_HEX)
 	   << (((ver & UUID_VERSION_MASK) << UUID_VERSION_SHIFT) |
 	       (rand_a &
 	        UUID_RANDOM_A_MASK))  // Last 16 bits of timestamp and version
-	   << "-" << std::setw(4)
+	   << "-" << std::setw(LEN_16_BITS_IN_HEX)
 	   << (((var & UUID_VARIANT_MASK) << 14) |
 	       ((rand_b >> RANDOM_B_SHIFT) & MASK_14_BITS))  // Variant and randb
-	   << "-" << std::setw(12)
+	   << "-" << std::setw(LEN_48_BITS_IN_HEX)
 	   << (rand_b & UUID_TIMESTAMP_MASK);  // Random number
 
 	return std::move(ss).str();

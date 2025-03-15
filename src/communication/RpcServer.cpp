@@ -125,9 +125,12 @@ v1::UStatus RpcServer::connect(const v1::UUri& method, RpcCallback&& callback) {
 		    v1::UUri any_uri;
 		    any_uri.set_authority_name("*");
 		    // Instance ID 0 and UE ID FFFF for wildcard
-		    any_uri.set_ue_id(0x0000FFFF);
-		    any_uri.set_ue_version_major(0xFF);
-		    any_uri.set_resource_id(0xFFFF);
+	    	constexpr auto DEFAULT_INSTANCE_ID_WITH_WILDCARD_SERVICE_ID = 0x0000FFFF;
+	    	constexpr auto VERSION_MAJOR_WILDCARD = 0xFF;
+	    	constexpr auto RESOURCE_ID_WILDCARD = 0xFFFF;
+		    any_uri.set_ue_id(DEFAULT_INSTANCE_ID_WITH_WILDCARD_SERVICE_ID);
+		    any_uri.set_ue_version_major(VERSION_MAJOR_WILDCARD);
+		    any_uri.set_resource_id(RESOURCE_ID_WILDCARD);
 		    return any_uri;
 	    }(),
 	    // sink_filter=

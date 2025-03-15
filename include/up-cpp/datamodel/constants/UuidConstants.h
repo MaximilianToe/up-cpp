@@ -38,6 +38,11 @@ constexpr uint64_t MASK_32_BITS = 0xFFFFFFFF;
 constexpr uint64_t MASK_16_BITS = 0xFFFF;
 constexpr uint64_t MASK_14_BITS = 0x3FFF;
 
+// number of digits needed to represent a given number of bits in base 16
+constexpr auto LEN_16_BITS_IN_HEX = 4;
+constexpr auto LEN_32_BITS_IN_HEX = 8;
+constexpr auto LEN_48_BITS_IN_HEX = 12;
+
 }  // namespace uprotocol::datamodel
 
 #endif  // UP_CPP_DATAMODEL_CONSTANTS_UUIDCONSTANTS_H

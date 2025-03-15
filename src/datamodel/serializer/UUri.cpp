@@ -55,8 +55,9 @@ std::string_view extractSegment(std::string_view& uri_view) {
 
 uint32_t segmentToUint32(const std::string_view& segment) {
 	uint32_t value = 0;
+	constexpr auto HEX_BASE = 16;
 	auto [end, ec] = std::from_chars(
-	    segment.data(), segment.data() + segment.size(), value, 16);
+	    segment.data(), segment.data() + segment.size(), value, HEX_BASE);
 	const bool convert_ok =
 	    (ec == std::errc{}) && (end == segment.data() + segment.size());
 	if (!convert_ok) {
