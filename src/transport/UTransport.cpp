@@ -89,7 +89,7 @@ UTransport::HandleOrStatus UTransport::registerListener(
 	    std::move(callable), source_filter, std::move(sink_filter));
 
 	if (status.code() == v1::UCode::OK) {
-		return HandleOrStatus(handle);
+		return HandleOrStatus(std::move(handle));
 	}
 	return HandleOrStatus(utils::Unexpected<v1::UStatus>(status));
 }

@@ -78,6 +78,6 @@ NotificationSink::SinkOrStatus NotificationSink::create(
 NotificationSink::NotificationSink(
     std::shared_ptr<transport::UTransport> transport,
     NotificationSink::ListenHandle&& listener)
-    : transport_(std::move(transport)), listener_(listener) {}
+    : transport_(std::move(transport)), listener_(std::move(listener)) {}
 
 }  // namespace uprotocol::communication

@@ -47,7 +47,7 @@ namespace uri_validator = uprotocol::datamodel::validator::uri;
 
 Subscriber::Subscriber(std::shared_ptr<transport::UTransport> transport,
                        ListenHandle&& subscription)
-    : transport_(std::move(transport)), subscription_(subscription) {
+    : transport_(std::move(transport)), subscription_(std::move(subscription)) {
 	// Constructor body. Any additional setup can go here.
 	if (!transport_) {
 		throw transport::NullTransport("transport cannot be null");

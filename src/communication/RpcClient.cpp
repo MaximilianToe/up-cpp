@@ -71,7 +71,7 @@ struct RpcClient::ExpireService {
 	             std::function<void(v1::UStatus)> expire) const {
 		detail::PendingRequest pending;
 		pending.when_expire = when_expire;
-		pending.response_listener = response_listener;
+		pending.response_listener = std::move(response_listener);
 		pending.expire = std::move(expire);
 		pending.instance_id = instance_id_;
 
@@ -128,7 +128,7 @@ RpcClient::InvokeHandle RpcClient::invokeMethod(v1::UMessage&& request,
 
 	auto connected_pair =
 	    Connection::establish(std::move(callback));
-	auto callback_handle = std::get<0>(connected_pair);
+	auto callback_handle = std::move(std::get<0>(connected_pair));
 	auto callable = std::get<1>(connected_pair);
 
 	///////////////////////////////////////////////////////////////////////////
@@ -240,7 +240,7 @@ RpcClient::InvokeFuture& RpcClient::InvokeFuture::operator=(
 
 RpcClient::InvokeFuture::InvokeFuture(std::future<MessageOrStatus>&& future,
                                       InvokeHandle&& handle) noexcept
-    : callback_handle_(handle), future_(std::move(future)) {}
+    : callback_handle_(std::move(handle)), future_(std::move(future)) {}
 
 }  // namespace uprotocol::communication
 
@@ -355,7 +355,7 @@ void ExpireWorker::doWork() {
 				if (when_expire <= now) {
 					maybe_expire = std::move(pending_.top().expire);
 					expired_handle =
-					    pending_.top().response_listener;
+					    std::move(pending_.top().response_listener);
 					pending_.pop();
 				}
 			}
