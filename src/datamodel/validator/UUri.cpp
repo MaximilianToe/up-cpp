@@ -14,6 +14,9 @@
 namespace {
 
 constexpr size_t AUTHORITY_SPEC_MAX_LENGTH = 128;
+//TODO(max) try to find a better name
+constexpr auto START_OF_TOPICS = 0x8000;
+constexpr auto MAX_RESOURCE_ID = 0xFFFF;
 
 using uprotocol::datamodel::validator::uri::ValidationResult;
 using uprotocol::datamodel::validator::uri::Reason;
@@ -145,7 +148,7 @@ ValidationResult isValidRpcMethod(const v1::UUri& uuri) {
 	}
 
 	// check resource ID [0x0001, 0x7FFF]
-	if (uuri.resource_id() == 0 || uuri.resource_id() > 0x7FFF) {
+	if (uuri.resource_id() == 0 || uuri.resource_id() >= START_OF_TOPICS) {
 		return {false, Reason::BAD_RESOURCE_ID};
 	}
 
@@ -182,7 +185,7 @@ ValidationResult isValidPublishTopic(const v1::UUri& uuri) {
 		return {false, Reason::DISALLOWED_WILDCARD};
 	}
 
-	if ((uuri.resource_id() < 0x8000) || (uuri.resource_id() > 0xFFFF)) {
+	if ((uuri.resource_id() < START_OF_TOPICS) || (uuri.resource_id() > MAX_RESOURCE_ID)) {
 		return {false, Reason::BAD_RESOURCE_ID};
 	}
 
@@ -195,7 +198,7 @@ ValidationResult isValidNotificationSource(const v1::UUri& uuri) {
 		return {false, Reason::DISALLOWED_WILDCARD};
 	}
 
-	if ((uuri.resource_id() < 0x8000) || (uuri.resource_id() > 0xFFFF)) {
+	if ((uuri.resource_id() < START_OF_TOPICS) || (uuri.resource_id() > MAX_RESOURCE_ID)) {
 		return {false, Reason::BAD_RESOURCE_ID};
 	}
 
@@ -216,7 +219,7 @@ ValidationResult isValidNotificationSink(const v1::UUri& uuri) {
 }
 
 ValidationResult isValidSubscription(const v1::UUri& uuri) {
-	if (uuri.resource_id() < 0x8000 || uuri.resource_id() > 0xFFFF) {
+	if (uuri.resource_id() < START_OF_TOPICS || uuri.resource_id() > MAX_RESOURCE_ID) {
 		return {false, Reason::BAD_RESOURCE_ID};
 	}
 
