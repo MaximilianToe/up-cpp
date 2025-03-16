@@ -91,11 +91,10 @@ struct RpcClient::ExpireService {
 	void enqueue(std::chrono::steady_clock::time_point when_expire,
 	             transport::UTransport::ListenHandle&& response_listener,
 	             std::function<void(v1::UStatus)> expire) const {
-		detail::PendingRequest pending = detail::PendingRequest(when_expire, std::move(response_listener), std::move(expire), instance_id_);
-		// pending.when_expire_ = when_expire;
-		// pending.response_listener_ = std::move(response_listener);
-		// pending.expire_ = std::move(expire);
-		// pending.instance_id_ = instance_id_;
+		auto pending = detail::PendingRequest(when_expire,
+			std::move(response_listener),
+			std::move(expire),
+			instance_id_);
 
 		worker_.enqueue(std::move(pending));
 	}
