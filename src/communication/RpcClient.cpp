@@ -36,15 +36,6 @@ struct PendingRequest {
 		expire_(std::move(expire)),
 		instance_id_(instance_id) {}
 
-	[[nodiscard]] std::chrono::steady_clock::time_point& when_expire() {
-		return when_expire_;
-	}
-	[[nodiscard]] ListenHandle& response_listener() {
-		return response_listener_;
-	}
-	[[nodiscard]] std::function<void(UStatus)>& expire() { return expire_; }
-	[[nodiscard]] size_t& instance_id() { return instance_id_; }
-
 	auto operator>(const PendingRequest& other) const;
 private:
 	std::chrono::steady_clock::time_point when_expire_;
