@@ -24,13 +24,35 @@ using uprotocol::v1::UStatus;
 using ListenHandle = uprotocol::transport::UTransport::ListenHandle;
 
 struct PendingRequest {
-	std::chrono::steady_clock::time_point when_expire;
-	ListenHandle response_listener;
-	std::function<void(UStatus)> expire;
-	size_t instance_id{};
+	friend struct ScrubablePendingQueue;
+	friend struct ExpireWorker;
+
+	PendingRequest(const std::chrono::steady_clock::time_point& when_expire,
+		ListenHandle response_listener,
+		std::function<void(UStatus)> expire,
+		const size_t& instance_id)
+		: when_expire_(when_expire),
+		response_listener_(std::move(response_listener)),
+		expire_(std::move(expire)),
+		instance_id_(instance_id) {}
+
+	[[nodiscard]] std::chrono::steady_clock::time_point& when_expire() {
+		return when_expire_;
+	}
+	[[nodiscard]] ListenHandle& response_listener() {
+		return response_listener_;
+	}
+	[[nodiscard]] std::function<void(UStatus)>& expire() { return expire_; }
+	[[nodiscard]] size_t& instance_id() { return instance_id_; }
 
 	auto operator>(const PendingRequest& other) const;
+private:
+	std::chrono::steady_clock::time_point when_expire_;
+	ListenHandle response_listener_;
+	std::function<void(UStatus)> expire_;
+	size_t instance_id_{};
 };
+
 
 struct ScrubablePendingQueue
     : public std::priority_queue<PendingRequest, std::vector<PendingRequest>,
@@ -69,11 +91,11 @@ struct RpcClient::ExpireService {
 	void enqueue(std::chrono::steady_clock::time_point when_expire,
 	             transport::UTransport::ListenHandle&& response_listener,
 	             std::function<void(v1::UStatus)> expire) const {
-		detail::PendingRequest pending;
-		pending.when_expire = when_expire;
-		pending.response_listener = std::move(response_listener);
-		pending.expire = std::move(expire);
-		pending.instance_id = instance_id_;
+		detail::PendingRequest pending = detail::PendingRequest(when_expire, std::move(response_listener), std::move(expire), instance_id_);
+		// pending.when_expire_ = when_expire;
+		// pending.response_listener_ = std::move(response_listener);
+		// pending.expire_ = std::move(expire);
+		// pending.instance_id_ = instance_id_;
 
 		worker_.enqueue(std::move(pending));
 	}
@@ -256,7 +278,7 @@ using uprotocol::v1::UCode;
 using ListenHandle = uprotocol::transport::UTransport::ListenHandle;
 
 auto PendingRequest::operator>(const PendingRequest& other) const {
-	return when_expire > other.when_expire;
+	return when_expire_ > other.when_expire_;
 }
 
 ScrubablePendingQueue::~ScrubablePendingQueue() {
@@ -271,7 +293,7 @@ ScrubablePendingQueue::~ScrubablePendingQueue() {
 	}();
 
 	for (auto& pending : c) {
-		pending.expire(cancel_reason);
+		pending.expire_(cancel_reason);
 	}
 }
 
@@ -283,8 +305,8 @@ auto ScrubablePendingQueue::scrub(size_t instance_id) {
 	c.erase(
 	    std::remove_if(c.begin(), c.end(),
 	                   [instance_id, &all_expired](const PendingRequest& p) {
-		                   if (instance_id == p.instance_id) {
-			                   all_expired.push_back(p.expire);
+		                   if (instance_id == p.instance_id_) {
+			                   all_expired.push_back(p.expire_);
 			                   return true;
 		                   }
 		                   return false;
@@ -347,17 +369,17 @@ void ExpireWorker::scrub(size_t instance_id) {
 void ExpireWorker::doWork() {
 	while (!stop_) {
 		const auto now = std::chrono::steady_clock::now();
-		std::optional<decltype(PendingRequest::expire)> maybe_expire;
+		std::optional<decltype(PendingRequest::expire_)> maybe_expire;
 
 		{
 			ListenHandle expired_handle;
 			std::lock_guard const lock(pending_mtx_);
 			if (!pending_.empty()) {
-				const auto when_expire = pending_.top().when_expire;
+				const auto when_expire = pending_.top().when_expire_;
 				if (when_expire <= now) {
-					maybe_expire = std::move(pending_.top().expire);
+					maybe_expire = std::move(pending_.top().expire_);
 					expired_handle =
-					    std::move(pending_.top().response_listener);
+					    std::move(pending_.top().response_listener_);
 					pending_.pop();
 				}
 			}
@@ -387,11 +409,11 @@ void ExpireWorker::doWork() {
 				//   priority queue (either by insertion or deletion)
 				// * The queue has been emptied (loop back to indefinite sleep)
 				// * A stop has been requested
-				auto wake_when = pending_.top().when_expire;
+				auto wake_when = pending_.top().when_expire_;
 				wake_worker_.wait_until(lock, wake_when, [this, &wake_when]() {
 					auto when_next_wake = wake_when;
 					if (!pending_.empty()) {
-						when_next_wake = pending_.top().when_expire;
+						when_next_wake = pending_.top().when_expire_;
 					}
 					return stop_ || when_next_wake != wake_when ||
 					       pending_.empty() ||
