@@ -33,7 +33,7 @@ public:
 		(*listener_)(msg);
 	}
 
-//TODO(max) set private again and fix access in RpcServerTest
+	// TODO(max) set private again and fix access in RpcServerTest
 public:
 	std::atomic<size_t> send_count_;
 

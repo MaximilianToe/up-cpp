@@ -75,8 +75,8 @@ protected:
 TEST_F(TestNotificationSource, NotifyWithPayloadSuccess) {
 	std::string test_payload_str = "test_payload";
 	NotificationSource notification_source(transportMock_, std::move(source_),
-	                                      std::move(sink_), format_, priority_,
-	                                      ttl_);
+	                                       std::move(sink_), format_, priority_,
+	                                       ttl_);
 	Payload test_payload(test_payload_str, format_);
 
 	uprotocol::v1::UStatus retval;
@@ -96,7 +96,8 @@ TEST_F(TestNotificationSource, NotifyWithPayloadSuccess) {
 TEST_F(TestNotificationSource, NotifyWithPayloadSuccessWithoutTTL) {
 	std::string test_payload_str = "test_payload";
 	NotificationSource notification_source(transportMock_, std::move(source_),
-	                                      std::move(sink_), format_, priority_);
+	                                       std::move(sink_), format_,
+	                                       priority_);
 	Payload test_payload(test_payload_str, format_);
 
 	uprotocol::v1::UStatus retval;
@@ -119,7 +120,8 @@ TEST_F(TestNotificationSource, NotifyWithPayloadSuccessWithoutPriority) {
 	std::string test_payload_str = "test_payload";
 	priority_.reset();
 	NotificationSource notification_source(transportMock_, std::move(source_),
-	                                      std::move(sink_), format_, priority_);
+	                                       std::move(sink_), format_,
+	                                       priority_);
 	Payload test_payload(test_payload_str, format_);
 
 	uprotocol::v1::UStatus retval;
@@ -142,8 +144,8 @@ TEST_F(TestNotificationSource, NotifyWithPayloadSuccessWithoutPriority) {
 TEST_F(TestNotificationSource, NotifyWithPayloadFailure) {
 	std::string test_payload_str = "test_payload";
 	NotificationSource notification_source(transportMock_, std::move(source_),
-	                                      std::move(sink_), format_, priority_,
-	                                      ttl_);
+	                                       std::move(sink_), format_, priority_,
+	                                       ttl_);
 	Payload test_payload(test_payload_str, format_);
 
 	uprotocol::v1::UStatus retval;
@@ -157,7 +159,7 @@ TEST_F(TestNotificationSource, NotifyWithPayloadFailure) {
 
 TEST_F(TestNotificationSource, NotifyWithoutPayloadSuccess) {
 	NotificationSource notification_source(transportMock_, std::move(source_),
-	                                      std::move(sink_));
+	                                       std::move(sink_));
 
 	uprotocol::v1::UStatus retval;
 	retval.set_code(uprotocol::v1::UCode::OK);
@@ -174,7 +176,7 @@ TEST_F(TestNotificationSource, NotifyWithoutPayloadSuccess) {
 
 TEST_F(TestNotificationSource, NotifyWithoutPayloadFailure) {
 	NotificationSource notification_source(transportMock_, std::move(source_),
-	                                      std::move(sink_));
+	                                       std::move(sink_));
 
 	uprotocol::v1::UStatus retval;
 	retval.set_code(uprotocol::v1::UCode::DATA_LOSS);

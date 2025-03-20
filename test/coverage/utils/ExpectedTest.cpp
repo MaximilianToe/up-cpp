@@ -81,8 +81,8 @@ TEST_F(ExpectedTest, UnexpectScalar) {
 
 TEST_F(ExpectedTest, UnexpectValueOr) {
 	int sample = get_rand();
-	auto expected =
-	    Expected<int, std::string>(Unexpected<std::string>(std::string("hello")));
+	auto expected = Expected<int, std::string>(
+	    Unexpected<std::string>(std::string("hello")));
 	EXPECT_FALSE(bool(expected));
 	EXPECT_FALSE(expected.has_value());
 	EXPECT_EQ(sample, expected.value_or(sample));
@@ -201,8 +201,8 @@ TEST_F(ExpectedTest, UnexpectStructDestruct) {
 	{
 		auto x = get_rand();
 		auto y = get_rand();
-		auto expected =
-		    Expected<int, PairDestruct>(Unexpected<PairDestruct>(PairDestruct(x, y)));
+		auto expected = Expected<int, PairDestruct>(
+		    Unexpected<PairDestruct>(PairDestruct(x, y)));
 		EXPECT_EQ(1, PairDestruct::cd_count);
 		EXPECT_FALSE(bool(expected));
 		EXPECT_FALSE(expected.has_value());
@@ -213,8 +213,8 @@ TEST_F(ExpectedTest, UnexpectStructDestruct) {
 }
 
 TEST_F(ExpectedTest, ExceptionValueCheckedWhenIsError) {
-	auto expected =
-	    Expected<int, std::string>(Unexpected<std::string>(std::string("hello")));
+	auto expected = Expected<int, std::string>(
+	    Unexpected<std::string>(std::string("hello")));
 	EXPECT_THROW(
 	    {
 		    try {
@@ -248,8 +248,8 @@ TEST_F(ExpectedTest, ExceptionErrorCheckedWhenNotError) {
 }
 
 TEST_F(ExpectedTest, ExceptionDerefValueWhenUnexpected) {
-	auto expected =
-	    Expected<const Pair, std::string>(Unexpected<std::string>(std::string("hello")));
+	auto expected = Expected<const Pair, std::string>(
+	    Unexpected<std::string>(std::string("hello")));
 	EXPECT_THROW(
 	    {
 		    try {
@@ -267,8 +267,8 @@ TEST_F(ExpectedTest, ExceptionDerefValueWhenUnexpected) {
 }
 
 TEST_F(ExpectedTest, ExceptionDerefPtrWhenUnexpected) {
-	auto expected =
-	    Expected<Pair, std::string>(Unexpected<std::string>(std::string("hello")));
+	auto expected = Expected<Pair, std::string>(
+	    Unexpected<std::string>(std::string("hello")));
 	EXPECT_THROW(
 	    {
 		    try {

@@ -90,9 +90,8 @@ TEST_F(ConsumerTest, ConstructorTestSuccess) {
 
 	auto consumer_or_status =
 	    uprotocol::client::usubscription::v3::Consumer::create(
-	        mockTransportClient_, subcription_uuri,
-	        subcription_callback, priority,
-	        subscribe_request_ttl, options);
+	        mockTransportClient_, subcription_uuri, subcription_callback,
+	        priority, subscribe_request_ttl, options);
 
 	// Ensure that the consumer creation was successful
 	ASSERT_TRUE(consumer_or_status.has_value());
@@ -114,9 +113,8 @@ TEST_F(ConsumerTest, SubscribeTestSuccess) {
 
 	auto consumerOrSatus =
 	    uprotocol::client::usubscription::v3::Consumer::create(
-	        mockTransportClient_, subcription_uuri,
-	        subcriptionCallback, priority,
-	        subscribe_request_ttl, options);
+	        mockTransportClient_, subcription_uuri, subcriptionCallback,
+	        priority, subscribe_request_ttl, options);
 
 	// Ensure that the consumer creation was successful
 	ASSERT_TRUE(consumerOrSatus.has_value());
@@ -159,9 +157,8 @@ TEST_F(ConsumerTest, UnsubscribeTestSuccess) {
 
 	auto consumerOrSatus =
 	    uprotocol::client::usubscription::v3::Consumer::create(
-	        mockTransportClient_, subcription_uuri,
-	        subcriptionCallback, priority,
-	        subscribe_request_ttl, options);
+	        mockTransportClient_, subcription_uuri, subcriptionCallback,
+	        priority, subscribe_request_ttl, options);
 
 	// Ensure that the consumer creation was successful
 	ASSERT_TRUE(consumerOrSatus.has_value());
