@@ -43,7 +43,8 @@ protected:
 TEST_F(CallbackTest, EstablishDoesNotThrow) {
 	using namespace uprotocol::utils;
 
-	EXPECT_NO_THROW(callbacks::Connection<void>::establish([]() {}));
+	EXPECT_NO_THROW(auto result =
+	                    callbacks::Connection<void>::establish([]() {}));
 }
 
 /// It should be possible to establish a connection and call the callback
@@ -696,6 +697,75 @@ TEST_F(CallbackTest, CalleeHandleCanDefaultConstruct) {
 		callbacks::CalleeHandle<void> x;
 		EXPECT_FALSE(x);
 	});
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// It is possible to create std::function objects with no target function. When
+// they are invoked, they throw std::bad_function_call. This is not desireable,
+// so the callback connections modules are required to check the validity of
+// function objects they receive
+
+// Tests invalid callback function objects
+TEST_F(CallbackTest, EstablishWithNonCallableCallback) {
+	using namespace uprotocol::utils;
+
+	callbacks::Connection<bool>::ConnectedPair conn;
+
+	EXPECT_THROW(conn = callbacks::Connection<bool>::establish({}),
+	             callbacks::EmptyFunctionObject);
+
+	auto& [handle, callable] = conn;
+
+	// Ordering is important here. If handle.reset() tries blindly to call the
+	// cleanup callback, the exception could be thrown before the connection
+	// is broken. When that happens, the destructor will try to reset again.
+	// By resetting the callable second, there is no need to try the cleanup
+	// funciton again, so the destructor won't throw.
+	EXPECT_NO_THROW(handle.reset());
+	EXPECT_NO_THROW(callable.reset());
+}
+
+// Tests invalid cleanup function objects
+TEST_F(CallbackTest, EstablishWithNonCallableCleanup) {
+	using namespace uprotocol::utils;
+
+	auto cb = []() -> bool { return true; };
+	callbacks::Connection<bool>::Cleanup empty;
+	callbacks::Connection<bool>::ConnectedPair conn;
+
+	EXPECT_THROW(conn = callbacks::Connection<bool>::establish(cb, empty),
+	             callbacks::EmptyFunctionObject);
+
+	auto& [handle, callable] = conn;
+
+	// Ordering is important here. If handle.reset() tries blindly to call the
+	// cleanup callback, the exception could be thrown before the connection
+	// is broken. When that happens, the destructor will try to reset again.
+	// By resetting the callable second, there is no need to try the cleanup
+	// funciton again, so the destructor won't throw.
+	EXPECT_NO_THROW(handle.reset());
+	EXPECT_NO_THROW(callable.reset());
+}
+
+// Tests both invalid cleanup and invalid callback function objects
+TEST_F(CallbackTest, EstablishWithNonCallableCallbackAndCleanup) {
+	using namespace uprotocol::utils;
+
+	callbacks::Connection<bool>::Cleanup empty;
+	callbacks::Connection<bool>::ConnectedPair conn;
+
+	EXPECT_THROW(conn = callbacks::Connection<bool>::establish({}, empty),
+	             callbacks::EmptyFunctionObject);
+
+	auto& [handle, callable] = conn;
+
+	// Ordering is important here. If handle.reset() tries blindly to call the
+	// cleanup callback, the exception could be thrown before the connection
+	// is broken. When that happens, the destructor will try to reset again.
+	// By resetting the callable second, there is no need to try the cleanup
+	// funciton again, so the destructor won't throw.
+	EXPECT_NO_THROW(handle.reset());
+	EXPECT_NO_THROW(callable.reset());
 }
 
 }  // namespace
