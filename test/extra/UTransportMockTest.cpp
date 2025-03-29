@@ -59,7 +59,7 @@ protected:
 	// Run once per execution of the test application.
 	// Used for setup of all tests. Has access to this instance.
 	TestMockUTransport() = default;
-	~TestMockUTransport() = default;
+	~TestMockUTransport() override = default;
 
 	// Run once per execution of the test application.
 	// Used only for global setup outside of tests.
@@ -68,7 +68,6 @@ protected:
 };
 
 TEST_F(TestMockUTransport, Send) {
-	using namespace std;
 
 	uprotocol::v1::UUri def_src_uuri;
 	def_src_uuri.set_authority_name(get_random_string());
@@ -79,11 +78,11 @@ TEST_F(TestMockUTransport, Send) {
 	auto transport =
 	    std::make_shared<uprotocol::test::UTransportMock>(def_src_uuri);
 	EXPECT_NE(nullptr, transport);
-	EXPECT_TRUE(MsgDiff::Equals(def_src_uuri, transport->getDefaultSource()));
+	EXPECT_TRUE(MsgDiff::Equals(def_src_uuri, transport->getEntityUri()));
 
 	const size_t max_count = 1000 * 100;
 	for (size_t i = 0; i < max_count; i++) {
-		auto src = new uprotocol::v1::UUri();
+		auto* src = new uprotocol::v1::UUri();
 		src->set_authority_name("10.0.0.1");
 		src->set_ue_id(0x00010001);
 		src->set_ue_version_major(1);
@@ -118,7 +117,6 @@ TEST_F(TestMockUTransport, Send) {
 }
 
 TEST_F(TestMockUTransport, registerListener) {
-	using namespace std;
 
 	uprotocol::v1::UUri def_src_uuri;
 	def_src_uuri.set_authority_name(get_random_string());
@@ -129,7 +127,7 @@ TEST_F(TestMockUTransport, registerListener) {
 	auto transport =
 	    std::make_shared<uprotocol::test::UTransportMock>(def_src_uuri);
 	EXPECT_NE(nullptr, transport);
-	EXPECT_TRUE(MsgDiff::Equals(def_src_uuri, transport->getDefaultSource()));
+	EXPECT_TRUE(MsgDiff::Equals(def_src_uuri, transport->getEntityUri()));
 
 	uprotocol::v1::UUri sink_filter;
 	sink_filter.set_authority_name(get_random_string());

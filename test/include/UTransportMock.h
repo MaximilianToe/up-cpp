@@ -9,8 +9,8 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-#ifndef UP_CPP_TEST_UTRANSPORTMOCK_H
-#define UP_CPP_TEST_UTRANSPORTMOCK_H
+#ifndef UTRANSPORTMOCK_H
+#define UTRANSPORTMOCK_H
 
 #include <gmock/gmock.h>
 #include <up-cpp/transport/UTransport.h>
@@ -51,7 +51,7 @@ public:
 	v1::UMessage message_;
 	std::mutex message_mtx_;
 
-	virtual ~UTransportMock() = default;
+	~UTransportMock() override = default;
 
 private:
 	[[nodiscard]] v1::UStatus sendImpl(const v1::UMessage& message) override {
@@ -80,4 +80,4 @@ private:
 
 };  // namespace uprotocol::test
 
-#endif  // UP_CPP_TEST_UTRANSPORTMOCK_H
+#endif  // UTRANSPORTMOCK_H

@@ -25,13 +25,13 @@ using namespace std::chrono_literals;
 
 namespace {
 
-using namespace uprotocol::v1;
+using uprotocol::v1::UUri;
 using uprotocol::communication::RpcClient;
 using uprotocol::communication::RpcServer;
 using uprotocol::test::UTransportMock;
 
 struct MyUUri {
-	std::string auth = "";
+	std::string auth;
 	uint32_t ue_id = 0x8000;
 	uint32_t ue_version_major = 1;
 	uint32_t resource_id = 1;
@@ -45,7 +45,7 @@ struct MyUUri {
 		return ret;
 	}
 
-	std::string to_string() const {
+	[[nodiscard]] std::string to_string() const {
 		return std::string("<< ") + UUri(*this).ShortDebugString() + " >>";
 	}
 };
@@ -64,7 +64,7 @@ protected:
 	// Run once per execution of the test application.
 	// Used for setup of all tests. Has access to this instance.
 	RpcClientServerTest() = default;
-	~RpcClientServerTest() = default;
+	~RpcClientServerTest() override = default;
 
 	// Run once per execution of the test application.
 	// Used only for global setup outside of tests.

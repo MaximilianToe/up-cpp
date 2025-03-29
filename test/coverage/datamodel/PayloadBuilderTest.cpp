@@ -97,7 +97,7 @@ TEST_F(PayloadTest, CreateSerializedProtobufPayloadAndMoveTest) {
 	// Arrange
 	uprotocol::v1::UUri uriObject;
 	uriObject.set_authority_name(testStringPayload_);
-	auto expectedPayloadData = uriObject.SerializeAsString();
+	auto expected_payload_data = uriObject.SerializeAsString();
 
 	// Act
 	Payload payload(uriObject);
@@ -108,7 +108,7 @@ TEST_F(PayloadTest, CreateSerializedProtobufPayloadAndMoveTest) {
 	auto [payloadData, payloadFormat] = std::move(payload).buildMove();
 	EXPECT_EQ(payloadFormat,
 	          uprotocol::v1::UPayloadFormat::UPAYLOAD_FORMAT_PROTOBUF);
-	EXPECT_EQ(payloadData, expectedPayloadData);
+	EXPECT_EQ(payloadData, expected_payload_data);
 
 	EXPECT_THROW(auto result = payload.buildCopy(), Payload::PayloadMoved);
 	EXPECT_EQ(original_address, payloadData.data());

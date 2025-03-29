@@ -23,7 +23,7 @@ using namespace uprotocol::datamodel::serializer::uri;
 using MsgDiff = google::protobuf::util::MessageDifferencer;
 
 namespace {
-using namespace uprotocol::datamodel::builder;
+using uprotocol::datamodel::builder::Payload;
 
 class TestPublisherSubscriber : public testing::Test {
 protected:
@@ -52,7 +52,7 @@ protected:
 	// Run once per execution of the test application.
 	// Used for setup of all tests. Has access to this instance.
 	TestPublisherSubscriber() = default;
-	~TestPublisherSubscriber() = default;
+	~TestPublisherSubscriber() override = default;
 
 	// Run once per execution of the test application.
 	// Used only for global setup outside of tests.
@@ -69,7 +69,7 @@ protected:
 
 TEST_F(TestPublisherSubscriber, PubSubSuccess) {
 	// sub
-	auto transportSub =
+	auto transport_sub =
 	    std::make_shared<uprotocol::test::UTransportMock>(source_);
 
 	uprotocol::v1::UMessage captured_message;
@@ -78,32 +78,32 @@ TEST_F(TestPublisherSubscriber, PubSubSuccess) {
 	};
 
 	auto result =
-	    Subscriber::subscribe(transportSub, topic_, std::move(callback));
+	    Subscriber::subscribe(transport_sub, topic_, std::move(callback));
 
 	// pub
-	std::string testPayloadStr = "test_payload";
-	auto movableTopic = topic_;
-	Publisher publisher(transportMock_, std::move(movableTopic), format_,
+	std::string test_payload_str = "test_payload";
+	auto movable_topic = topic_;
+	Publisher publisher(transportMock_, std::move(movable_topic), format_,
 	                    priority_, ttl_);
 
 	uprotocol::v1::UStatus retval;
 	retval.set_code(uprotocol::v1::UCode::OK);
 	transportMock_->send_status_ = retval;
 
-	Payload testPayload(testPayloadStr, format_);
-	auto status = publisher.publish(std::move(testPayload));
+	Payload test_payload(test_payload_str, format_);
+	auto status = publisher.publish(std::move(test_payload));
 
 	// Test
 	EXPECT_EQ(
 	    AsString::serialize(transportMock_->message_.attributes().source()),
-	    AsString::serialize(transportSub->source_filter_));
+	    AsString::serialize(transport_sub->source_filter_));
 
 	// Manually bridge the two transports
-	transportSub->mockMessage(transportMock_->message_);
+	transport_sub->mockMessage(transportMock_->message_);
 
 	// Test
 	EXPECT_TRUE(MsgDiff::Equals(transportMock_->message_, captured_message));
-	EXPECT_EQ(testPayloadStr, captured_message.payload());
+	EXPECT_EQ(test_payload_str, captured_message.payload());
 }
 
 }  // namespace
