@@ -9,37 +9,38 @@
 
 namespace uprotocol::core::usubscription::v3::util {
 
-	template<typename T>
-	struct ChannelBuilder;
+template <typename T>
+struct ChannelBuilder;
 
-	template<typename T>
-	struct ReceiverChannelImpl : ReceiverChannel<T> {
-		T receive() override;
-	private:
-		friend struct ChannelBuilder<T>;
-		explicit ReceiverChannelImpl(std::shared_ptr<ThreadsafeQueue<T>> queue)
-			: _queue(std::move(queue)) {};
-		std::shared_ptr<ThreadsafeQueue<T>> _queue;
-	};
+template <typename T>
+struct ReceiverChannelImpl : ReceiverChannel<T> {
+	T receive() override;
 
-	template<typename T>
-	struct SenderChannelImpl : SenderChannel<T> {
-		void send(const T& value) override;
-	private:
-		friend struct ChannelBuilder<T>;
-	    explicit SenderChannelImpl(std::shared_ptr<ThreadsafeQueue<T>> queue)
-	        : _queue(std::move(queue)) {};
-		std::shared_ptr<ThreadsafeQueue<T>> _queue;
-	};
+private:
+	friend struct ChannelBuilder<T>;
+	explicit ReceiverChannelImpl(std::shared_ptr<ThreadsafeQueue<T>> queue)
+	    : _queue(std::move(queue)){};
+	std::shared_ptr<ThreadsafeQueue<T>> _queue;
+};
 
-	template<typename T>
-	struct ChannelBuilder {
-	    std::tuple<std::unique_ptr<ReceiverChannel<T>>,
-	               std::unique_ptr<SenderChannel<T>>>
-	    build();
-	};
+template <typename T>
+struct SenderChannelImpl : SenderChannel<T> {
+	void send(const T& value) override;
 
+private:
+	friend struct ChannelBuilder<T>;
+	explicit SenderChannelImpl(std::shared_ptr<ThreadsafeQueue<T>> queue)
+	    : _queue(std::move(queue)){};
+	std::shared_ptr<ThreadsafeQueue<T>> _queue;
+};
 
-} // namespace uprotocol::core::usubscription::v3::util
+template <typename T>
+struct ChannelBuilder {
+	std::tuple<std::unique_ptr<ReceiverChannel<T>>,
+	           std::unique_ptr<SenderChannel<T>>>
+	build();
+};
 
-#endif //CHANNELS_IMPL_H
+}  // namespace uprotocol::core::usubscription::v3::util
+
+#endif  // CHANNELS_IMPL_H

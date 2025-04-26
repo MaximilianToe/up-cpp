@@ -10,28 +10,29 @@
 #include "util/channels.h"
 
 namespace uprotocol::core::usubscription::v3 {
-    
+
 // Define events
 struct AddSubscription {
-    v1::UUri subscriber;
-    v1::UUri topic;
-    // Sender<int> respond_to;
+	v1::UUri subscriber;
+	v1::UUri topic;
+	// Sender<int> respond_to;
 };
 
 struct RemoveSubscription {
-    v1::UUri subscriber;
-    v1::UUri topic;
-    // Sender<int> respond_to;
+	v1::UUri subscriber;
+	v1::UUri topic;
+	// Sender<int> respond_to;
 };
 
 using SubscriptionEvent = std::variant<AddSubscription, RemoveSubscription>;
 using UTransport = transport::UTransport;
 
 struct subscription_manager {
-	subscription_manager(std::shared_ptr<UTransport> transport,const USubscriptionConfiguration& config)
-	:_transport(std::move(transport)), _config(std::move(config)){};
+	subscription_manager(std::shared_ptr<UTransport> transport,
+	                     const USubscriptionConfiguration& config)
+	    : _transport(std::move(transport)), _config(std::move(config)){};
 
-    void handle_message(
+	void handle_message(
 	    const UTransport& transport,
 	    util::receiver_channel<SubscriptionEvent>& subscription_receiver);
 
@@ -43,6 +44,6 @@ private:
 	USubscriptionConfiguration _config;
 };
 
-} // namespace uprotocol::core::usubscription::v3
+}  // namespace uprotocol::core::usubscription::v3
 
-#endif //SUBSCRIPTION_MANAGER_H
+#endif  // SUBSCRIPTION_MANAGER_H

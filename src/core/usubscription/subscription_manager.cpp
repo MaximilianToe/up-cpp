@@ -1,6 +1,5 @@
 #include "up-cpp/core/usubscription/subscription_manager.h"
 
-
 namespace uprotocol::core::usubscription::v3 {
 
 void subscription_manager::handle_message(
@@ -12,8 +11,6 @@ void subscription_manager::handle_message(
 	}
 };
 
-void subscription_manager::stop_execution() {
-	executing_ = false;
-}
+void subscription_manager::stop_execution() { executing_ = false; }
 
-}// uprotocol::core::usubscription::v3
+}  // namespace uprotocol::core::usubscription::v3

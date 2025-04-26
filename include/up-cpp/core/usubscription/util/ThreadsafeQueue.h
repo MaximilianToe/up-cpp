@@ -9,19 +9,18 @@
 #include <queue>
 namespace uprotocol::core::usubscription::v3::util {
 
-	template<typename T>
-	struct ThreadsafeQueue {
+template <typename T>
+struct ThreadsafeQueue {
+	void send(const T& value);
 
-		void send(const T& value);
+	T receive();
 
-		T receive();
+private:
+	std::queue<T> _queue;
+	std::mutex _mutex;
+	std::condition_variable _condition;
+};
 
-	private:
-		std::queue<T> _queue;
-		std::mutex _mutex;
-		std::condition_variable _condition;
-	};
+}  // namespace uprotocol::core::usubscription::v3::util
 
-} // uprotocol::core::usubscription::v3::util
-
-#endif //THREADSAFEQUEUE_H
+#endif  // THREADSAFEQUEUE_H
