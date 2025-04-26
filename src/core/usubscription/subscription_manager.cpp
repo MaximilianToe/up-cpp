@@ -3,8 +3,17 @@
 
 namespace uprotocol::core::usubscription::v3 {
 
-void handle_message(const USubscriptionConfiguration& configuration, const transport::UTransport& transport, const SubscriptionEvent& command_receiver){
-    
+void subscription_manager::handle_message(
+    const transport::UTransport& transport,
+    util::ReceiverChannel<SubscriptionEvent>& subscription_receiver) {
+	executing_ = true;
+	while (executing_) {
+		auto event = subscription_receiver.receive();
+	}
 };
+
+void subscription_manager::stop_execution() {
+	executing_ = false;
+}
 
 }// uprotocol::core::usubscription::v3

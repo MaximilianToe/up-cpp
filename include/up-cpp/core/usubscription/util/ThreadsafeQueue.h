@@ -7,7 +7,7 @@
 #include <condition_variable>
 #include <mutex>
 #include <queue>
-namespace uprotocol::core::usubscription::util {
+namespace uprotocol::core::usubscription::v3::util {
 
 	template<typename T>
 	struct ThreadsafeQueue {
@@ -22,6 +22,6 @@ namespace uprotocol::core::usubscription::util {
 		std::condition_variable _condition;
 	};
 
-} // uprotocol::core::usubscription::util
+} // uprotocol::core::usubscription::v3::util
 
 #endif //THREADSAFEQUEUE_H

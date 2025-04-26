@@ -4,7 +4,7 @@
 
 #include "up-cpp/core/usubscription/util/ThreadsafeQueue.h"
 
-namespace uprotocol::core::usubscription::util {
+namespace uprotocol::core::usubscription::v3::util {
 template<typename T>
 void ThreadsafeQueue<T>::send(const T& value) {
 	std::lock_guard<std::mutex> lock(_mutex);
@@ -22,4 +22,4 @@ T ThreadsafeQueue<T>::receive() {
 	return value;
 }
 
-} // uprotocol::core::usubscription::util
+} // uprotocol::core::usubscription::v3::util
