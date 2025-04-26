@@ -8,9 +8,10 @@
 
 // std::function<std::optional<datamodel::builder::Payload>(
 // 	const v1::UMessage&)>;
-namespace uprotocol::core::usubscription::handlers{
+namespace uprotocol::core::usubscription::handlers {
 
-utils::Expected<datamodel::builder::Payload, v1::UStatus> subscribe(const v1::UMessage& message);
+std::optional<datamodel::builder::Payload> subscribe(
+    const v1::UMessage& message);
 
 } // namespace uprotocol::core::usubscription::handlers
 

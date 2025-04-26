@@ -1,4 +1,4 @@
-#include "../../../../include/up-cpp/core/usubscription/handlers/subscribe.h"
+#include "up-cpp/core/usubscription/handlers/subscribe.h"
 #include <uprotocol/v1/ustatus.pb.h>
 #include "up-cpp/datamodel/builder/Payload.h"
 
@@ -55,7 +55,8 @@ std::pair<uprotocol::datamodel::builder::Payload, uprotocol::v1::UUri> extract_i
 
 namespace uprotocol::core::usubscription::handlers {
 
-utils::Expected<datamodel::builder::Payload, v1::UStatus> subscribe(const v1::UMessage& message) {
+std::optional<datamodel::builder::Payload> subscribe(
+    const v1::UMessage& message) {
     uint16_t expected_resource_id = 0;
     uint16_t received_resource_id = 0;
 

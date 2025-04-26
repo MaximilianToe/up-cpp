@@ -56,7 +56,9 @@ add_library(${PROJECT_NAME} ${SRC_FILES}
 		src/core/usubscription/handlers/subscribe.cpp
 		include/up-cpp/core/usubscription/handlers/subscribe.h
 		src/core/usubscription/configuration.cpp
-		include/up-cpp/core/usubscription/configuration.h)
+		include/up-cpp/core/usubscription/configuration.h
+		src/core/usubscription/util/ThreadsafeQueue.cpp
+		include/up-cpp/core/usubscription/util/ThreadsafeQueue.h)
 add_library(up-cpp::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
 target_include_directories(${PROJECT_NAME}

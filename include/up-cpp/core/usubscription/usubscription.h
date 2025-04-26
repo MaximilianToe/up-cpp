@@ -12,16 +12,25 @@
 
 namespace uprotocol::core::usubscription::v3 {
 
-	struct USubscriptionStopper;
+	struct USubscriptionStopper{};
+	using UTransport = uprotocol::transport::UTransport;
+	using stopper_or_status = uprotocol::utils::Expected<USubscriptionStopper,v1::UStatus>;
 
-	struct USubscriptionConfig;
+
+	struct USubscriptionConfig{};
 
 	struct USubscriptionService : communication::RpcServer{
 
-		explicit USubscriptionService(std::shared_ptr<transport::UTransport> transport, USubscriptionConfig config);
+		explicit USubscriptionService(std::shared_ptr<transport::UTransport> transport,
+			USubscriptionConfig config,
+			v1::UPayloadFormat format = {},
+			std::chrono::milliseconds ttl = {});
 
 		//TODO(max) make async
 		utils::Expected<USubscriptionStopper,v1::UStatus> run();
+
+	private:
+		USubscriptionConfig config_;
 	};
 
 
