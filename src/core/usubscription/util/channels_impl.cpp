@@ -17,10 +17,13 @@ namespace uprotocol::core::usubscription::v3::util {
 	}
 
 	template<typename T>
-	std::tuple<ReceiverChannel<T>,SenderChannel<T>> ChannelBuilder<T>::build() {
+    std::tuple<std::unique_ptr<ReceiverChannel<T>>,
+               std::unique_ptr<SenderChannel<T>>>
+    ChannelBuilder<T>::build() {
 		auto queue = std::make_shared<ThreadsafeQueue<T>>();
-		return std::make_tuple(ReceiverChannelImpl<T>(queue)
-			,SenderChannelImpl<T>(queue));
+		auto receiver_channel = std::make_unique<ReceiverChannelImpl<T>>(queue);
+		auto sender_channel = std::make_unique<SenderChannelImpl<T>>(queue);
+		return std::make_tuple(receiver_channel, sender_channel);
 	}
 
 } // namespace uprotocol::core::usubscription::v3::util

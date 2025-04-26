@@ -36,15 +36,16 @@ namespace uprotocol::core::usubscription::v3 {
 
 		stopper_or_status USubscriptionService::run() {
 
+			using USubscriptionUUriBuilder = client::usubscription::v3::USubscriptionUUriBuilder;
 			util::ChannelBuilder<SubscriptionEvent> builder;
 			auto [subscription_receiver, subscription_sender] = builder.build();
 
 	        subscription_manager manager(transport_, config_);
 	        std::thread manager_thread(manager.handle_message, transport_, subscription_receiver);
 
-			client::usubscription::v3::USubscriptionUUriBuilder uuri_builder;
+			USubscriptionUUriBuilder uuri_builder;
 			//what is the correct uuri here? dummy for now
-			v1::UUri subscribe_uuri = builder.getServiceUriWithResourceId(0x0001);
+			v1::UUri subscribe_uuri = uuri_builder.getServiceUriWithResourceId(0x0001);
 			v1::UStatus connection_status = connect(subscribe_uuri, handlers::subscribe);
 			if(connection_status.code() != v1::UCode::OK) {
 				return stopper_or_status(utils::Unexpected(connection_status));

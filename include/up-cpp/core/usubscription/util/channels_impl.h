@@ -34,7 +34,9 @@ namespace uprotocol::core::usubscription::v3::util {
 
 	template<typename T>
 	struct ChannelBuilder {
-		std::tuple<ReceiverChannel<T>, SenderChannel<T>> build();
+	    std::tuple<std::unique_ptr<ReceiverChannel<T>>,
+	               std::unique_ptr<SenderChannel<T>>>
+	    build();
 	};
 
 
