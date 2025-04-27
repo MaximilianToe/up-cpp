@@ -10,26 +10,26 @@
 
 namespace uprotocol::core::usubscription::v3 {
 
-	using UTransport = transport::UTransport;
+using UTransport = transport::UTransport;
 
-	struct NotificationEvent {};
+struct NotificationEvent {};
 
-	struct NotificationManager {
-		explicit NotificationManager(std::shared_ptr<UTransport> transport,
-			USubscriptionConfiguration config)
-				:transport_(std::move(transport)), config_(std::move(config)){};
+struct NotificationManager {
+	explicit NotificationManager(std::shared_ptr<UTransport> transport,
+	                             USubscriptionConfiguration config)
+	    : transport_(std::move(transport)), config_(std::move(config)){};
 
-		void handle_message(
-			std::shared_ptr<UTransport>  transport,
-			std::unique_ptr<util::ReceiverChannel<NotificationEvent>> notification_receiver,
-			std::condition_variable& shutdown
-			);
+	void handle_message(
+	    std::shared_ptr<UTransport> transport,
+	    std::unique_ptr<util::ReceiverChannel<NotificationEvent>>
+	        notification_receiver,
+	    std::condition_variable& shutdown);
 
-	private:
-		std::shared_ptr<UTransport> transport_;
-	    USubscriptionConfiguration config_;
-	};
+private:
+	std::shared_ptr<UTransport> transport_;
+	USubscriptionConfiguration config_;
+};
 
-} // namespace uprotocol::core::usubscription::v3
+}  // namespace uprotocol::core::usubscription::v3
 
-#endif //NOTIFICATION_MANAGER_H
+#endif  // NOTIFICATION_MANAGER_H

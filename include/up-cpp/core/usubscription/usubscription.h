@@ -24,7 +24,6 @@ using UTransport = transport::UTransport;
 using StopperOrStatus = utils::Expected<USubscriptionStopper, v1::UStatus>;
 
 struct USubscriptionService : communication::RpcServer {
-
 	explicit USubscriptionService(
 	    std::shared_ptr<transport::UTransport> transport,
 	    USubscriptionConfiguration config, v1::UPayloadFormat format = {},
@@ -32,23 +31,25 @@ struct USubscriptionService : communication::RpcServer {
 
 	StopperOrStatus run();
 
-	v1::UStatus register_handlers(std::unique_ptr<util::SenderChannel<SubscriptionEvent>> subscription_sender,
-		std::unique_ptr<util::SenderChannel<NotificationEvent>> notification_channel);
+	v1::UStatus register_handlers(
+	    std::unique_ptr<util::SenderChannel<SubscriptionEvent>>
+	        subscription_sender,
+	    std::unique_ptr<util::SenderChannel<NotificationEvent>>
+	        notification_channel);
 
 	// TODO(max) maybe return a stopper struct instead
 	void stop();
 
 	struct USubscriptionStopper {
 		explicit USubscriptionStopper() = default;
-	// 	    : service_(std::make_unique<USubscriptionService>(this)) {}
-	//
-	// 	void stop() {service_->stop();}
-	// 	~USubscriptionStopper(){stop();}
-	//
-	// private:
-	// 	std::unique_ptr<USubscriptionService> service_;
+		// 	    : service_(std::make_unique<USubscriptionService>(this)) {}
+		//
+		// 	void stop() {service_->stop();}
+		// 	~USubscriptionStopper(){stop();}
+		//
+		// private:
+		// 	std::unique_ptr<USubscriptionService> service_;
 	};
-
 
 private:
 	std::atomic<bool> stop_{false};

@@ -26,32 +26,34 @@ USubscriptionService::USubscriptionService(
       config_(std::move(config)){};
 
 StopperOrStatus USubscriptionService::run() {
-
 	util::ChannelBuilder<SubscriptionEvent> subscription_channel_builder;
 
-	auto [subscription_receiver, subscription_sender] = subscription_channel_builder.build();
+	auto [subscription_receiver, subscription_sender] =
+	    subscription_channel_builder.build();
 	const SubscriptionManager subscription_manager(transport_, config_);
-	subscription_manager_thread_ = std::thread(subscription_manager.handle_message, transport_,
-	                           subscription_receiver);
+	subscription_manager_thread_ = std::thread(
+	    subscription_manager.handle_message, transport_, subscription_receiver);
 
 	util::ChannelBuilder<NotificationEvent> notification_channel_builder;
 
-	auto [notification_receiver, notification_sender] = notification_channel_builder.build();
+	auto [notification_receiver, notification_sender] =
+	    notification_channel_builder.build();
 	const NotificationManager notification_manager(transport_, config_);
-	notification_manager_thread_ = std::thread(notification_manager.handle_message, transport_,
-		notification_receiver);
+	notification_manager_thread_ = std::thread(
+	    notification_manager.handle_message, transport_, notification_receiver);
 
-	const v1::UStatus connection_status = register_handlers(std::move(subscription_sender),
-		std::move(notification_sender));
+	const v1::UStatus connection_status = register_handlers(
+	    std::move(subscription_sender), std::move(notification_sender));
 	if (connection_status.code() != v1::UCode::OK) {
 		return StopperOrStatus(utils::Unexpected(connection_status));
 	}
 
-	return  StopperOrStatus(USubscriptionStopper());
+	return StopperOrStatus(USubscriptionStopper());
 }
 
-v1::UStatus register_handlers(util::SenderChannel<SubscriptionEvent> sender_channel,
-	util::ReceiverChannel<NotificationEvent> notification_sender) {
+v1::UStatus register_handlers(
+    util::SenderChannel<SubscriptionEvent> sender_channel,
+    util::ReceiverChannel<NotificationEvent> notification_sender) {
 	throw std::runtime_error("Not implemented");
 }
 

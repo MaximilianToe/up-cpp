@@ -13,22 +13,20 @@ namespace uprotocol::core::usubscription::v3 {
 struct PersistencyError {};
 
 struct SubscriptionStore {
-
 	explicit SubscriptionStore(USubscriptionConfiguration config);
 
 	utils::Expected<bool, PersistencyError> add_subscription(
-		const v1::UUri& subscriber,
-		const v1::UUri& topic);
+	    const v1::UUri& subscriber, const v1::UUri& topic);
 
-	private:
-	std::unordered_map<std::string, std::unordered_set<std::string>> persistency_;
+private:
+	std::unordered_map<std::string, std::unordered_set<std::string>>
+	    persistency_;
 };
 
 struct RemoteTopicStore {
-
 	explicit RemoteTopicStore(USubscriptionConfiguration config);
 };
 
-} // uprotocol::core::usubscription::v3
+}  // namespace uprotocol::core::usubscription::v3
 
-#endif //PERSISTENCY_H
+#endif  // PERSISTENCY_H

@@ -38,8 +38,8 @@ extract_inputs(uint16_t expected_resource_id, uint16_t resource_id,
 		throw ServiceInvocationError::InvalidArgument("No request payload");
 	}
 
-	// TODO(max) turned into comment to check compiling, uncomment to continue work
-	// std::optional<uprotocol::datamodel::builder::Payload> request;
+	// TODO(max) turned into comment to check compiling, uncomment to continue
+	// work std::optional<uprotocol::datamodel::builder::Payload> request;
 
 	try {
 		// TODO(lennart)
@@ -55,9 +55,9 @@ extract_inputs(uint16_t expected_resource_id, uint16_t resource_id,
 		throw ServiceInvocationError::InvalidArgument("No request source uri");
 	}
 
-	auto  request = uprotocol::datamodel::builder::Payload(std::string("dummy payload"), uprotocol::v1::UPAYLOAD_FORMAT_TEXT);
-	return { request,
-			uprotocol::v1::UUri(source)};
+	auto request = uprotocol::datamodel::builder::Payload(
+	    std::string("dummy payload"), uprotocol::v1::UPAYLOAD_FORMAT_TEXT);
+	return {request, uprotocol::v1::UUri(source)};
 	// TODO(lennart) get corresponding request Payload Constructor, in Rust
 	// MessageFull is used, that originates from: request =
 	// payload.extract_protobuf()...

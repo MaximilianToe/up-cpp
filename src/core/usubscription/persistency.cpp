@@ -6,4 +6,4 @@
 
 namespace uprotocol::core::usubscription::v3 {
 
-} // namespace uprotocol::core::usubscription::v3
+}  // namespace uprotocol::core::usubscription::v3

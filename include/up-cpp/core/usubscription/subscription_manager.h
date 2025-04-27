@@ -27,12 +27,9 @@ struct RemoveSubscription {
 	// Sender<int> respond_to;
 };
 
-// TODO(max) this is just a placeholder, there might be something like this in the usubscription.ph.h file
-enum class TopicState {
-	SUBSCRIBED,
-	UNSUBSCRIBED,
-	UNKNOWN
-};
+// TODO(max) this is just a placeholder, there might be something like this in
+// the usubscription.ph.h file
+enum class TopicState { SUBSCRIBED, UNSUBSCRIBED, UNKNOWN };
 
 struct RemoteSubscriptionState {
 	v1::UUri topic;
@@ -41,28 +38,27 @@ struct RemoteSubscriptionState {
 
 using SubscriptionEvent = std::variant<AddSubscription, RemoveSubscription>;
 using RemoteSubscriptionEvent = std::variant<RemoteSubscriptionState>;
-	using Event = std::variant<SubscriptionEvent, RemoteSubscriptionEvent>;
+using Event = std::variant<SubscriptionEvent, RemoteSubscriptionEvent>;
 using UTransport = transport::UTransport;
 
 struct SubscriptionManager {
 	SubscriptionManager(std::shared_ptr<UTransport> transport,
-	                     USubscriptionConfiguration  config)
+	                    USubscriptionConfiguration config)
 	    : _transport(std::move(transport)), _config(std::move(config)){};
 
 	void handle_message(
 	    std::shared_ptr<UTransport> transport,
-	    std::unique_ptr<util::ReceiverChannel<SubscriptionEvent>> subscription_receiver,
-	    std::condition_variable& shutdown
-	    );
+	    std::unique_ptr<util::ReceiverChannel<SubscriptionEvent>>
+	        subscription_receiver,
+	    std::condition_variable& shutdown);
 
 	utils::Expected<SubscriptionStatus, PersistencyError> add_aubscription(
-		std::shared_ptr<UTransport> transport,
-		std::unique_ptr<util::ReceiverChannel<RemoteSubscriptionEvent>> remote_sub_sender,
-		SubscriptionStore top_subscription_store,
-		RemoteTopicStore remote_topic_store,
-		v1::UUri subscriber,
-		v1::UUri topic);
-
+	    std::shared_ptr<UTransport> transport,
+	    std::unique_ptr<util::ReceiverChannel<RemoteSubscriptionEvent>>
+	        remote_sub_sender,
+	    SubscriptionStore top_subscription_store,
+	    RemoteTopicStore remote_topic_store, v1::UUri subscriber,
+	    v1::UUri topic);
 
 private:
 	std::shared_ptr<UTransport> _transport;
