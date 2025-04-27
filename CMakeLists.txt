@@ -63,7 +63,9 @@ add_library(${PROJECT_NAME} ${SRC_FILES}
 		src/core/usubscription/util/channels_impl.cpp
 		include/up-cpp/core/usubscription/util/channels_impl.h
 		src/core/usubscription/persistency.cpp
-		include/up-cpp/core/usubscription/persistency.h)
+		include/up-cpp/core/usubscription/persistency.h
+		src/core/usubscription/notification_manager.cpp
+		include/up-cpp/core/usubscription/notification_manager.h)
 add_library(up-cpp::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
 target_include_directories(${PROJECT_NAME}

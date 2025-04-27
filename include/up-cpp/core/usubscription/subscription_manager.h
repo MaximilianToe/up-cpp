@@ -5,6 +5,7 @@
 #include <uprotocol/core/usubscription/v3/usubscription.pb.h>
 
 #include <thread>
+#include <utility>
 #include <variant>
 
 #include "up-cpp/core/usubscription/configuration.h"
@@ -45,11 +46,11 @@ using UTransport = transport::UTransport;
 
 struct SubscriptionManager {
 	SubscriptionManager(std::shared_ptr<UTransport> transport,
-	                     const USubscriptionConfiguration& config)
-	    : _transport(std::move(transport)), _config(config){};
+	                     USubscriptionConfiguration  config)
+	    : _transport(std::move(transport)), _config(std::move(config)){};
 
 	void handle_message(
-	    const UTransport& transport,
+	    std::shared_ptr<UTransport> transport,
 	    std::unique_ptr<util::ReceiverChannel<SubscriptionEvent>> subscription_receiver,
 	    std::condition_variable& shutdown
 	    );
@@ -61,6 +62,8 @@ struct SubscriptionManager {
 		RemoteTopicStore remote_topic_store,
 		v1::UUri subscriber,
 		v1::UUri topic);
+
+
 private:
 	std::shared_ptr<UTransport> _transport;
 	USubscriptionConfiguration _config;

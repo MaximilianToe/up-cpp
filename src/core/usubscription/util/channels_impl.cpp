@@ -7,12 +7,12 @@
 namespace uprotocol::core::usubscription::v3::util {
 
 template <typename T>
-T ReceiverChannelImpl<T>::receive() override {
+T ReceiverChannelImpl<T>::receive() {
 	return _queue->receive();
 }
 
 template <typename T>
-void SenderChannelImpl<T>::send(const T& value) override {
+void SenderChannelImpl<T>::send(const T& value) {
 	_queue->send(value);
 }
 

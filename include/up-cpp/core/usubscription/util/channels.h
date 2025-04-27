@@ -10,14 +10,14 @@ namespace uprotocol::core::usubscription::v3::util {
 template <typename T>
 struct ReceiverChannel {
 	virtual ~ReceiverChannel() = default;
-	virtual T receive() = 0;
+	virtual T receive();
 };
 
 // interface that a class needs to implement to act as a sender channel for IPC
 template <typename T>
 struct SenderChannel {
 	virtual ~SenderChannel() = default;
-	virtual void send(const T& value) = 0;
+	virtual void send(const T& value);
 };
 }  // namespace uprotocol::core::usubscription::v3::util
 

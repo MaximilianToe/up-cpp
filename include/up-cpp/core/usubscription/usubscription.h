@@ -11,11 +11,14 @@
 #include <thread>
 
 #include "configuration.h"
+#include "notification_manager.h"
+#include "subscription_manager.h"
 #include "up-cpp/communication/RpcServer.h"
+#include "up-cpp/core/usubscription/util/channels.h"
 
 namespace uprotocol::core::usubscription::v3 {
 
-struct USubscriptionStopper{};
+struct USubscriptionStopper;
 
 using UTransport = transport::UTransport;
 using StopperOrStatus = utils::Expected<USubscriptionStopper, v1::UStatus>;
@@ -29,13 +32,21 @@ struct USubscriptionService : communication::RpcServer {
 
 	StopperOrStatus run();
 
+	v1::UStatus register_handlers(std::unique_ptr<util::SenderChannel<SubscriptionEvent>> subscription_sender,
+		std::unique_ptr<util::SenderChannel<NotificationEvent>> notification_channel);
+
 	// TODO(max) maybe return a stopper struct instead
 	void stop();
 
 	struct USubscriptionStopper {
-		explicit USubscriptionStopper(USubscriptionService& service): service_(service){};
-	private:
-		USubscriptionService& service_;
+		explicit USubscriptionStopper() = default;
+	// 	    : service_(std::make_unique<USubscriptionService>(this)) {}
+	//
+	// 	void stop() {service_->stop();}
+	// 	~USubscriptionStopper(){stop();}
+	//
+	// private:
+	// 	std::unique_ptr<USubscriptionService> service_;
 	};
 
 
