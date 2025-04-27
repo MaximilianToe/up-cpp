@@ -20,7 +20,7 @@ template <typename T>
 std::tuple<std::unique_ptr<ReceiverChannel<T>>,
            std::unique_ptr<SenderChannel<T>>>
 ChannelBuilder<T>::build() {
-	auto queue = std::make_shared<ThreadsafeQueue<T>>();
+	auto queue = std::make_shared<threadsafe_queue<T>>();
 	auto receiver_channel = std::make_unique<ReceiverChannelImpl<T>>(queue);
 	auto sender_channel = std::make_unique<SenderChannelImpl<T>>(queue);
 	return std::make_tuple(receiver_channel, sender_channel);

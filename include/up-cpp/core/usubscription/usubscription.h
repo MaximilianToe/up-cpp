@@ -8,32 +8,41 @@
 #include <up-cpp/transport/UTransport.h>
 #include <uprotocol/core/usubscription/v3/usubscription.pb.h>
 
+#include <thread>
+
 #include "configuration.h"
 #include "up-cpp/communication/RpcServer.h"
 
 namespace uprotocol::core::usubscription::v3 {
 
-struct USubscriptionStopper {
-	void stop();
-	~USubscriptionStopper() { stop(); }
-	// TODO(max) handlers to stop services, dummies for now
-	bool running_service;
-	bool running_subscription_manager;
-	bool running_notification_manager;
-};
+struct USubscriptionStopper{};
+
 using UTransport = transport::UTransport;
-using stopper_or_status = utils::Expected<USubscriptionStopper, v1::UStatus>;
+using StopperOrStatus = utils::Expected<USubscriptionStopper, v1::UStatus>;
 
 struct USubscriptionService : communication::RpcServer {
+
 	explicit USubscriptionService(
 	    std::shared_ptr<transport::UTransport> transport,
 	    USubscriptionConfiguration config, v1::UPayloadFormat format = {},
 	    std::chrono::milliseconds ttl = {});
 
-	// TODO(max) make async
-	utils::Expected<USubscriptionStopper, v1::UStatus> run();
+	StopperOrStatus run();
+
+	// TODO(max) maybe return a stopper struct instead
+	void stop();
+
+	struct USubscriptionStopper {
+		explicit USubscriptionStopper(USubscriptionService& service): service_(service){};
+	private:
+		USubscriptionService& service_;
+	};
+
 
 private:
+	std::atomic<bool> stop_{false};
+	std::thread subscription_manager_thread_;
+	std::thread notification_manager_thread_;
 	std::shared_ptr<UTransport> transport_;
 	USubscriptionConfiguration config_;
 };

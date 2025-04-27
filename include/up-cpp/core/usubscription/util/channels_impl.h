@@ -4,8 +4,8 @@
 
 #ifndef CHANNELS_IMPL_H
 #define CHANNELS_IMPL_H
-#include "ThreadsafeQueue.h"
 #include "channels.h"
+#include "threadsafe_queue.h"
 
 namespace uprotocol::core::usubscription::v3::util {
 
@@ -18,9 +18,9 @@ struct ReceiverChannelImpl : ReceiverChannel<T> {
 
 private:
 	friend struct ChannelBuilder<T>;
-	explicit ReceiverChannelImpl(std::shared_ptr<ThreadsafeQueue<T>> queue)
+	explicit ReceiverChannelImpl(std::shared_ptr<threadsafe_queue<T>> queue)
 	    : _queue(std::move(queue)){};
-	std::shared_ptr<ThreadsafeQueue<T>> _queue;
+	std::shared_ptr<threadsafe_queue<T>> _queue;
 };
 
 template <typename T>
@@ -29,9 +29,9 @@ struct SenderChannelImpl : SenderChannel<T> {
 
 private:
 	friend struct ChannelBuilder<T>;
-	explicit SenderChannelImpl(std::shared_ptr<ThreadsafeQueue<T>> queue)
+	explicit SenderChannelImpl(std::shared_ptr<threadsafe_queue<T>> queue)
 	    : _queue(std::move(queue)){};
-	std::shared_ptr<ThreadsafeQueue<T>> _queue;
+	std::shared_ptr<threadsafe_queue<T>> _queue;
 };
 
 template <typename T>

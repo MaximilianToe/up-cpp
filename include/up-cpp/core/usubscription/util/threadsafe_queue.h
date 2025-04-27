@@ -10,7 +10,7 @@
 namespace uprotocol::core::usubscription::v3::util {
 
 template <typename T>
-struct ThreadsafeQueue {
+struct threadsafe_queue {
 	void send(const T& value);
 
 	T receive();

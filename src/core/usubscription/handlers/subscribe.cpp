@@ -38,7 +38,9 @@ extract_inputs(uint16_t expected_resource_id, uint16_t resource_id,
 		throw ServiceInvocationError::InvalidArgument("No request payload");
 	}
 
-	std::optional<uprotocol::datamodel::builder::Payload> request;
+	// TODO(max) turned into comment to check compiling, uncomment to continue work
+	// std::optional<uprotocol::datamodel::builder::Payload> request;
+
 	try {
 		// TODO(lennart)
 		// request = payload.extract_protobuf()
@@ -53,11 +55,14 @@ extract_inputs(uint16_t expected_resource_id, uint16_t resource_id,
 		throw ServiceInvocationError::InvalidArgument("No request source uri");
 	}
 
+	auto  request = uprotocol::datamodel::builder::Payload(std::string("dummy payload"), uprotocol::v1::UPAYLOAD_FORMAT_TEXT);
+	return { request,
+			uprotocol::v1::UUri(source)};
 	// TODO(lennart) get corresponding request Payload Constructor, in Rust
 	// MessageFull is used, that originates from: request =
 	// payload.extract_protobuf()...
-	return {uprotocol::datamodel::builder::Payload(request),
-	        uprotocol::v1::UUri(source)};
+	// return {uprotocol::datamodel::builder::Payload(request),
+	//         uprotocol::v1::UUri(source)};
 }
 
 namespace uprotocol::core::usubscription::handlers {
@@ -93,14 +98,16 @@ std::optional<datamodel::builder::Payload> subscribe(
 	} catch (const std::exception& e) {
 		std::cerr << "Error communicating with subscription manager: "
 		          << e.what() << std::endl;
-		return ServiceInvocationError(
-		    "Error processing request");  // UStatus zurückgeben
+		return std::optional<datamodel::builder::Payload>(
+		    ServiceInvocationError(
+		        "Error processing request"));  // UStatus zurückgeben
 	}
 	try {
 		// Receive asynchronos response, retrieve subscription status (UStatus?)
 	} catch (const std::exception& e) {
 		std::cerr << "Error processing request: " << e.what() << std::endl;
-		return ServiceInvocationError("Error processing request");
+		return std::optional<datamodel::builder::Payload>(
+		    ServiceInvocationError("Error processing request"));
 	}
 
 	// Notify update channel
@@ -117,7 +124,8 @@ std::optional<datamodel::builder::Payload> subscribe(
 	} catch (const std::exception& e) {
 		std::cerr << "Error building response payload: " << e.what()
 		          << std::endl;
-		return ServiceInvocationError("Error building response payload");
+		return std::optional<datamodel::builder::Payload>(
+		    ServiceInvocationError("Error building response payload"));
 	}
 
 	return response_payload;
