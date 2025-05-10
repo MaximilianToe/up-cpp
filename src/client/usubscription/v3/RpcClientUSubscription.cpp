@@ -14,6 +14,8 @@
 #include <uprotocol/core/usubscription/v3/usubscription.pb.h>
 #include <uprotocol/v1/ustatus.pb.h>
 
+#include <spdlog/spdlog.h>
+
 #include <utility>
 
 #include "up-cpp/communication/RpcClient.h"
@@ -36,14 +38,14 @@ RpcClientUSubscription::RpcClientUSubscription(
 	uuri_builder_ = USubscriptionUUriBuilder();
 }
 
-SubscriptionRequest RpcClientUSubscription::buildSubscriptionRequest() {
+SubscriptionRequest RpcClientUSubscription::buildSubscriptionRequest(const v1::UUri& subscription_topic) {
 	auto attributes = utils::ProtoConverter::BuildSubscribeAttributes(
 	    rpc_client_usubscription_options_.when_expire,
 	    rpc_client_usubscription_options_.subscription_details,
 	    rpc_client_usubscription_options_.sample_period_ms);
 
 	auto subscription_request = utils::ProtoConverter::BuildSubscriptionRequest(
-	    subscription_topic_, attributes);
+	    subscription_topic, attributes);
 	return subscription_request;
 }
 
@@ -64,19 +66,19 @@ RpcClientUSubscription::subscribe(
 
 	if (!message_or_status.has_value()) {
 		return ResponseOrStatus<SubscriptionResponse>(
-		    utils::Unexpected<v1::UStatus>(message_or_status.error()));
+		    utils::Unexpected<v1::UStatus>(std::move(message_or_status.error())));
 	}
 
 	SubscriptionResponse subscription_response;
 	subscription_response.ParseFromString(message_or_status.value().payload());
 
-	if (subscription_response.topic().SerializeAsString() ==
-	    subscription_topic_.SerializeAsString()) {
-		return ResponseOrStatus<SubscriptionResponse>(subscription_response);
+	if (subscription_response.topic().SerializeAsString() !=
+	    subscription_request.topic().SerializeAsString()) {
+		return ResponseOrStatus<SubscriptionResponse>(
+			utils::Unexpected<v1::UStatus>(std::move(message_or_status.error())));
 	}
 
-	return ResponseOrStatus<SubscriptionResponse>(
-	    utils::Unexpected<v1::UStatus>(message_or_status.error()));
+	return ResponseOrStatus<SubscriptionResponse>(std::move(subscription_response));
 }
 
 }  // namespace uprotocol::core::usubscription::v3

@@ -51,7 +51,9 @@ file(GLOB_RECURSE SRC_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
 add_library(${PROJECT_NAME} ${SRC_FILES}
 		src/client/usubscription/v3/RpcClientUSubscription.cpp
 		include/up-cpp/client/usubscription/v3/RpcClientUSubscription.h
-		include/up-cpp/client/usubscription/v3/USubscription.h)
+		include/up-cpp/client/usubscription/v3/USubscription.h
+		src/client/usubscription/v3/USubscriptionUUriBuilder.cpp
+		include/up-cpp/client/usubscription/v3/USubscriptionUUriBuilder.h)
 add_library(up-cpp::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
 target_include_directories(${PROJECT_NAME}
