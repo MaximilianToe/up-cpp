@@ -14,20 +14,18 @@
 
 #include <up-cpp/communication/NotificationSink.h>
 #include <up-cpp/communication/RpcClient.h>
-#include <up-cpp/communication/Subscriber.h>
 #include <up-cpp/datamodel/builder/Payload.h>
 #include <up-cpp/utils/ProtoConverter.h>
 #include <uprotocol/core/usubscription/v3/usubscription.pb.h>
-#include <uprotocol/v1/umessage.pb.h>
+#include <up-cpp/transport/UTransport.h>
 
-#include <utility>
 #include "up-cpp/client/usubscription/v3/USubscription.h"
 
 namespace uprotocol::core::usubscription::v3 {
-using uprotocol::core::usubscription::v3::SubscriptionRequest;
-using uprotocol::core::usubscription::v3::UnsubscribeRequest;
-using uprotocol::core::usubscription::v3::Update;
-using uprotocol::core::usubscription::v3::uSubscription;
+using v3::SubscriptionRequest;
+using v3::UnsubscribeRequest;
+using v3::Update;
+using v3::uSubscription;
 
 /**
  * @struct RpcClientUSubscriptionOptions
@@ -111,9 +109,9 @@ public:
 
 /// @brief Interface for uEntities to create subscriptions.
 ///
-/// Like all L3 client APIs, the RpcClientUSubscription is a wrapper on top of the
-/// L2 Communication APIs and USubscription service.
-struct RpcClientUSubscription : public USubscription{
+/// Like all L3 client APIs, the RpcClientUSubscription is a wrapper on top of
+/// the L2 Communication APIs and USubscription service.
+struct RpcClientUSubscription : USubscription {
 	using RpcClientUSubscriptionOrStatus =
 	    utils::Expected<std::unique_ptr<RpcClientUSubscription>, v1::UStatus>;
 	using ListenCallback = transport::UTransport::ListenCallback;
@@ -127,7 +125,8 @@ struct RpcClientUSubscription : public USubscription{
 	/// received.
 	/// @param priority Priority of the subscription request.
 	/// @param subscribe_request_ttl Time to live for the subscription request.
-	/// @param rpc_client_usubscription_options Additional details for uSubscription service.
+	/// @param rpc_client_usubscription_options Additional details for
+	/// uSubscription service.
 	// [[nodiscard]] static RpcClientUSubscriptionOrStatus create(
 	//     std::shared_ptr<transport::UTransport> transport,
 	//     const v1::UUri& subscription_topic, ListenCallback&& callback,
@@ -135,43 +134,53 @@ struct RpcClientUSubscription : public USubscription{
 
 	/// @brief Subscribe to the topic
 	///
-	utils::Expected<SubscriptionResponse, v1::UStatus> subscribe(const SubscriptionRequest& subscription_request) override;
+	utils::Expected<SubscriptionResponse, v1::UStatus> subscribe(
+	    const SubscriptionRequest& subscription_request) override;
 	// void subscribe(google::protobuf::RpcController* controller,
-	// 	const ::uprotocol::core::usubscription::v3::SubscriptionRequest* request,
+	// 	const ::uprotocol::core::usubscription::v3::SubscriptionRequest*
+	// request,
 	// 	::uprotocol::core::usubscription::v3::SubscriptionResponse* response,
 	// 	::google::protobuf::Closure* done) override;
-	
+
 	/// @brief Unsubscribe from the topic and call uSubscription service to
 	/// close the subscription.
 	// void Unsubscribe(google::protobuf::RpcController* controller,
 	// 	const ::uprotocol::core::usubscription::v3::UnsubscribeRequest* request,
 	// 	::uprotocol::core::usubscription::v3::UnsubscribeResponse* response,
 	// 	::google::protobuf::Closure* done) override;
-	
-	// /// @brief Fetch all subscriptions for a given topic or subscriber contained inside a [`FetchSubscriptionsRequest`]
-	// void FetchSubscriptions(google::protobuf::RpcController* controller,
-	// 	const ::uprotocol::core::usubscription::v3::FetchSubscriptionsRequest* request,
-	// 	::uprotocol::core::usubscription::v3::FetchSubscriptionsResponse* response,
+
+	// /// @brief Fetch all subscriptions for a given topic or subscriber
+	// contained inside a [`FetchSubscriptionsRequest`] void
+	// FetchSubscriptions(google::protobuf::RpcController* controller, 	const
+	// ::uprotocol::core::usubscription::v3::FetchSubscriptionsRequest* request,
+	// 	::uprotocol::core::usubscription::v3::FetchSubscriptionsResponse*
+	// response,
 	// 	::google::protobuf::Closure* done) override;
-	
-	// /// @brief Register for notifications relevant to a given topic inside a [`NotificationsRequest`]
-    // /// changing in subscription status.
-	// void RegisterForNotifications(google::protobuf::RpcController* controller,
-	// 	const ::uprotocol::core::usubscription::v3::NotificationsRequest* request,
-	// 	::uprotocol::core::usubscription::v3::NotificationsResponse* response,
-	// 	::google::protobuf::Closure* done) override;
-	
-	// /// @brief Unregister for notifications relevant to a given topic inside a [`NotificationsRequest`]
-    // /// changing in subscription status.
-	// void UnregisterForNotifications(google::protobuf::RpcController* controller,
-	// 	const ::uprotocol::core::usubscription::v3::NotificationsRequest* request,
+
+	// /// @brief Register for notifications relevant to a given topic inside a
+	// [`NotificationsRequest`]
+	// /// changing in subscription status.
+	// void RegisterForNotifications(google::protobuf::RpcController*
+	// controller, 	const
+	// ::uprotocol::core::usubscription::v3::NotificationsRequest* request,
 	// 	::uprotocol::core::usubscription::v3::NotificationsResponse* response,
 	// 	::google::protobuf::Closure* done) override;
 
-	// /// @brief Fetch a list of subscribers that are currently subscribed to a given topic in a [`FetchSubscribersRequest`]	
-	// void FetchSubscribers(google::protobuf::RpcController* controller,
-	// 	const ::uprotocol::core::usubscription::v3::FetchSubscribersRequest* request,
-	// 	::uprotocol::core::usubscription::v3::FetchSubscribersResponse* response,
+	// /// @brief Unregister for notifications relevant to a given topic inside
+	// a [`NotificationsRequest`]
+	// /// changing in subscription status.
+	// void UnregisterForNotifications(google::protobuf::RpcController*
+	// controller, 	const
+	// ::uprotocol::core::usubscription::v3::NotificationsRequest* request,
+	// 	::uprotocol::core::usubscription::v3::NotificationsResponse* response,
+	// 	::google::protobuf::Closure* done) override;
+
+	// /// @brief Fetch a list of subscribers that are currently subscribed to a
+	// given topic in a [`FetchSubscribersRequest`] void
+	// FetchSubscribers(google::protobuf::RpcController* controller, 	const
+	// ::uprotocol::core::usubscription::v3::FetchSubscribersRequest* request,
+	// 	::uprotocol::core::usubscription::v3::FetchSubscribersResponse*
+	// response,
 	// 	::google::protobuf::Closure* done) override;
 
 	/// @brief Destructor
@@ -179,13 +188,14 @@ struct RpcClientUSubscription : public USubscription{
 
 	/// This section for test code only delete later
 
-// protected:
+	// protected:
 	/// @brief Constructor
 	///
 	/// @param transport Transport to register with.
 	/// @param subscriber_details Additional details about the subscriber.
-	explicit RpcClientUSubscription(std::shared_ptr<transport::UTransport> transport,
-	         RpcClientUSubscriptionOptions rpc_client_usubscription_options = {});
+	explicit RpcClientUSubscription(
+	    std::shared_ptr<transport::UTransport> transport,
+	    RpcClientUSubscriptionOptions rpc_client_usubscription_options = {});
 
 private:
 	// Transport
@@ -198,27 +208,24 @@ private:
 	RpcClientUSubscriptionOptions rpc_client_usubscription_options_;
 
 	// URI info about the uSubscription service
-	USubscriptionUUriBuilder uSubscriptionUUriBuilder_;
+	USubscriptionUUriBuilder uuri_builder_;
 
 	// Allow the protected constructor for this class to be used in make_unique
 	// inside of create()
-	friend std::unique_ptr<RpcClientUSubscription>
-	std::make_unique<RpcClientUSubscription, std::shared_ptr<transport::UTransport>,
-	                 const uprotocol::v1::UUri,
-	                 uprotocol::core::usubscription::v3::RpcClientUSubscriptionOptions>(
-	    std::shared_ptr<uprotocol::transport::UTransport>&&,
-	    const uprotocol::v1::UUri&&,
-	    uprotocol::core::usubscription::v3::RpcClientUSubscriptionOptions&&);
+	// friend std::unique_ptr<RpcClientUSubscription> std::make_unique<
+	//     RpcClientUSubscription, std::shared_ptr<transport::UTransport>,
+	//     const v1::UUri, RpcClientUSubscriptionOptions>(
+	//     std::shared_ptr<uprotocol::transport::UTransport>&&, const v1::UUri&&,
+	//     RpcClientUSubscriptionOptions&&);
 
 	/// @brief Build SubscriptionRequest for subscription request
 	SubscriptionRequest buildSubscriptionRequest();
-
-	/// @brief  Build UnsubscriptionRequest for unsubscription request
-	UnsubscribeRequest buildUnsubscriptionRequest();
-
-	/// @brief Create a notification sink to receive subscription updates
-	v1::UStatus createNotificationSink();
-
+	//
+	// /// @brief  Build UnsubscriptionRequest for unsubscription request
+	// UnsubscribeRequest buildUnsubscriptionRequest();
+	//
+	// /// @brief Create a notification sink to receive subscription updates
+	// v1::UStatus createNotificationSink();
 };
 
 }  // namespace uprotocol::core::usubscription::v3
