@@ -112,6 +112,7 @@ private:
 	//     std::shared_ptr<uprotocol::transport::UTransport>&&, const v1::UUri&&,
 	//     RpcClientUSubscriptionOptions&&);
 
+public:
 	/// @brief Build SubscriptionRequest for subscription request
 	SubscriptionRequest buildSubscriptionRequest(const v1::UUri& subscription_topic);
 	//
