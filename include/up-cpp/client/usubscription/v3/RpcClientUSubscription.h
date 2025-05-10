@@ -70,7 +70,7 @@ public:
 		const auto& service_options = service->options();
 
 		// Get the service options
-		const auto& service_name = "test.name";
+		const auto& service_name = "usubscription.local";
 		    // service_options.GetExtension(uprotocol::service_name);
 		const auto& service_version_major =
 		    service_options.GetExtension(uprotocol::service_version_major);
