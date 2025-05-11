@@ -1,7 +1,3 @@
-//
-// Created by max on 10.05.25.
-//
-
 #ifndef USUBSCRIPTIONUURIBUILDER_H
 #define USUBSCRIPTIONUURIBUILDER_H
 

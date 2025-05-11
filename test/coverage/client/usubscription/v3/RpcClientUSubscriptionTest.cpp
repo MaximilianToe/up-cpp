@@ -97,12 +97,10 @@ public:
 // Negative test case with no source filter
 TEST_F(RpcClientUSubscriptionTest, ConstructorTestSuccess) {  // NOLINT
 
-	auto options =
-	    uprotocol::core::usubscription::v3::RpcClientUSubscriptionOptions();
 
 	auto rpc_client_usubscription = std::make_unique<
 	    uprotocol::core::usubscription::v3::RpcClientUSubscription>(
-	    getMockTransportClient(), options);
+	    getMockTransportClient());
 
 	// Verify that the RpcClientUSubscription pointer is not null, indicating
 	// successful
@@ -110,9 +108,6 @@ TEST_F(RpcClientUSubscriptionTest, ConstructorTestSuccess) {  // NOLINT
 }
 
 TEST_F(RpcClientUSubscriptionTest, SubscribeTestSuccess) {  // NOLINT
-
-	auto options =
-	    uprotocol::core::usubscription::v3::RpcClientUSubscriptionOptions();
 
 	uprotocol::core::usubscription::v3::SubscriptionRequest
 	    subscription_request =
@@ -122,7 +117,7 @@ TEST_F(RpcClientUSubscriptionTest, SubscribeTestSuccess) {  // NOLINT
 
 	auto rpc_client_usubscription = std::make_unique<
 	    uprotocol::core::usubscription::v3::RpcClientUSubscription>(
-	    getMockTransportClient(), options);
+	    getMockTransportClient());
 
 	// Verify that the RpcClientUSubscription pointer is not null, indicating
 	// successful

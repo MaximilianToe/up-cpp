@@ -30,24 +30,11 @@ auto priority = uprotocol::v1::UPriority::UPRIORITY_CS4;  // MUST be >= 4
 namespace uprotocol::core::usubscription::v3 {
 
 RpcClientUSubscription::RpcClientUSubscription(
-    std::shared_ptr<transport::UTransport> transport,
-    RpcClientUSubscriptionOptions rpc_client_usubscription_options)
-    : transport_(std::move(transport)),
-      rpc_client_usubscription_options_(
-          std::move(rpc_client_usubscription_options)) {
+    std::shared_ptr<transport::UTransport> transport)
+    : transport_(std::move(transport)) {
 	uuri_builder_ = USubscriptionUUriBuilder();
 }
 
-SubscriptionRequest RpcClientUSubscription::buildSubscriptionRequest(const v1::UUri& subscription_topic) {
-	auto attributes = utils::ProtoConverter::BuildSubscribeAttributes(
-	    rpc_client_usubscription_options_.when_expire,
-	    rpc_client_usubscription_options_.subscription_details,
-	    rpc_client_usubscription_options_.sample_period_ms);
-
-	auto subscription_request = utils::ProtoConverter::BuildSubscriptionRequest(
-	    subscription_topic, attributes);
-	return subscription_request;
-}
 
 RpcClientUSubscription::ResponseOrStatus<SubscriptionResponse>
 RpcClientUSubscription::subscribe(

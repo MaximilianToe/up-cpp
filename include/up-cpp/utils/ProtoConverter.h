@@ -52,7 +52,7 @@ struct ProtoConverter {
 	/// @param subscription_topic the UUri of the topic to unsubscribe from
 	/// @return the built UnsubscribeRequest
 	static UnsubscribeRequest BuildUnSubscribeRequest(
-	    const v1::UUri& subscription_topic);
+	    const v1::UUri& subscription_topic);UnsubscribeRequest BuildUnSubscribeRequest(const v1::UUri& uri, const SubscribeAttributes& attributes);
 };
 };      // namespace uprotocol::utils
 #endif  // UP_CPP_UTILS_PROTOCONVERTER_H
