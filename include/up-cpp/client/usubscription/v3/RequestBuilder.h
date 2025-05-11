@@ -28,7 +28,7 @@ struct USubscriptionOptions {
 
 	struct RequestBuilder {
 		 explicit RequestBuilder(
-	        const USubscriptionOptions& options)
+	        const USubscriptionOptions& options = {})
 			:options_(options){};
 
 		SubscriptionRequest buildSubscriptionRequest(const v1::UUri& topic) const;
