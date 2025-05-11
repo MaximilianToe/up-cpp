@@ -40,38 +40,20 @@ struct RpcClientUSubscription : USubscription {
 	using ListenCallback = transport::UTransport::ListenCallback;
 	using ListenHandle = transport::UTransport::ListenHandle;
 
-	/// @brief Create a subscription
-	///
-	/// @param transport Transport to register with.
-	/// @param subscription_topic Topic to subscribe to.
-	/// @param callback Function that is called when publish message is
-	/// received.
-	/// @param priority Priority of the subscription request.
-	/// @param subscribe_request_ttl Time to live for the subscription request.
-	/// @param rpc_client_usubscription_options Additional details for
-	/// uSubscription service.
-	// [[nodiscard]] static RpcClientUSubscriptionOrStatus create(
-	//     std::shared_ptr<transport::UTransport> transport,
-	//     const v1::UUri& subscription_topic, ListenCallback&& callback,
-	//     RpcClientUSubscriptionOptions rpc_client_usubscription_options);
-
 	/// @brief Subscribe to the topic
 	///
 	utils::Expected<SubscriptionResponse, v1::UStatus> subscribe(
 	    const SubscriptionRequest& subscription_request) override;
 
-	/// @brief Destructor
-	~RpcClientUSubscription() override = default;
-
-	/// This section for test code only delete later
-
-	// protected:
 	/// @brief Constructor
 	///
 	/// @param transport Transport to register with.
-	/// @param subscriber_details Additional details about the subscriber.
 	explicit RpcClientUSubscription(
 	    std::shared_ptr<transport::UTransport> transport);
+
+	/// @brief Destructor
+	~RpcClientUSubscription() override = default;
+
 
 private:
 	// Transport
@@ -79,14 +61,6 @@ private:
 
 	// URI info about the uSubscription service
 	USubscriptionUUriBuilder uuri_builder_;
-
-	// Allow the protected constructor for this class to be used in make_unique
-	// inside of create()
-	// friend std::unique_ptr<RpcClientUSubscription> std::make_unique<
-	//     RpcClientUSubscription, std::shared_ptr<transport::UTransport>,
-	//     const v1::UUri, RpcClientUSubscriptionOptions>(
-	//     std::shared_ptr<uprotocol::transport::UTransport>&&, const v1::UUri&&,
-	//     RpcClientUSubscriptionOptions&&);
 };
 
 }  // namespace uprotocol::core::usubscription::v3

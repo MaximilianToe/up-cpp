@@ -25,20 +25,9 @@ struct USubscriptionUUriBuilder {
 	/// @return The URI with the specified resource ID.
 	v1::UUri getServiceUriWithResourceId(uint32_t resource_id) const;
 
-	/// @brief Get the notification URI.
-	///
-	/// @return The notification URI.
-	v1::UUri getNotificationUri() const {
-		v1::UUri uri = base_uri_;  // Copy the base URI
-		uri.set_resource_id(sink_resource_id_);
-		return uri;
-	}
-
 	private:
 		/// URI for the uSubscription service
 		v1::UUri base_uri_;
-		/// Resource ID of the notification topic
-		uint32_t sink_resource_id_;
 	};
 } // namespace uprotocol::core::usubscription::v3
 
