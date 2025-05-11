@@ -15,9 +15,9 @@
 #include <up-cpp/communication/NotificationSink.h>
 #include <up-cpp/communication/RpcClient.h>
 #include <up-cpp/datamodel/builder/Payload.h>
+#include <up-cpp/transport/UTransport.h>
 #include <up-cpp/utils/ProtoConverter.h>
 #include <uprotocol/core/usubscription/v3/usubscription.pb.h>
-#include <up-cpp/transport/UTransport.h>
 
 #include "up-cpp/client/usubscription/v3/USubscription.h"
 #include "up-cpp/client/usubscription/v3/USubscriptionUUriBuilder.h"
@@ -28,26 +28,6 @@ using v3::UnsubscribeRequest;
 using v3::Update;
 using v3::uSubscription;
 
-/**
- * @struct RpcClientUSubscriptionOptions
- * @brief Additional details for uSubscription service.
- *
- * Each member represents an optional parameter for the uSubscription service.
- */
-struct RpcClientUSubscriptionOptions {
-	/// Permission level of the subscription request
-	std::optional<uint32_t> permission_level;
-	/// TAP token for access.
-	std::optional<std::string> token;
-	/// Expiration time of the subscription.
-	std::optional<std::chrono::system_clock::time_point> when_expire;
-	/// Sample period for the subscription messages in milliseconds.
-	std::optional<std::chrono::milliseconds> sample_period_ms;
-	/// Details of the subscriber.
-	std::optional<google::protobuf::Any> subscriber_details;
-	/// Details of the subscription.
-	std::optional<google::protobuf::Any> subscription_details;
-};
 
 
 /// @brief Interface for uEntities to create subscriptions.
@@ -91,15 +71,11 @@ struct RpcClientUSubscription : USubscription {
 	/// @param transport Transport to register with.
 	/// @param subscriber_details Additional details about the subscriber.
 	explicit RpcClientUSubscription(
-	    std::shared_ptr<transport::UTransport> transport,
-	    RpcClientUSubscriptionOptions rpc_client_usubscription_options = {});
+	    std::shared_ptr<transport::UTransport> transport);
 
 private:
 	// Transport
 	std::shared_ptr<transport::UTransport> transport_;
-
-	// Additional details about uSubscription service
-	RpcClientUSubscriptionOptions rpc_client_usubscription_options_;
 
 	// URI info about the uSubscription service
 	USubscriptionUUriBuilder uuri_builder_;
@@ -111,16 +87,6 @@ private:
 	//     const v1::UUri, RpcClientUSubscriptionOptions>(
 	//     std::shared_ptr<uprotocol::transport::UTransport>&&, const v1::UUri&&,
 	//     RpcClientUSubscriptionOptions&&);
-
-public:
-	/// @brief Build SubscriptionRequest for subscription request
-	SubscriptionRequest buildSubscriptionRequest(const v1::UUri& subscription_topic);
-	//
-	// /// @brief  Build UnsubscriptionRequest for unsubscription request
-	// UnsubscribeRequest buildUnsubscriptionRequest();
-	//
-	// /// @brief Create a notification sink to receive subscription updates
-	// v1::UStatus createNotificationSink();
 };
 
 }  // namespace uprotocol::core::usubscription::v3
