@@ -29,12 +29,6 @@ auto priority = uprotocol::v1::UPriority::UPRIORITY_CS4;  // MUST be >= 4
 
 namespace uprotocol::core::usubscription::v3 {
 
-RpcClientUSubscription::RpcClientUSubscription(
-    std::shared_ptr<transport::UTransport> transport)
-    : transport_(std::move(transport)) {
-	uuri_builder_ = USubscriptionUUriBuilder();
-}
-
 
 RpcClientUSubscription::ResponseOrStatus<SubscriptionResponse>
 RpcClientUSubscription::subscribe(

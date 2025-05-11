@@ -48,8 +48,10 @@ struct RpcClientUSubscription : USubscription {
 	/// @brief Constructor
 	///
 	/// @param transport Transport to register with.
-	explicit RpcClientUSubscription(
-	    std::shared_ptr<transport::UTransport> transport);
+	explicit RpcClientUSubscription::RpcClientUSubscription(
+		std::shared_ptr<transport::UTransport> transport)
+		: transport_(std::move(transport)), uuri_builder_(USubscriptionUUriBuilder()) {}
+
 
 	/// @brief Destructor
 	~RpcClientUSubscription() override = default;
