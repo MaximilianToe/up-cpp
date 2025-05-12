@@ -3,7 +3,6 @@
 #include <up-cpp/utils/ProtoConverter.h>
 
 #include <utility>
-#include "up-cpp/client/usubscription/v3/RpcClientUSubscription.h"
 
 
 namespace uprotocol::core::usubscription::v3 {
@@ -35,7 +34,7 @@ struct USubscriptionOptions {
 
 		SubscriptionRequest buildSubscriptionRequest(const v1::UUri& topic) const;
 
-		UnsubscribeRequest buildUnsubscribeRequest(const v1::UUri& topic);
+		static UnsubscribeRequest buildUnsubscribeRequest(const v1::UUri& topic);
 	private:
 		USubscriptionOptions options_;
 	};

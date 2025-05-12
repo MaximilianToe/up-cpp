@@ -19,7 +19,6 @@
 #include <utility>
 
 #include "up-cpp/communication/RpcClient.h"
-#include "up-cpp/transport/UTransport.h"
 
 constexpr uint16_t RESOURCE_ID_SUBSCRIBE = 0x0001;
 // TODO(lennart) see default_call_options() for the request in Rust
@@ -47,7 +46,7 @@ RpcClientUSubscription::subscribe(
 
 	if (!message_or_status.has_value()) {
 		return ResponseOrStatus<SubscriptionResponse>(
-		    utils::Unexpected<v1::UStatus>(std::move(message_or_status.error())));
+		    utils::Unexpected<v1::UStatus>(message_or_status.error()));
 	}
 
 	SubscriptionResponse subscription_response;
@@ -56,7 +55,7 @@ RpcClientUSubscription::subscribe(
 	if (subscription_response.topic().SerializeAsString() !=
 	    subscription_request.topic().SerializeAsString()) {
 		return ResponseOrStatus<SubscriptionResponse>(
-			utils::Unexpected<v1::UStatus>(std::move(message_or_status.error())));
+			utils::Unexpected<v1::UStatus>(message_or_status.error()));
 	}
 
 	return ResponseOrStatus<SubscriptionResponse>(std::move(subscription_response));
