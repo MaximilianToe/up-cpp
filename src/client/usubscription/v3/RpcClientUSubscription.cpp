@@ -24,7 +24,7 @@
 constexpr uint16_t RESOURCE_ID_SUBSCRIBE = 0x0001;
 // TODO(lennart) see default_call_options() for the request in Rust
 constexpr auto SUBSCRIPTION_REQUEST_TTL =
-    std::chrono::milliseconds(0x0800);  // TODO(lennart) change time
+    std::chrono::milliseconds(0x8000);  // TODO(lennart) change time
 auto priority = uprotocol::v1::UPriority::UPRIORITY_CS4;  // MUST be >= 4
 
 namespace uprotocol::core::usubscription::v3 {
