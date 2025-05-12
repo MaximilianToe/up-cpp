@@ -50,7 +50,7 @@ struct RpcClientUSubscription : USubscription {
 	/// @param transport Transport to register with.
 	explicit RpcClientUSubscription(
 		std::shared_ptr<transport::UTransport> transport)
-		: transport_(std::move(transport)), uuri_builder_(USubscriptionUUriBuilder()) {}
+		: transport_(std::move(transport)) {}
 
 
 	/// @brief Destructor
