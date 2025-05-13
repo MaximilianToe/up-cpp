@@ -11,8 +11,8 @@ USubscriptionUUriBuilder::USubscriptionUUriBuilder() {
 	// Get the service options
 	const auto& service_name =
 		service_options.GetExtension(uprotocol::service_name);
-	const auto& service_version_major =
-		service_options.GetExtension(uprotocol::service_version_major);
+	const auto& service_version_major =3;
+		// service_options.GetExtension(uprotocol::service_version_major);
 	const auto& service_id =
 		service_options.GetExtension(uprotocol::service_id);
 
