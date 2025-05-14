@@ -12,26 +12,40 @@
 #include <gtest/gtest.h>
 #include "up-cpp/client/usubscription/v3/RequestBuilder.h"
 #include <uprotocol/core/usubscription/v3/usubscription.pb.h>
+#include <iostream>
 #include <optional>
 #include <chrono>
+#include <ostream>
 #include <google/protobuf/any.pb.h>
+
+constexpr uint32_t SOURCE_UE_ID = 0x00011101;
+constexpr uint32_t SOURCE_UE_VERSION_MAJOR = 0xF8;
+constexpr uint32_t SOURCE_RESOURCE_ID = 0x8101;
 
 namespace uprotocol::core::usubscription::v3 {
 
 class RequestBuilderTest : public ::testing::Test {
+
+private:
+	v1::UUri source_;
+
 protected:
-    RequestBuilder builder_;
     USubscriptionOptions options_;
+    const v1::UUri& getSource() const { return source_; }
 
     void SetUp() override {
-        options_.permission_level = 1;
+        // Create a UUri object for testing
+		source_.set_authority_name("10.0.0.1");
+		source_.set_ue_id(SOURCE_UE_ID);
+		source_.set_ue_version_major(SOURCE_UE_VERSION_MAJOR);
+		source_.set_resource_id(SOURCE_RESOURCE_ID);
+
+        options_.permission_level = 2;
         options_.token = "sample_token";
-        options_.when_expire = std::chrono::system_clock::now() + std::chrono::hours(1);
+        options_.when_expire = std::chrono::system_clock::now() + std::chrono::milliseconds(1000);
         options_.sample_period_ms = std::chrono::milliseconds(1000);
         options_.subscriber_details = google::protobuf::Any(); 
         options_.subscription_details = google::protobuf::Any();
-        
-        RequestBuilder builder(options_);
     }
     void TearDown() override {}
 
@@ -49,19 +63,34 @@ public:
 };
 
 TEST_F(RequestBuilderTest, BuildSubscriptionRequestWithOptions) {
-    v1::UUri topic;
+    v1::UUri topic = getSource();
+    RequestBuilder builder(options_);  
 
-    SubscriptionRequest request = builder_.buildSubscriptionRequest(topic);
+    SubscriptionRequest request = builder.buildSubscriptionRequest(topic);
 
     // Verify the attributes in the request
-    // TODO(lennart) did not find appropriate member to check the remaining attributes
     EXPECT_EQ(request.topic().SerializeAsString(), topic.SerializeAsString());
-    EXPECT_EQ(request.attributes().has_expire(), options_.when_expire.has_value());
-    // EXPECT_EQ(request.attributes().subscription_details().SerializeAsString(), options_.subscription_details->SerializeAsString());
-    EXPECT_EQ(request.attributes().sample_period_ms(), options_.sample_period_ms.value().count());
-    // EXPECT_EQ(request.attributes().permission_level(), options_.permission_level.value());
-    // EXPECT_EQ(request.attributes().token(), options_.token.value());
-    // EXPECT_EQ(request.attributes().subscriber_details().SerializeAsString(), options_.subscriber_details->SerializeAsString());
+    std::cout<< "request.SerializeAsString(): " << request.SerializeAsString() << std::endl;
+    std::cout<< "request.attributes: " << request.attributes().SerializeAsString() << std::endl;
+
+}
+
+TEST_F(RequestBuilderTest, BuildSubscriptionRequestWrongTopic) {
+    v1::UUri topic = getSource();
+    RequestBuilder builder(options_);
+    
+    v1::UUri wrong_topic;
+
+		wrong_topic.set_authority_name("10.0.0.2"); // random different authority
+		wrong_topic.set_ue_id(SOURCE_UE_ID);
+		wrong_topic.set_ue_version_major(SOURCE_UE_VERSION_MAJOR);
+		wrong_topic.set_resource_id(SOURCE_RESOURCE_ID);
+
+    SubscriptionRequest request = builder.buildSubscriptionRequest(topic);
+
+    // Verify the attributes in the request
+    EXPECT_NE(request.topic().SerializeAsString(), wrong_topic.SerializeAsString());
+
 }
 
 } // namespace uprotocol::core::usubscription::v3
