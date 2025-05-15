@@ -13,8 +13,12 @@
 #include <gtest/gtest.h>
 #include <up-cpp/client/usubscription/v3/RpcClientUSubscription.h>
 #include <up-cpp/communication/NotificationSource.h>
+#include <up-cpp/client/usubscription/v3/RequestBuilder.h>
 
 #include "UTransportMock.h"
+
+constexpr uint32_t TEST_UE_ID = 0x18000;
+constexpr uint32_t DEFAULT_RESOURCE_ID = 0x8000;
 
 namespace {
 using MsgDiff = google::protobuf::util::MessageDifferencer;
@@ -28,26 +32,21 @@ private:
 	uprotocol::v1::UUri subscription_uuri;
 
 protected:
-	// Run once per TEST_F.
-	// Used to set up clean environments per test.
 
 	std::shared_ptr<uprotocol::test::UTransportMock> getMockTransportClient()
 	    const {
 		return mockTransportClient_;
 	}
-	std::shared_ptr<uprotocol::test::UTransportMock> getMockTransportServer()
-	    const {
-		return mockTransportServer_;
-	}
-	uprotocol::v1::UUri& getClientUUri() { return client_uuri; }
-	const uprotocol::v1::UUri& getServerUUri() const { return server_uuri; }
 	const uprotocol::v1::UUri& getSubscriptionUUri() const {
 		return subscription_uuri;
 	}
 
+	const uprotocol::v1::UUri& getSubscriptionUuri() const { return subscription_uuri; }
+
+	// Run once per TEST_F.
+	// Used to set up clean environments per test.
+
 	void SetUp() override {
-		constexpr uint32_t TEST_UE_ID = 0x18000;
-		constexpr uint32_t DEFAULT_RESOURCE_ID = 0x8000;
 		// Create a generic transport uri
 		client_uuri.set_authority_name("random_string");
 		client_uuri.set_ue_id(TEST_UE_ID);
@@ -95,7 +94,6 @@ public:
 // Negative test case with no source filter
 TEST_F(RpcClientUSubscriptionTest, ConstructorTestSuccess) {  // NOLINT
 
-
 	auto rpc_client_usubscription = std::make_unique<
 	    uprotocol::core::usubscription::v3::RpcClientUSubscription>(
 	    getMockTransportClient());
@@ -107,11 +105,10 @@ TEST_F(RpcClientUSubscriptionTest, ConstructorTestSuccess) {  // NOLINT
 
 TEST_F(RpcClientUSubscriptionTest, SubscribeTestSuccess) {  // NOLINT
 
-	uprotocol::core::usubscription::v3::SubscriptionRequest
-	    subscription_request =
-	        uprotocol::utils::ProtoConverter::BuildSubscriptionRequest(
-	            getSubscriptionUUri(),
-	            uprotocol::core::usubscription::v3::SubscribeAttributes());
+	uprotocol::v1::UUri topic = getSubscriptionUUri();
+    uprotocol::core::usubscription::v3::RequestBuilder builder;  
+
+    uprotocol::utils::SubscriptionRequest subscription_request = builder.buildSubscriptionRequest(topic);
 
 	auto rpc_client_usubscription = std::make_unique<
 	    uprotocol::core::usubscription::v3::RpcClientUSubscription>(
