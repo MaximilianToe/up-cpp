@@ -43,13 +43,14 @@ RpcClientUSubscription::subscribe(
 	auto message_or_status = rpc_client.invokeMethod(std::move(payload)).get();
 
 	if (!message_or_status.has_value()) {
+		spdlog::error("Failed to subscribe");
 		return ResponseOrStatus<SubscriptionResponse>(
 		    utils::Unexpected<v1::UStatus>(message_or_status.error()));
 	}
-
+	spdlog::debug("Received subscription response");
 	SubscriptionResponse subscription_response;
 	subscription_response.ParseFromString(message_or_status.value().payload());
-
+	spdlog::debug("Parsed subscription response");
 	if (subscription_response.topic().SerializeAsString() !=
 	    subscription_request.topic().SerializeAsString()) {
 		return ResponseOrStatus<SubscriptionResponse>(
