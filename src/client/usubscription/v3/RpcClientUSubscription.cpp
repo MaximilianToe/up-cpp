@@ -51,7 +51,13 @@ RpcClientUSubscription::subscribe(
 	}
 
 	SubscriptionResponse subscription_response;
-	subscription_response.ParseFromString(message_or_status.value().payload());
+	if (!subscription_response.ParseFromString(message_or_status.value().payload())) {
+		spdlog::error("Error parsing response payload.");
+		return ResponseOrStatus<SubscriptionResponse>(
+			utils::Unexpected<v1::UStatus>(v1::UStatus()));
+	}
+
+	spdlog::debug("response: {}", subscription_response.DebugString());
 
 	if (subscription_response.topic().SerializeAsString() !=
 	    subscription_request.topic().SerializeAsString()) {
