@@ -47,7 +47,7 @@ RpcClientUSubscription::subscribe(
 
 	if (!message_or_status.has_value()) {
 		return ResponseOrStatus<SubscriptionResponse>(
-		    utils::Unexpected<v1::UStatus>(std::move(message_or_status.error())));
+		    utils::Unexpected<v1::UStatus>(message_or_status.error()));
 	}
 
 	SubscriptionResponse subscription_response;
@@ -55,8 +55,9 @@ RpcClientUSubscription::subscribe(
 
 	if (subscription_response.topic().SerializeAsString() !=
 	    subscription_request.topic().SerializeAsString()) {
+		//TODO(max) return correct UStatus
 		return ResponseOrStatus<SubscriptionResponse>(
-			utils::Unexpected<v1::UStatus>(std::move(message_or_status.error())));
+			utils::Unexpected<v1::UStatus>(v1::UStatus()));
 	}
 
 	return ResponseOrStatus<SubscriptionResponse>(std::move(subscription_response));
