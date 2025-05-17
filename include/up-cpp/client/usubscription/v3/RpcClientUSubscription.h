@@ -48,7 +48,7 @@ struct RpcClientUSubscription : USubscription {
 	/// @brief Constructor
 	///
 	/// @param transport Transport to register with.
-	explicit RpcClientUSubscription::RpcClientUSubscription(
+	explicit RpcClientUSubscription(
 		std::shared_ptr<transport::UTransport> transport)
 		: transport_(std::move(transport)){}
 
