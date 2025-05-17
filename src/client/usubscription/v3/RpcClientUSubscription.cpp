@@ -56,6 +56,7 @@ RpcClientUSubscription::subscribe(
 	if (subscription_response.topic().SerializeAsString() !=
 	    subscription_request.topic().SerializeAsString()) {
 		//TODO(max) return correct UStatus
+		spdlog::debug("topics do not match. response {}, request {}", subscription_response.topic().DebugString(), subscription_request.topic().DebugString());
 		return ResponseOrStatus<SubscriptionResponse>(
 			utils::Unexpected<v1::UStatus>(v1::UStatus()));
 	}
