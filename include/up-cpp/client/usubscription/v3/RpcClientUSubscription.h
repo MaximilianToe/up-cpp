@@ -14,9 +14,7 @@
 
 #include <up-cpp/communication/NotificationSink.h>
 #include <up-cpp/communication/RpcClient.h>
-#include <up-cpp/datamodel/builder/Payload.h>
 #include <up-cpp/transport/UTransport.h>
-#include <up-cpp/utils/ProtoConverter.h>
 #include <uprotocol/core/usubscription/v3/usubscription.pb.h>
 
 #include "up-cpp/client/usubscription/v3/USubscription.h"
