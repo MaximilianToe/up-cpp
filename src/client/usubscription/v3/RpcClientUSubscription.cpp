@@ -52,11 +52,18 @@ RpcClientUSubscription::subscribe(
 
 	spdlog::debug("response UMessage: {}", message_or_status.value().DebugString());
 	SubscriptionResponse subscription_response;
-	if (!subscription_response.ParseFromString(message_or_status.value().payload())) {
+	const google::protobuf::Any any;
+
+	if (!any.UnpackTo(&subscription_response)) {
 		spdlog::error("subscribe: Error parsing response payload.");
 		return ResponseOrStatus<SubscriptionResponse>(
 			utils::Unexpected<v1::UStatus>(v1::UStatus()));
 	}
+	// if (!subscription_response.ParseFromString(message_or_status.value().payload())) {
+	// 	spdlog::error("subscribe: Error parsing response payload.");
+	// 	return ResponseOrStatus<SubscriptionResponse>(
+	// 		utils::Unexpected<v1::UStatus>(v1::UStatus()));
+	// }
 
 	spdlog::debug("response: {}", subscription_response.DebugString());
 
