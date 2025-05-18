@@ -50,9 +50,10 @@ RpcClientUSubscription::subscribe(
 		    utils::Unexpected<v1::UStatus>(message_or_status.error()));
 	}
 
+	spdlog::debug("response UMessage: {}", message_or_status.value().DebugString());
 	SubscriptionResponse subscription_response;
 	if (!subscription_response.ParseFromString(message_or_status.value().payload())) {
-		spdlog::error("Error parsing response payload.");
+		spdlog::error("subscribe: Error parsing response payload.");
 		return ResponseOrStatus<SubscriptionResponse>(
 			utils::Unexpected<v1::UStatus>(v1::UStatus()));
 	}
