@@ -39,7 +39,15 @@ RpcClientUSubscription::subscribe(
 	        RESOURCE_ID_SUBSCRIBE),
 	    priority, SUBSCRIPTION_REQUEST_TTL);
 
-	datamodel::builder::Payload payload(subscription_request);
+	google::protobuf::Any any_request;
+
+	if (!any_request.PackFrom(subscription_request)) {
+		spdlog::error("subscribe: There was an error when serializing the subscription request.");
+	}
+	// datamodel::builder::Payload payload;
+	// any.PackFrom(subscription_request);
+	// datamodel::builder::Payload payload(subscription_request);
+	datamodel::builder::Payload payload(any_request);
 
 	auto invoke_future = rpc_client.invokeMethod(std::move(payload));
 
@@ -51,11 +59,15 @@ RpcClientUSubscription::subscribe(
 	}
 
 	spdlog::debug("response UMessage: {}", message_or_status.value().DebugString());
+	google::protobuf::Any any_response;
 	SubscriptionResponse subscription_response;
-	const google::protobuf::Any any;
 
-	if (!any.UnpackTo(&subscription_response)) {
+	if (!any_response.ParseFromString(message_or_status.value().payload())) {
 		spdlog::error("subscribe: Error parsing response payload.");
+	}
+
+	if (!any_response.UnpackTo(&subscription_response)) {
+		spdlog::error("subscribe: Error when unpacking any.");
 		return ResponseOrStatus<SubscriptionResponse>(
 			utils::Unexpected<v1::UStatus>(v1::UStatus()));
 	}
