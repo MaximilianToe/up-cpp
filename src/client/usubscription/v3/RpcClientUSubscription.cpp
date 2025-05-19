@@ -92,4 +92,12 @@ RpcClientUSubscription::subscribe(
 	return ResponseOrStatus<SubscriptionResponse>(std::move(subscription_response));
 }
 
+RpcClientUSubscription::ResponseOrStatus<UnsubscribeResponse>
+RpcClientUSubscription::unsubscribe(
+	const UnsubscribeRequest& unsubscribe_request) {
+
+	UnsubscribeResponse unsubscribe_response;
+	return ResponseOrStatus<UnsubscribeResponse>(std::move(unsubscribe_response));	
+}
+
 }  // namespace uprotocol::core::usubscription::v3
