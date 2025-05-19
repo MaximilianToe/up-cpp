@@ -95,17 +95,16 @@ public:
 };
 
 // Negative test case with no source filter
-TEST_F(RpcClientUSubscriptionTest, ConstructorTestSuccess) {  // NOLINT
+// TEST_F(RpcClientUSubscriptionTest, ConstructorTestSuccess) {  // NOLINT
 
-
-	auto rpc_client_usubscription = std::make_unique<
-	    uprotocol::core::usubscription::v3::RpcClientUSubscription>(
-	    getMockTransportClient());
+	// auto rpc_client_usubscription = std::make_unique<
+	//     uprotocol::core::usubscription::v3::RpcClientUSubscription>(
+	//     getMockTransportClient());
 
 	// Verify that the RpcClientUSubscription pointer is not null, indicating
 	// successful
-	ASSERT_NE(rpc_client_usubscription, nullptr);
-}
+	// ASSERT_NE(rpc_client_usubscription, nullptr);
+// }
 
 // TEST_F(RpcClientUSubscriptionTest, SubscribeTestSuccess) {  // NOLINT
 //

@@ -37,7 +37,10 @@ struct RpcClientUSubscription : USubscription {
 	    utils::Expected<std::unique_ptr<RpcClientUSubscription>, v1::UStatus>;
 	using ListenCallback = transport::UTransport::ListenCallback;
 	using ListenHandle = transport::UTransport::ListenHandle;
-
+	
+	template <typename Response>
+	Response invokeResponse(communication::RpcClient rpc_client);
+	
 	/// @brief Subscribe to the topic
 	///
 	utils::Expected<SubscriptionResponse, v1::UStatus> subscribe(

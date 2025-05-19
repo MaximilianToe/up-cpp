@@ -3,9 +3,13 @@
 
 #include <google/protobuf/timestamp.pb.h>
 #include <uprotocol/core/usubscription/v3/usubscription.pb.h>
+#include <uprotocol/v1/umessage.pb.h>
+#include <uprotocol/v1/ustatus.pb.h>
 
 #include <chrono>
 #include <optional>
+#include "up-cpp/datamodel/builder/Payload.h"
+#include "up-cpp/utils/Expected.h"
 
 namespace uprotocol::utils {
 using uprotocol::core::usubscription::v3::SubscribeAttributes;
@@ -53,6 +57,13 @@ struct ProtoConverter {
 	/// @return the built UnsubscribeRequest
 	static UnsubscribeRequest BuildUnSubscribeRequest(
 	    const v1::UUri& subscription_topic);UnsubscribeRequest BuildUnSubscribeRequest(const v1::UUri& uri, const SubscribeAttributes& attributes);
+
+	template <typename T>
+	static utils::Expected<T, v1::UStatus> extractFromProtobuf(const v1::UMessage& message);
+	
+	template <typename T>
+	static utils::Expected<datamodel::builder::Payload, v1::UStatus> protoToPayload(const T& proto);
+
 };
 };      // namespace uprotocol::utils
 #endif  // UP_CPP_UTILS_PROTOCONVERTER_H

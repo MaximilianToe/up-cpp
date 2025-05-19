@@ -20,6 +20,7 @@
 
 #include "up-cpp/communication/RpcClient.h"
 #include "up-cpp/transport/UTransport.h"
+#include "up-cpp/utils/ProtoConverter.h"
 
 constexpr uint16_t RESOURCE_ID_SUBSCRIBE = 0x0001;
 // TODO(lennart) see default_call_options() for the request in Rust
@@ -29,6 +30,10 @@ auto priority = uprotocol::v1::UPriority::UPRIORITY_CS4;  // MUST be >= 4
 
 namespace uprotocol::core::usubscription::v3 {
 
+template <typename Response>	
+Response RpcClientUSubscription::invokeResponse(communication::RpcClient rpc_client){
+
+}
 
 RpcClientUSubscription::ResponseOrStatus<SubscriptionResponse>
 RpcClientUSubscription::subscribe(
@@ -44,9 +49,6 @@ RpcClientUSubscription::subscribe(
 	if (!any_request.PackFrom(subscription_request)) {
 		spdlog::error("subscribe: There was an error when serializing the subscription request.");
 	}
-	// datamodel::builder::Payload payload;
-	// any.PackFrom(subscription_request);
-	// datamodel::builder::Payload payload(subscription_request);
 	datamodel::builder::Payload payload(any_request);
 
 	auto message_or_status = rpc_client.invokeMethod(std::move(payload)).get();
@@ -57,34 +59,27 @@ RpcClientUSubscription::subscribe(
 	}
 
 	spdlog::debug("response UMessage: {}", message_or_status.value().DebugString());
-	google::protobuf::Any any_response;
 	SubscriptionResponse subscription_response;
 
-	if (!any_response.ParseFromString(message_or_status.value().payload())) {
-		spdlog::error("subscribe: Error parsing response payload.");
-	}
-
-	if (!any_response.UnpackTo(&subscription_response)) {
-		spdlog::error("subscribe: Error when unpacking any.");
+	auto response_or_status = utils::ProtoConverter::extractFromProtobuf<SubscriptionResponse>(message_or_status.value());
+	
+	if (!response_or_status.has_value()){
+		spdlog::error("subscribe: Error when extracting response from protobuf.");
 		return ResponseOrStatus<SubscriptionResponse>(
-			utils::Unexpected<v1::UStatus>(v1::UStatus()));
+		    utils::Unexpected<v1::UStatus>(response_or_status.error()));
 	}
-	// if (!subscription_response.ParseFromString(message_or_status.value().payload())) {
-	// 	spdlog::error("subscribe: Error parsing response payload.");
-	// 	return ResponseOrStatus<SubscriptionResponse>(
-	// 		utils::Unexpected<v1::UStatus>(v1::UStatus()));
-	// }
 
-	spdlog::debug("response: {}", subscription_response.DebugString());
+	subscription_response = response_or_status.value();
+
+	spdlog::debug("subscribe: response: {}", subscription_response.DebugString());
 
 	if (subscription_response.topic().SerializeAsString() !=
 	    subscription_request.topic().SerializeAsString()) {
-		//TODO(max) return correct UStatus
-		spdlog::debug("topics do not match.");
-		spdlog::debug("subscription_request: {}", subscription_request.topic().DebugString());
-		spdlog::debug("subscription_response: {}", subscription_response.topic().DebugString());
+		v1::UStatus status;
+		status.set_code(v1::UCode::INTERNAL);
+		status.set_message("subscribe: topics do not match.");
 		return ResponseOrStatus<SubscriptionResponse>(
-			utils::Unexpected<v1::UStatus>(v1::UStatus()));
+			utils::Unexpected<v1::UStatus>(status));
 	}
 
 	return ResponseOrStatus<SubscriptionResponse>(std::move(subscription_response));

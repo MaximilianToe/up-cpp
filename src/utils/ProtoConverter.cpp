@@ -1,4 +1,9 @@
 #include "up-cpp/utils/ProtoConverter.h"
+#include <spdlog/spdlog.h>
+#include <uprotocol/v1/ustatus.pb.h>
+#include <optional>
+#include "up-cpp/datamodel/builder/Payload.h"
+#include "up-cpp/utils/Expected.h"
 
 namespace uprotocol::utils {
 google::protobuf::Timestamp ProtoConverter::ConvertToProtoTimestamp(
@@ -74,6 +79,45 @@ UnsubscribeRequest ProtoConverter::BuildUnSubscribeRequest(
 	*unsubscribe_request.mutable_topic() = subscription_topic;
 
 	return unsubscribe_request;
+}
+
+template <typename T>
+utils::Expected<T, v1::UStatus> ProtoConverter::extractFromProtobuf(const v1::UMessage& message) {
+	google::protobuf::Any any;
+
+	if (!any.ParseFromString(message.payload())) {
+		spdlog::error("extractFromProtobuf: Error parsing response payload.");
+	}
+
+	T response;
+
+	if (!any.UnpackTo(&response)) {
+		v1::UStatus status;
+		status.set_code(v1::UCode::INTERNAL);
+		status.set_message("extractFromProtobuf: Error when unpacking any.");
+		return utils::Expected<T, v1::UStatus>(
+			utils::Unexpected<v1::UStatus>(status));
+	}
+
+	return response;
+}
+
+template <typename T>
+utils::Expected<datamodel::builder::Payload, v1::UStatus> protoToPayload(const T& proto){
+
+	google::protobuf::Any any;
+
+	if (!any.PackFrom(proto)) {
+		v1::UStatus status;
+		status.set_code(v1::UCode::INTERNAL);
+		status.set_message("protoToPayload: There was an error when serializing the subscription request.");
+		return utils::Expected<datamodel::builder::Payload, v1::UStatus>(
+			utils::Unexpected<v1::UStatus>(status));
+	}
+
+	datamodel::builder::Payload payload(any);
+
+	return utils::Expected<datamodel::builder::Payload, v1::UStatus>(payload);
 }
 
 }  // namespace uprotocol::utils
