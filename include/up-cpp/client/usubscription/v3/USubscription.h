@@ -17,8 +17,8 @@ struct USubscription {
 	virtual ResponseOrStatus<SubscriptionResponse> subscribe(
 	    const SubscriptionRequest& subscription_request) = 0;
 
-	// virtual UnsubscribeResponse unsubscribe(const UnsubscribeRequest&
-	// unsubscribe_request) = 0;
+	virtual ResponseOrStatus<UnsubscribeResponse> unsubscribe(const UnsubscribeRequest&
+	unsubscribe_request) = 0;
 
 	// virtual FetchSubscriptionsResponse fetch_subscriptions(const
 	// FetchSubscriptionsRequest& fetch_subscribers_request) = 0;
