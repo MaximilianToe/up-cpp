@@ -49,9 +49,7 @@ RpcClientUSubscription::subscribe(
 	// datamodel::builder::Payload payload(subscription_request);
 	datamodel::builder::Payload payload(any_request);
 
-	auto invoke_future = rpc_client.invokeMethod(std::move(payload));
-
-	auto message_or_status = invoke_future.get();
+	auto message_or_status = rpc_client.invokeMethod(std::move(payload)).get();
 
 	if (!message_or_status.has_value()) {
 		return ResponseOrStatus<SubscriptionResponse>(
