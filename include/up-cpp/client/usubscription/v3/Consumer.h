@@ -19,6 +19,7 @@
 #include <up-cpp/utils/ProtoConverter.h>
 #include <uprotocol/core/usubscription/v3/usubscription.pb.h>
 #include <uprotocol/v1/umessage.pb.h>
+#include "RequestBuilder.h"
 
 #include <utility>
 
@@ -27,27 +28,6 @@ using uprotocol::core::usubscription::v3::SubscriptionRequest;
 using uprotocol::core::usubscription::v3::UnsubscribeRequest;
 using uprotocol::core::usubscription::v3::Update;
 using uprotocol::core::usubscription::v3::uSubscription;
-
-/**
- * @struct ConsumerOptions
- * @brief Additional details for uSubscription service.
- *
- * Each member represents an optional parameter for the uSubscription service.
- */
-struct ConsumerOptions {
-	/// Permission level of the subscription request
-	std::optional<uint32_t> permission_level;
-	/// TAP token for access.
-	std::optional<std::string> token;
-	/// Expiration time of the subscription.
-	std::optional<std::chrono::system_clock::time_point> when_expire;
-	/// Sample period for the subscription messages in milliseconds.
-	std::optional<std::chrono::milliseconds> sample_period_ms;
-	/// Details of the subscriber.
-	std::optional<google::protobuf::Any> subscriber_details;
-	/// Details of the subscription.
-	std::optional<google::protobuf::Any> subscription_details;
-};
 
 /// @struct uSubscriptionUUriBuilder
 /// @brief Structure to build uSubscription request URIs.
@@ -133,7 +113,7 @@ struct Consumer {
 	    const v1::UUri& subscription_topic, ListenCallback&& callback,
 	    v1::UPriority priority,
 	    std::chrono::milliseconds subscription_request_ttl,
-	    ConsumerOptions consumer_options);
+	    core::usubscription::v3::USubscriptionOptions consumer_options);
 
 	/// @brief Unsubscribe from the topic and call uSubscription service to
 	/// close the subscription.
@@ -160,7 +140,7 @@ protected:
 	/// @param subscriber_details Additional details about the subscriber.
 	Consumer(std::shared_ptr<transport::UTransport> transport,
 	         v1::UUri subscription_topic,
-	         ConsumerOptions consumer_options = {});
+	         core::usubscription::v3::USubscriptionOptions consumer_options = {});
 
 private:
 	// Transport
@@ -169,7 +149,7 @@ private:
 	// Topic to subscribe to
 	const v1::UUri subscription_topic_;
 	// Additional details about uSubscription service
-	ConsumerOptions consumer_options_;
+	core::usubscription::v3::USubscriptionOptions consumer_options_;
 
 	// URI info about the uSubscription service
 	USubscriptionUUriBuilder uSubscriptionUUriBuilder_;
@@ -191,10 +171,10 @@ private:
 	friend std::unique_ptr<Consumer>
 	std::make_unique<Consumer, std::shared_ptr<transport::UTransport>,
 	                 const uprotocol::v1::UUri,
-	                 uprotocol::client::usubscription::v3::ConsumerOptions>(
+	                 uprotocol::core::usubscription::v3::USubscriptionOptions>(
 	    std::shared_ptr<uprotocol::transport::UTransport>&&,
 	    const uprotocol::v1::UUri&&,
-	    uprotocol::client::usubscription::v3::ConsumerOptions&&);
+	    uprotocol::core::usubscription::v3::USubscriptionOptions&&);
 
 	/// @brief Build SubscriptionRequest for subscription request
 	SubscriptionRequest buildSubscriptionRequest();
