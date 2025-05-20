@@ -60,7 +60,7 @@ struct RequestBuilder {
      * 
      * @return An `UnsubscribeRequest` configured for the specified topic.
      */
-    UnsubscribeRequest buildUnsubscribeRequest(const v1::UUri& topic) const;
+    static UnsubscribeRequest buildUnsubscribeRequest(const v1::UUri& topic);
 
 private:
     USubscriptionOptions options_; ///< Options used to configure the requests.
