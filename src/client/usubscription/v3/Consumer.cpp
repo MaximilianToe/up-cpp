@@ -24,7 +24,7 @@ Consumer::Consumer(std::shared_ptr<uprotocol::transport::UTransport> transport,
       consumer_options_(std::move(consumer_options)),
       rpc_client_(nullptr) {
 	// Initialize uSubscriptionUUriBuilder_
-	uSubscriptionUUriBuilder_ = USubscriptionUUriBuilder();
+	uSubscriptionUUriBuilder_ = core::usubscription::v3::USubscriptionUUriBuilder();
 }
 
 [[nodiscard]] Consumer::ConsumerOrStatus Consumer::create(

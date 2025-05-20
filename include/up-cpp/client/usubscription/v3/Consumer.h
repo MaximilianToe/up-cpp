@@ -20,6 +20,7 @@
 #include <uprotocol/core/usubscription/v3/usubscription.pb.h>
 #include <uprotocol/v1/umessage.pb.h>
 #include "RequestBuilder.h"
+#include "USubscriptionUUriBuilder.h"
 
 #include <utility>
 
@@ -28,65 +29,6 @@ using uprotocol::core::usubscription::v3::SubscriptionRequest;
 using uprotocol::core::usubscription::v3::UnsubscribeRequest;
 using uprotocol::core::usubscription::v3::Update;
 using uprotocol::core::usubscription::v3::uSubscription;
-
-/// @struct uSubscriptionUUriBuilder
-/// @brief Structure to build uSubscription request URIs.
-///
-/// This structure is used to build URIs for uSubscription service. It uses the
-/// service options from uSubscription proto to set the authority name, ue_id,
-/// ue_version_major, and the notification topic resource ID in the URI.
-struct USubscriptionUUriBuilder {
-private:
-	/// URI for the uSubscription service
-	v1::UUri uri_;
-	/// Resource ID of the notification topic
-	uint32_t sink_resource_id_;
-
-public:
-	/// @brief Constructor for uSubscriptionUUriBuilder.
-	USubscriptionUUriBuilder() {
-		// Get the service descriptor
-		const google::protobuf::ServiceDescriptor* service =
-		    uSubscription::descriptor();
-		const auto& service_options = service->options();
-
-		// Get the service options
-		const auto& service_name =
-		    service_options.GetExtension(uprotocol::service_name);
-		const auto& service_version_major =
-		    service_options.GetExtension(uprotocol::service_version_major);
-		const auto& service_id =
-		    service_options.GetExtension(uprotocol::service_id);
-		const auto& notification_topic =
-		    service_options.GetExtension(uprotocol::notification_topic, 0);
-
-		// Set the values in the URI
-		uri_.set_authority_name(service_name);
-		uri_.set_ue_id(service_id);
-		uri_.set_ue_version_major(service_version_major);
-		sink_resource_id_ = notification_topic.id();
-	}
-
-	/// @brief Get the URI with a specific resource ID.
-	///
-	/// @param resource_id The resource ID to set in the URI.
-	///
-	/// @return The URI with the specified resource ID.
-	v1::UUri getServiceUriWithResourceId(uint32_t resource_id) const {
-		v1::UUri uri = uri_;  // Copy the base URI
-		uri.set_resource_id(resource_id);
-		return uri;
-	}
-
-	/// @brief Get the notification URI.
-	///
-	/// @return The notification URI.
-	v1::UUri getNotificationUri() const {
-		v1::UUri uri = uri_;  // Copy the base URI
-		uri.set_resource_id(sink_resource_id_);
-		return uri;
-	}
-};
 
 /// @brief Interface for uEntities to create subscriptions.
 ///
@@ -152,7 +94,7 @@ private:
 	core::usubscription::v3::USubscriptionOptions consumer_options_;
 
 	// URI info about the uSubscription service
-	USubscriptionUUriBuilder uSubscriptionUUriBuilder_;
+	core::usubscription::v3::USubscriptionUUriBuilder uSubscriptionUUriBuilder_;
 
 	// Subscription updates
 	std::unique_ptr<communication::NotificationSink> noficationSinkHandle_;
