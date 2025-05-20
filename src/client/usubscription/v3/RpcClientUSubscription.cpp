@@ -44,12 +44,13 @@ RpcClientUSubscription::subscribe(
 	        RESOURCE_ID_SUBSCRIBE),
 	    priority, SUBSCRIPTION_REQUEST_TTL);
 
-	google::protobuf::Any any_request;
+	auto payload_or_status = utils::ProtoConverter::protoToPayload(subscription_request);
 
-	if (!any_request.PackFrom(subscription_request)) {
-		spdlog::error("subscribe: There was an error when serializing the subscription request.");
+	if(payload_or_status.has_value()){
+		return ResponseOrStatus<SubscriptionResponse>(
+		    utils::Unexpected<v1::UStatus>(payload_or_status.error()));
 	}
-	datamodel::builder::Payload payload(any_request);
+	datamodel::builder::Payload payload(payload_or_status.value());
 
 	auto message_or_status = rpc_client.invokeMethod(std::move(payload)).get();
 
