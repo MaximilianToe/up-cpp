@@ -1,16 +1,15 @@
 #ifndef REQUESTBUILDER_H
 #define REQUESTBUILDER_H
 #include <up-cpp/utils/ProtoConverter.h>
+
 #include "up-cpp/client/usubscription/v3/RpcClientUSubscription.h"
 
-
 namespace uprotocol::core::usubscription::v3 {
-/**
- * @struct USubscriptionOptions
- * @brief Additional details for uSubscription service.
- *
- * Each member represents an optional parameter for the uSubscription service.
- */
+
+/// @struct USubscriptionOptions
+/// @brief Additional details for uSubscription service.
+///
+/// Each member represents an optional parameter for the uSubscription service.
 struct USubscriptionOptions {
 	/// Permission level of the subscription request
 	std::optional<uint32_t> permission_level;
@@ -26,17 +25,17 @@ struct USubscriptionOptions {
 	std::optional<google::protobuf::Any> subscription_details;
 };
 
-	struct RequestBuilder {
-		 explicit RequestBuilder(
-	        const USubscriptionOptions& options = {})
-			:options_(options){};
+struct RequestBuilder {
+	explicit RequestBuilder(const USubscriptionOptions& options = {})
+	    : options_(options){};
 
-		SubscriptionRequest buildSubscriptionRequest(const v1::UUri& topic) const;
+	SubscriptionRequest buildSubscriptionRequest(const v1::UUri& topic) const;
 
-		UnsubscribeRequest buildUnsubscribeRequest(const v1::UUri& topic);
-	private:
-		USubscriptionOptions options_;
-	};
+	UnsubscribeRequest buildUnsubscribeRequest(const v1::UUri& topic);
 
-} // namespace uprotocol::core::usubscription::v3
-#endif //REQUESTBUILDER_H
+private:
+	USubscriptionOptions options_;
+};
+
+}  // namespace uprotocol::core::usubscription::v3
+#endif  // REQUESTBUILDER_H

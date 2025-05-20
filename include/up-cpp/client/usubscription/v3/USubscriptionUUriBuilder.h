@@ -1,8 +1,8 @@
 #ifndef USUBSCRIPTIONUURIBUILDER_H
 #define USUBSCRIPTIONUURIBUILDER_H
 
-#include <uprotocol/uoptions.pb.h>
 #include <uprotocol/core/usubscription/v3/usubscription.pb.h>
+#include <uprotocol/uoptions.pb.h>
 
 #include "up-cpp/datamodel/validator/UUri.h"
 
@@ -14,7 +14,6 @@ namespace uprotocol::core::usubscription::v3 {
 /// service options from uSubscription proto to set the authority name, ue_id,
 /// ue_version_major, and the notification topic resource ID in the URI.
 struct USubscriptionUUriBuilder {
-
 	/// @brief Constructor for USubscriptionUUriBuilder.
 	explicit USubscriptionUUriBuilder();
 
@@ -25,10 +24,10 @@ struct USubscriptionUUriBuilder {
 	/// @return The URI with the specified resource ID.
 	v1::UUri getServiceUriWithResourceId(uint32_t resource_id) const;
 
-	private:
-		/// URI for the uSubscription service
-		v1::UUri base_uri_;
-	};
-} // namespace uprotocol::core::usubscription::v3
+private:
+	/// URI for the uSubscription service
+	v1::UUri base_uri_;
+};
+}  // namespace uprotocol::core::usubscription::v3
 
-#endif //USUBSCRIPTIONUURIBUILDER_H
+#endif  // USUBSCRIPTIONUURIBUILDER_H

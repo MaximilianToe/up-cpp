@@ -26,8 +26,6 @@ using v3::UnsubscribeRequest;
 using v3::Update;
 using v3::uSubscription;
 
-
-
 /// @brief Interface for uEntities to create subscriptions.
 ///
 /// Like all L3 client APIs, the RpcClientUSubscription is a wrapper on top of
@@ -37,15 +35,15 @@ struct RpcClientUSubscription : USubscription {
 	    utils::Expected<std::unique_ptr<RpcClientUSubscription>, v1::UStatus>;
 	using ListenCallback = transport::UTransport::ListenCallback;
 	using ListenHandle = transport::UTransport::ListenHandle;
-	
+
 	template <typename Response>
 	Response invokeResponse(communication::RpcClient rpc_client);
-	
+
 	/// @brief Subscribe to the topic
 	///
 	utils::Expected<SubscriptionResponse, v1::UStatus> subscribe(
 	    const SubscriptionRequest& subscription_request) override;
-	
+
 	/// @brief Unsubscribe from the topic
 	///
 	utils::Expected<UnsubscribeResponse, v1::UStatus> unsubscribe(
@@ -55,13 +53,11 @@ struct RpcClientUSubscription : USubscription {
 	///
 	/// @param transport Transport to register with.
 	explicit RpcClientUSubscription(
-		std::shared_ptr<transport::UTransport> transport)
-		: transport_(std::move(transport)){}
-
+	    std::shared_ptr<transport::UTransport> transport)
+	    : transport_(std::move(transport)) {}
 
 	/// @brief Destructor
 	~RpcClientUSubscription() override = default;
-
 
 private:
 	// Transport

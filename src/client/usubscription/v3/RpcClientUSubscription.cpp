@@ -9,12 +9,11 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+#include <spdlog/spdlog.h>
 #include <up-cpp/client/usubscription/v3/RpcClientUSubscription.h>
 #include <up-cpp/client/usubscription/v3/USubscription.h>
 #include <uprotocol/core/usubscription/v3/usubscription.pb.h>
 #include <uprotocol/v1/ustatus.pb.h>
-
-#include <spdlog/spdlog.h>
 
 #include <utility>
 
@@ -30,24 +29,24 @@ auto priority = uprotocol::v1::UPriority::UPRIORITY_CS4;  // MUST be >= 4
 
 namespace uprotocol::core::usubscription::v3 {
 
-template <typename Response>	
-Response RpcClientUSubscription::invokeResponse(communication::RpcClient rpc_client){
-
-}
+template <typename Response>
+Response RpcClientUSubscription::invokeResponse(
+    communication::RpcClient rpc_client) {}
 
 RpcClientUSubscription::ResponseOrStatus<SubscriptionResponse>
 RpcClientUSubscription::subscribe(
     const SubscriptionRequest& subscription_request) {
 	communication::RpcClient rpc_client(
 	    transport_,
-	    uuri_builder_.getServiceUriWithResourceId(
-	        RESOURCE_ID_SUBSCRIBE),
+	    uuri_builder_.getServiceUriWithResourceId(RESOURCE_ID_SUBSCRIBE),
 	    priority, SUBSCRIPTION_REQUEST_TTL);
 
 	google::protobuf::Any any_request;
 
 	if (!any_request.PackFrom(subscription_request)) {
-		spdlog::error("subscribe: There was an error when serializing the subscription request.");
+		spdlog::error(
+		    "subscribe: There was an error when serializing the subscription "
+		    "request.");
 	}
 	datamodel::builder::Payload payload(any_request);
 
@@ -58,20 +57,25 @@ RpcClientUSubscription::subscribe(
 		    utils::Unexpected<v1::UStatus>(message_or_status.error()));
 	}
 
-	spdlog::debug("response UMessage: {}", message_or_status.value().DebugString());
+	spdlog::debug("response UMessage: {}",
+	              message_or_status.value().DebugString());
 	SubscriptionResponse subscription_response;
 
-	auto response_or_status = utils::ProtoConverter::extractFromProtobuf<SubscriptionResponse>(message_or_status.value());
-	
-	if (!response_or_status.has_value()){
-		spdlog::error("subscribe: Error when extracting response from protobuf.");
+	auto response_or_status =
+	    utils::ProtoConverter::extractFromProtobuf<SubscriptionResponse>(
+	        message_or_status.value());
+
+	if (!response_or_status.has_value()) {
+		spdlog::error(
+		    "subscribe: Error when extracting response from protobuf.");
 		return ResponseOrStatus<SubscriptionResponse>(
 		    utils::Unexpected<v1::UStatus>(response_or_status.error()));
 	}
 
 	subscription_response = response_or_status.value();
 
-	spdlog::debug("subscribe: response: {}", subscription_response.DebugString());
+	spdlog::debug("subscribe: response: {}",
+	              subscription_response.DebugString());
 
 	if (subscription_response.topic().SerializeAsString() !=
 	    subscription_request.topic().SerializeAsString()) {
@@ -79,18 +83,19 @@ RpcClientUSubscription::subscribe(
 		status.set_code(v1::UCode::INTERNAL);
 		status.set_message("subscribe: topics do not match.");
 		return ResponseOrStatus<SubscriptionResponse>(
-			utils::Unexpected<v1::UStatus>(status));
+		    utils::Unexpected<v1::UStatus>(status));
 	}
 
-	return ResponseOrStatus<SubscriptionResponse>(std::move(subscription_response));
+	return ResponseOrStatus<SubscriptionResponse>(
+	    std::move(subscription_response));
 }
 
 RpcClientUSubscription::ResponseOrStatus<UnsubscribeResponse>
 RpcClientUSubscription::unsubscribe(
-	const UnsubscribeRequest& unsubscribe_request) {
-
+    const UnsubscribeRequest& unsubscribe_request) {
 	UnsubscribeResponse unsubscribe_response;
-	return ResponseOrStatus<UnsubscribeResponse>(std::move(unsubscribe_response));	
+	return ResponseOrStatus<UnsubscribeResponse>(
+	    std::move(unsubscribe_response));
 }
 
 }  // namespace uprotocol::core::usubscription::v3

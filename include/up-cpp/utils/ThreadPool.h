@@ -37,7 +37,7 @@ public:
 
 	~ThreadPool();
 
-	// Submit a function to be executed asynchronously by the pool
+	/// @brief Submit a function to be executed asynchronously by the pool
 	template <typename F, typename... Args>
 	auto submit(F&& f, Args&&... args) -> std::future<decltype(f(args...))>;
 

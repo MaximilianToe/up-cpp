@@ -94,7 +94,7 @@ public:
 	~RpcClientUSubscriptionTest() override = default;
 };
 
-//Negative test case with no source filter
+// Negative test case with no source filter
 TEST_F(RpcClientUSubscriptionTest, ConstructorTestSuccess) {  // NOLINT
 
 	auto rpc_client_usubscription = std::make_unique<

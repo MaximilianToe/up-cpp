@@ -28,12 +28,10 @@ using uprotocol::core::usubscription::v3::UnsubscribeRequest;
 using uprotocol::core::usubscription::v3::Update;
 using uprotocol::core::usubscription::v3::uSubscription;
 
-/**
- * @struct ConsumerOptions
- * @brief Additional details for uSubscription service.
- *
- * Each member represents an optional parameter for the uSubscription service.
- */
+/// @struct ConsumerOptions
+/// @brief Additional details for uSubscription service.
+///
+/// Each member represents an optional parameter for the uSubscription service.
 struct ConsumerOptions {
 	/// Permission level of the subscription request
 	std::optional<uint32_t> permission_level;
@@ -143,7 +141,7 @@ struct Consumer {
 	void unsubscribe(v1::UPriority priority,
 	                 std::chrono::milliseconds request_ttl);
 
-	/// @brief getter for subscription update
+	/// @brief Get the subscription update
 	///
 	/// @return subscription update
 	Update getSubscriptionUpdate() const { return subscription_update_; }

@@ -36,12 +36,19 @@ public:
 	bool isFull() const noexcept;
 	bool isEmpty() const noexcept;
 
-	// Blocking pop()
+	/// @brief Blocking pop()
 	bool pop(T& popped_value) noexcept;
-	// Non-blocking pop()
+	/// @brief  Non-blocking pop()
 	bool tryPop(T& popped_value) noexcept;
-	// Time-limited blocking pop()s
+	/// @brief Time-limited blocking pop(), waiting for 'time' milliseconds
+	/// @param popped_value
+	/// @param limit
+	/// @return
 	bool tryPopFor(T& popped_value, std::chrono::milliseconds limit) noexcept;
+	/// @brief Time-limited blocking pop(), waiting until 'when' time_point
+	/// @param popped_value
+	/// @param when
+	/// @return
 	bool tryPopUntil(T& popped_value,
 	                 std::chrono::system_clock::time_point when) noexcept;
 

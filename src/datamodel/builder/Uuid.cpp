@@ -18,12 +18,6 @@
 
 namespace uprotocol::datamodel::builder {
 
-/*
-struct uuidbuilder::uuidsharedstate {
-    std::mt19937_64 random_engine{std::random_device{}()};
-};
-*/
-
 UuidBuilder UuidBuilder::getBuilder() { return UuidBuilder(false); }
 
 UuidBuilder UuidBuilder::getTestBuilder() { return UuidBuilder(true); }
