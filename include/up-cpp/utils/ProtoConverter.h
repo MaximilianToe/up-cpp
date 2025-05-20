@@ -56,13 +56,51 @@ struct ProtoConverter {
 	/// @param subscription_topic the UUri of the topic to unsubscribe from
 	/// @return the built UnsubscribeRequest
 	static UnsubscribeRequest BuildUnSubscribeRequest(
-	    const v1::UUri& subscription_topic);UnsubscribeRequest BuildUnSubscribeRequest(const v1::UUri& uri, const SubscribeAttributes& attributes);
+	    const v1::UUri& subscription_topic);
+	static UnsubscribeRequest BuildUnSubscribeRequest(const v1::UUri& uri, const SubscribeAttributes& attributes);
 
 	template <typename T>
-	static utils::Expected<T, v1::UStatus> extractFromProtobuf(const v1::UMessage& message);
-	
+	static utils::Expected<T, v1::UStatus> extractFromProtobuf(const v1::UMessage& message)
+	{
+		google::protobuf::Any any;
+
+		if (!any.ParseFromString(message.payload())) {
+			v1::UStatus status;
+			status.set_code(v1::UCode::INTERNAL);
+			status.set_message("extractFromProtobuf: Error when parsing payload.");
+			return utils::Expected<T, v1::UStatus>(
+				utils::Unexpected<v1::UStatus>(status));
+		}
+
+		T response;
+
+		if (!any.UnpackTo(&response)) {
+			v1::UStatus status;
+			status.set_code(v1::UCode::INTERNAL);
+			status.set_message("extractFromProtobuf: Error when unpacking any.");
+			return utils::Expected<T, v1::UStatus>(
+				utils::Unexpected<v1::UStatus>(status));
+		}
+
+		return Expected<T, v1::UStatus>(response);
+	}
+
 	template <typename T>
-	static utils::Expected<datamodel::builder::Payload, v1::UStatus> protoToPayload(const T& proto);
+	static utils::Expected<datamodel::builder::Payload, v1::UStatus> protoToPayload(const T& proto) {
+		google::protobuf::Any any;
+
+		if (!any.PackFrom(proto)) {
+			v1::UStatus status;
+			status.set_code(v1::UCode::INTERNAL);
+			status.set_message("protoToPayload: There was an error when serializing the subscription request.");
+			return utils::Expected<datamodel::builder::Payload, v1::UStatus>(
+				utils::Unexpected<v1::UStatus>(status));
+		}
+
+		const datamodel::builder::Payload payload(any);
+
+		return utils::Expected<datamodel::builder::Payload, v1::UStatus>(payload);
+	}
 
 };
 };      // namespace uprotocol::utils
