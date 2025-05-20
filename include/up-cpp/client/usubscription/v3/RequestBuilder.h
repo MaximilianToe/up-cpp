@@ -1,8 +1,6 @@
 #ifndef REQUESTBUILDER_H
 #define REQUESTBUILDER_H
 #include <up-cpp/utils/ProtoConverter.h>
-
-#include <utility>
 #include "up-cpp/client/usubscription/v3/RpcClientUSubscription.h"
 
 
@@ -41,7 +39,7 @@ struct RequestBuilder {
      * 
      * @param options Subscription options to configure the requests. Defaults to empty options.
      */
-    explicit RequestBuilder(USubscriptionOptions options = {}) 
+    explicit RequestBuilder(const USubscriptionOptions& options = {}) 
         : options_(std::move(options)) {}
 
     /**
