@@ -15,14 +15,14 @@ USubscriptionUUriBuilder::USubscriptionUUriBuilder() {
 		service_options.GetExtension(uprotocol::service_version_major);
 	const auto& service_id =
 		service_options.GetExtension(uprotocol::service_id);
-	const auto& notification_topic =
-		service_options.GetExtension(uprotocol::notification_topic, 0);
+	// const auto& notification_topic =
+	// 	service_options.GetExtension(uprotocol::notification_topic, 0);
 
 	// Set the values in the URI
 	base_uri_.set_authority_name(service_name);
 	base_uri_.set_ue_id(service_id);
 	base_uri_.set_ue_version_major(service_version_major);
-	sink_resource_id_ = notification_topic.id();
+	// sink_resource_id_ = notification_topic.id();
 }
 
 v1::UUri USubscriptionUUriBuilder::getServiceUriWithResourceId(uint32_t resource_id) const {
