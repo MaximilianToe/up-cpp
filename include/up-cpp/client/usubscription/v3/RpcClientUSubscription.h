@@ -45,7 +45,7 @@ struct RpcClientUSubscription : USubscription {
 	/// @brief Unsubscribe from the topic
 	///
 	utils::Expected<UnsubscribeResponse, v1::UStatus> unsubscribe(
-	    const UnsubscribeRequest& subscription_request) override;
+	    const UnsubscribeRequest& unsubscribe_request) override;
 
 	/// @brief Constructor
 	///

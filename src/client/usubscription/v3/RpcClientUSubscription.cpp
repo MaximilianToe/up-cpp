@@ -21,8 +21,9 @@
 #include "up-cpp/utils/ProtoConverter.h"
 
 constexpr uint16_t RESOURCE_ID_SUBSCRIBE = 0x0001;
+constexpr uint16_t RESOURCE_ID_UNSUBSCRIBE = 0x0002;
 // TODO(lennart) see default_call_options() for the request in Rust
-constexpr auto SUBSCRIPTION_REQUEST_TTL =
+constexpr auto USUBSCRIPTION_REQUEST_TTL =
     std::chrono::milliseconds(0x0800);  // TODO(lennart) change time
 auto priority = uprotocol::v1::UPriority::UPRIORITY_CS4;  // MUST be >= 4
 
@@ -38,7 +39,7 @@ RpcClientUSubscription::subscribe(
 	communication::RpcClient rpc_client(
 	    transport_,
 	    uuri_builder_.getServiceUriWithResourceId(RESOURCE_ID_SUBSCRIBE),
-	    priority, SUBSCRIPTION_REQUEST_TTL);
+	    priority, USUBSCRIPTION_REQUEST_TTL);
 
 	auto payload_or_status =
 	    utils::ProtoConverter::protoToPayload(subscription_request);
@@ -92,7 +93,47 @@ RpcClientUSubscription::subscribe(
 RpcClientUSubscription::ResponseOrStatus<UnsubscribeResponse>
 RpcClientUSubscription::unsubscribe(
     const UnsubscribeRequest& unsubscribe_request) {
+	communication::RpcClient rpc_client(
+	    transport_,
+	    uuri_builder_.getServiceUriWithResourceId(RESOURCE_ID_UNSUBSCRIBE),
+	    priority, USUBSCRIPTION_REQUEST_TTL);
+
+	auto payload_or_status =
+	    utils::ProtoConverter::protoToPayload(unsubscribe_request);
+
+	if (!payload_or_status.has_value()) {
+		return ResponseOrStatus<UnsubscribeResponse>(
+		    utils::Unexpected<v1::UStatus>(payload_or_status.error()));
+	}
+	datamodel::builder::Payload payload(payload_or_status.value());
+
+	auto message_or_status = rpc_client.invokeMethod(std::move(payload)).get();
+
+	if (!message_or_status.has_value()) {
+		return ResponseOrStatus<UnsubscribeResponse>(
+		    utils::Unexpected<v1::UStatus>(message_or_status.error()));
+	}
+
+	spdlog::debug("response UMessage: {}",
+	              message_or_status.value().DebugString());
 	UnsubscribeResponse unsubscribe_response;
+
+	auto response_or_status =
+	    utils::ProtoConverter::extractFromProtobuf<UnsubscribeResponse>(
+	        message_or_status.value());
+
+	if (!response_or_status.has_value()) {
+		spdlog::error(
+		    "unsubscribe: Error when extracting response from protobuf.");
+		return ResponseOrStatus<UnsubscribeResponse>(
+		    utils::Unexpected<v1::UStatus>(response_or_status.error()));
+	}
+
+	unsubscribe_response = response_or_status.value();
+
+	spdlog::debug("unsubscribe: response: {}",
+	              unsubscribe_response.DebugString());
+
 	return ResponseOrStatus<UnsubscribeResponse>(
 	    std::move(unsubscribe_response));
 }
