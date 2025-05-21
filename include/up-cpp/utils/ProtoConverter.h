@@ -81,29 +81,73 @@ struct ProtoConverter {
 	template <typename T>
 	static TOrStatus<T> extractFromProtobuf(const v1::UMessage& message) {
 
-		// auto payload = std::get<datamodel::builder::Payload::PayloadType::Format>(message);
+		switch (message.attributes().payload_format()) {
 
-		google::protobuf::Any any;
+			case v1::UPayloadFormat::UPAYLOAD_FORMAT_PROTOBUF: {
+				T response;
+				if (!response.ParseFromString(message.payload())) {
+					v1::UStatus status;
+					status.set_code(v1::UCode::INTERNAL);
+					status.set_message("extractFromProtobuf: Error when parsing payload from protobuf.");
+					return TOrStatus<T>(UnexpectedStatus(status));
+				}
+				return TOrStatus<T>(response);	//TODO(lennart) UnpackTo not necessary?
+			}
 
-		if (!any.ParseFromString(message.payload())) {
-			v1::UStatus status;
-			status.set_code(v1::UCode::INTERNAL);
-			status.set_message(
-			    "extractFromProtobuf: Error when parsing payload.");
-			return TOrStatus<T>(UnexpectedStatus(status));
-		}
+			case v1::UPayloadFormat::UPAYLOAD_FORMAT_PROTOBUF_WRAPPED_IN_ANY: {
+				google::protobuf::Any any;
+				if (!any.ParseFromString(message.payload())) {
+					v1::UStatus status;
+					status.set_code(v1::UCode::INTERNAL);
+					status.set_message(
+						"extractFromProtobuf: Error when parsing payload from protobuf any.");
+					return TOrStatus<T>(UnexpectedStatus(status));
+				}
+				T response;
+				if (!any.UnpackTo(&response)) {
+					v1::UStatus status;
+					status.set_code(v1::UCode::INTERNAL);
+					status.set_message(
+						"extractFromProtobuf: Error when unpacking any.");
+					return TOrStatus<T>(UnexpectedStatus(status));
+				}
+				return TOrStatus<T>(response);
+			}
 
-		T response;
+			case v1::UPayloadFormat::UPAYLOAD_FORMAT_UNSPECIFIED: {
+				google::protobuf::Any any;
+				if (!any.ParseFromString(message.payload())) {
+					v1::UStatus status;
+					status.set_code(v1::UCode::INTERNAL);
+					status.set_message("Error when parsing payload from unspecified format.");
+					return TOrStatus<T>(UnexpectedStatus(status));
+				}
+				T response;
+				if (!any.UnpackTo(&response)) {
+					v1::UStatus status;
+					status.set_code(v1::UCode::INTERNAL);
+					status.set_message(
+						"Cannot deserialize payload, message type mismatch.");
+					return TOrStatus<T>(UnexpectedStatus(status));
+				}
+				return TOrStatus<T>(response);
+			}
+			case v1::UPayloadFormat::UPAYLOAD_FORMAT_JSON:
+			case v1::UPayloadFormat::UPAYLOAD_FORMAT_SOMEIP:
+			case v1::UPayloadFormat::UPAYLOAD_FORMAT_SOMEIP_TLV:
+			case v1::UPayloadFormat::UPAYLOAD_FORMAT_RAW:
+			case v1::UPayloadFormat::UPAYLOAD_FORMAT_TEXT:
+			case v1::UPayloadFormat::UPAYLOAD_FORMAT_SHM:
+			case v1::UPayloadFormat::UPayloadFormat_INT_MIN_SENTINEL_DO_NOT_USE_:
+			case v1::UPayloadFormat::UPayloadFormat_INT_MAX_SENTINEL_DO_NOT_USE_:
+			default: {
+				v1::UStatus status;
+				status.set_code(v1::UCode::INVALID_ARGUMENT);
+				status.set_message("Unknown/invalid/unsupported payload format.");
+				return TOrStatus<T>(UnexpectedStatus(status));
+			}
+    	}
 
-		if (!any.UnpackTo(&response)) {
-			v1::UStatus status;
-			status.set_code(v1::UCode::INTERNAL);
-			status.set_message(
-			    "extractFromProtobuf: Error when unpacking any.");
-			return TOrStatus<T>(UnexpectedStatus(status));
-		}
-
-		return TOrStatus<T>(response);
 	}
 
 	/**

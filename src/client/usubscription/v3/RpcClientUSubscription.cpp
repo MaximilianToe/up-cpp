@@ -41,16 +41,15 @@ RpcClientUSubscription::subscribe(
 	    uuri_builder_.getServiceUriWithResourceId(RESOURCE_ID_SUBSCRIBE),
 	    priority, USUBSCRIPTION_REQUEST_TTL);
 
-	// auto payload_or_status =
-	//     utils::ProtoConverter::protoToPayload(subscription_request);
+	auto payload_or_status =
+	    utils::ProtoConverter::protoToPayload(subscription_request);
 
-	// if (!payload_or_status.has_value()) {
-	// 	return ResponseOrStatus<SubscriptionResponse>(
-	// 	    utils::Unexpected<v1::UStatus>(payload_or_status.error()));
-	// }
-	// datamodel::builder::Payload payload(payload_or_status.value());
-	datamodel::builder::Payload payload(subscription_request);
-	
+	if (!payload_or_status.has_value()) {
+		return ResponseOrStatus<SubscriptionResponse>(
+		    utils::Unexpected<v1::UStatus>(payload_or_status.error()));
+	}
+	datamodel::builder::Payload payload(payload_or_status.value());
+
 	auto message_or_status = rpc_client.invokeMethod(std::move(payload)).get();
 
 	if (!message_or_status.has_value()) {
