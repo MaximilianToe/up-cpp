@@ -1,7 +1,10 @@
 #include "up-cpp/utils/ProtoConverter.h"
+
 #include <spdlog/spdlog.h>
 #include <uprotocol/v1/ustatus.pb.h>
+
 #include <optional>
+
 #include "up-cpp/datamodel/builder/Payload.h"
 #include "up-cpp/utils/Expected.h"
 

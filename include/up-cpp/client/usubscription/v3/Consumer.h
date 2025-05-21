@@ -19,10 +19,9 @@
 #include <up-cpp/utils/ProtoConverter.h>
 #include <uprotocol/core/usubscription/v3/usubscription.pb.h>
 #include <uprotocol/v1/umessage.pb.h>
+
 #include "RequestBuilder.h"
 #include "USubscriptionUUriBuilder.h"
-
-#include <utility>
 
 namespace uprotocol::client::usubscription::v3 {
 using uprotocol::core::usubscription::v3::SubscriptionRequest;
@@ -80,9 +79,10 @@ protected:
 	///
 	/// @param transport Transport to register with.
 	/// @param subscriber_details Additional details about the subscriber.
-	Consumer(std::shared_ptr<transport::UTransport> transport,
-	         v1::UUri subscription_topic,
-	         core::usubscription::v3::USubscriptionOptions consumer_options = {});
+	Consumer(
+	    std::shared_ptr<transport::UTransport> transport,
+	    v1::UUri subscription_topic,
+	    core::usubscription::v3::USubscriptionOptions consumer_options = {});
 
 private:
 	// Transport

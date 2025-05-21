@@ -1,10 +1,8 @@
 #ifndef USUBSCRIPTIONUURIBUILDER_H
 #define USUBSCRIPTIONUURIBUILDER_H
 
-#include <uprotocol/uoptions.pb.h>
 #include <uprotocol/core/usubscription/v3/usubscription.pb.h>
-
-#include "up-cpp/datamodel/validator/UUri.h"
+#include <uprotocol/uoptions.pb.h>
 
 namespace uprotocol::core::usubscription::v3 {
 /// @struct uSubscriptionUUriBuilder
@@ -37,6 +35,6 @@ public:
 	v1::UUri getNotificationUri();
 };
 
-} // namespace uprotocol::core::usubscription::v3
+}  // namespace uprotocol::core::usubscription::v3
 
-#endif //USUBSCRIPTIONUURIBUILDER_H
+#endif  // USUBSCRIPTIONUURIBUILDER_H
