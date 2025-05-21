@@ -57,8 +57,8 @@ RpcClientUSubscription::subscribe(
 		    utils::Unexpected<v1::UStatus>(message_or_status.error()));
 	}
 
-	spdlog::debug("response UMessage: {}",
-	              message_or_status.value().DebugString());
+	// spdlog::debug("response UMessage: {}",
+	//               message_or_status.value().DebugString());
 	SubscriptionResponse subscription_response;
 
 	auto response_or_status =
@@ -74,8 +74,8 @@ RpcClientUSubscription::subscribe(
 
 	subscription_response = response_or_status.value();
 
-	spdlog::debug("subscribe: response: {}",
-	              subscription_response.DebugString());
+	// spdlog::debug("subscribe: response: {}",
+	//               subscription_response.DebugString());
 
 	if (subscription_response.topic().SerializeAsString() !=
 	    subscription_request.topic().SerializeAsString()) {
@@ -114,8 +114,8 @@ RpcClientUSubscription::unsubscribe(
 		    utils::Unexpected<v1::UStatus>(message_or_status.error()));
 	}
 
-	spdlog::debug("response UMessage: {}",
-	              message_or_status.value().DebugString());
+	// spdlog::debug("response UMessage: {}",
+	//               message_or_status.value().DebugString());
 	UnsubscribeResponse unsubscribe_response;
 
 	auto response_or_status =
@@ -131,8 +131,8 @@ RpcClientUSubscription::unsubscribe(
 
 	unsubscribe_response = response_or_status.value();
 
-	spdlog::debug("unsubscribe: response: {}",
-	              unsubscribe_response.DebugString());
+	// spdlog::debug("unsubscribe: response: {}",
+	//               unsubscribe_response.DebugString());
 
 	return ResponseOrStatus<UnsubscribeResponse>(
 	    std::move(unsubscribe_response));
