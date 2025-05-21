@@ -80,6 +80,9 @@ struct ProtoConverter {
 	 */
 	template <typename T>
 	static TOrStatus<T> extractFromProtobuf(const v1::UMessage& message) {
+
+		// auto payload = std::get<datamodel::builder::Payload::PayloadType::Format>(message);
+
 		google::protobuf::Any any;
 
 		if (!any.ParseFromString(message.payload())) {
