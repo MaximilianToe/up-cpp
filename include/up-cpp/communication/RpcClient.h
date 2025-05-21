@@ -201,6 +201,9 @@ struct RpcClient {
 
 		response_message = response_or_status.value();
 
+		spdlog::debug(
+			"invokeProtoMethod: Successfully extracted response from protobuf. {}", response_message.DebugString());
+
 		return ResponseOrStatus<T>(
 			std::move(response_message));
 	}
