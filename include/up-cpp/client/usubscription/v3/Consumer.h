@@ -27,7 +27,6 @@ namespace uprotocol::client::usubscription::v3 {
 using uprotocol::core::usubscription::v3::SubscriptionRequest;
 using uprotocol::core::usubscription::v3::UnsubscribeRequest;
 using uprotocol::core::usubscription::v3::Update;
-using uprotocol::core::usubscription::v3::uSubscription;
 
 /// @brief Interface for uEntities to create subscriptions.
 ///

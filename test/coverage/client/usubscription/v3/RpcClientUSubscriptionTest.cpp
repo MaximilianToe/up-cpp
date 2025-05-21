@@ -14,8 +14,6 @@
 #include <up-cpp/client/usubscription/v3/RpcClientUSubscription.h>
 #include <up-cpp/communication/NotificationSource.h>
 
-#include <string>
-
 #include "UTransportMock.h"
 
 namespace {

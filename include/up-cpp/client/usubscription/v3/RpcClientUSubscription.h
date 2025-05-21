@@ -9,8 +9,8 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-#ifndef RPCCLIENTUSUBSCRIPTION_H
-#define RPCCLIENTUSUBSCRIPTION_H
+#ifndef UP_CPP_CLIENT_USUBSCRIPTION_V3_RPCCLIENTUSUBSCRIPTION_H
+#define UP_CPP_CLIENT_USUBSCRIPTION_V3_RPCCLIENTUSUBSCRIPTION_H
 
 #include <up-cpp/communication/NotificationSink.h>
 #include <up-cpp/communication/RpcClient.h>
@@ -23,8 +23,6 @@
 namespace uprotocol::core::usubscription::v3 {
 using v3::SubscriptionRequest;
 using v3::UnsubscribeRequest;
-using v3::Update;
-using v3::uSubscription;
 
 /// @brief Interface for uEntities to create subscriptions.
 ///
@@ -69,4 +67,4 @@ private:
 
 }  // namespace uprotocol::core::usubscription::v3
 
-#endif  // RPCCLIENTUSUBSCRIPTION_H
+#endif  // UP_CPP_CLIENT_USUBSCRIPTION_V3_RPCCLIENTUSUBSCRIPTION_H
