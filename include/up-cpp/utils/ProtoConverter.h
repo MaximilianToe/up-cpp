@@ -91,9 +91,9 @@ struct ProtoConverter {
 					status.set_message("extractFromProtobuf: Error when parsing payload from protobuf.");
 					return TOrStatus<T>(UnexpectedStatus(status));
 				}
-				return TOrStatus<T>(response);	//TODO(lennart) UnpackTo not necessary?
+				return TOrStatus<T>(response);
 			}
-
+			case v1::UPayloadFormat::UPAYLOAD_FORMAT_UNSPECIFIED:
 			case v1::UPayloadFormat::UPAYLOAD_FORMAT_PROTOBUF_WRAPPED_IN_ANY: {
 				google::protobuf::Any any;
 				if (!any.ParseFromString(message.payload())) {
@@ -109,25 +109,6 @@ struct ProtoConverter {
 					status.set_code(v1::UCode::INTERNAL);
 					status.set_message(
 						"extractFromProtobuf: Error when unpacking any.");
-					return TOrStatus<T>(UnexpectedStatus(status));
-				}
-				return TOrStatus<T>(response);
-			}
-
-			case v1::UPayloadFormat::UPAYLOAD_FORMAT_UNSPECIFIED: {
-				google::protobuf::Any any;
-				if (!any.ParseFromString(message.payload())) {
-					v1::UStatus status;
-					status.set_code(v1::UCode::INTERNAL);
-					status.set_message("Error when parsing payload from unspecified format.");
-					return TOrStatus<T>(UnexpectedStatus(status));
-				}
-				T response;
-				if (!any.UnpackTo(&response)) {
-					v1::UStatus status;
-					status.set_code(v1::UCode::INTERNAL);
-					status.set_message(
-						"Cannot deserialize payload, message type mismatch.");
 					return TOrStatus<T>(UnexpectedStatus(status));
 				}
 				return TOrStatus<T>(response);

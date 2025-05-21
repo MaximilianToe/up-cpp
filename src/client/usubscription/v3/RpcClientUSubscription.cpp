@@ -18,6 +18,7 @@
 #include <utility>
 
 #include "up-cpp/communication/RpcClient.h"
+#include "up-cpp/utils/Expected.h"
 #include "up-cpp/utils/ProtoConverter.h"
 
 constexpr uint16_t RESOURCE_ID_SUBSCRIBE = 0x0001;
@@ -41,41 +42,14 @@ RpcClientUSubscription::subscribe(
 	    uuri_builder_.getServiceUriWithResourceId(RESOURCE_ID_SUBSCRIBE),
 	    priority, USUBSCRIPTION_REQUEST_TTL);
 
-	auto payload_or_status =
-	    utils::ProtoConverter::protoToPayload(subscription_request);
-
-	if (!payload_or_status.has_value()) {
-		return ResponseOrStatus<SubscriptionResponse>(
-		    utils::Unexpected<v1::UStatus>(payload_or_status.error()));
-	}
-	datamodel::builder::Payload payload(payload_or_status.value());
-
-	auto message_or_status = rpc_client.invokeMethod(std::move(payload)).get();
-
-	if (!message_or_status.has_value()) {
-		return ResponseOrStatus<SubscriptionResponse>(
-		    utils::Unexpected<v1::UStatus>(message_or_status.error()));
-	}
-
-	// spdlog::debug("response UMessage: {}",
-	//               message_or_status.value().DebugString());
-	SubscriptionResponse subscription_response;
-
 	auto response_or_status =
-	    utils::ProtoConverter::extractFromProtobuf<SubscriptionResponse>(
-	        message_or_status.value());
+	    rpc_client.invokeProtoMethod<SubscriptionResponse>(subscription_request);
 
 	if (!response_or_status.has_value()) {
-		spdlog::error(
-		    "subscribe: Error when extracting response from protobuf.");
-		return ResponseOrStatus<SubscriptionResponse>(
-		    utils::Unexpected<v1::UStatus>(response_or_status.error()));
+		return utils::Expected<SubscriptionResponse, v1::UStatus>(
+		    utils::Unexpected(response_or_status.error()));
 	}
-
-	subscription_response = response_or_status.value();
-
-	// spdlog::debug("subscribe: response: {}",
-	//               subscription_response.DebugString());
+	auto subscription_response = response_or_status.value();
 
 	if (subscription_response.topic().SerializeAsString() !=
 	    subscription_request.topic().SerializeAsString()) {
@@ -98,44 +72,7 @@ RpcClientUSubscription::unsubscribe(
 	    uuri_builder_.getServiceUriWithResourceId(RESOURCE_ID_UNSUBSCRIBE),
 	    priority, USUBSCRIPTION_REQUEST_TTL);
 
-	auto payload_or_status =
-	    utils::ProtoConverter::protoToPayload(unsubscribe_request);
-
-	if (!payload_or_status.has_value()) {
-		return ResponseOrStatus<UnsubscribeResponse>(
-		    utils::Unexpected<v1::UStatus>(payload_or_status.error()));
-	}
-	datamodel::builder::Payload payload(payload_or_status.value());
-
-	auto message_or_status = rpc_client.invokeMethod(std::move(payload)).get();
-
-	if (!message_or_status.has_value()) {
-		return ResponseOrStatus<UnsubscribeResponse>(
-		    utils::Unexpected<v1::UStatus>(message_or_status.error()));
-	}
-
-	// spdlog::debug("response UMessage: {}",
-	//               message_or_status.value().DebugString());
-	UnsubscribeResponse unsubscribe_response;
-
-	auto response_or_status =
-	    utils::ProtoConverter::extractFromProtobuf<UnsubscribeResponse>(
-	        message_or_status.value());
-
-	if (!response_or_status.has_value()) {
-		spdlog::error(
-		    "unsubscribe: Error when extracting response from protobuf.");
-		return ResponseOrStatus<UnsubscribeResponse>(
-		    utils::Unexpected<v1::UStatus>(response_or_status.error()));
-	}
-
-	unsubscribe_response = response_or_status.value();
-
-	// spdlog::debug("unsubscribe: response: {}",
-	//               unsubscribe_response.DebugString());
-
-	return ResponseOrStatus<UnsubscribeResponse>(
-	    std::move(unsubscribe_response));
+	return rpc_client.invokeProtoMethod<UnsubscribeResponse>(unsubscribe_request);
 }
 
 }  // namespace uprotocol::core::usubscription::v3
