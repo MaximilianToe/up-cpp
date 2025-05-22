@@ -41,4 +41,28 @@ FetchSubscriptionsRequest RequestBuilder::buildFetchSubscriptionsRequest(
 	return fetch_subscriptions_request;
 }
 
+FetchSubscriptionsRequest RequestBuilder::buildFetchSubscriptionsRequest(
+    const SubscriberInfo& subscriber) {
+	FetchSubscriptionsRequest fetch_subscriptions_request;
+	*fetch_subscriptions_request.mutable_subscriber() = subscriber;
+
+	return fetch_subscriptions_request;
+}
+
+FetchSubscribersRequest RequestBuilder::buildFetchSubscribersRequest(
+    const v1::UUri& topic) {
+	FetchSubscribersRequest fetch_subscribers_request;
+	*fetch_subscribers_request.mutable_topic() = topic;
+
+	return fetch_subscribers_request;
+}
+
+NotificationsRequest RequestBuilder::buildNotificationRequest(
+    const v1::UUri& topic) {
+	NotificationsRequest notification_request;
+	*notification_request.mutable_topic() = topic;
+
+	return notification_request;
+}
+
 }  // namespace uprotocol::core::usubscription::v3

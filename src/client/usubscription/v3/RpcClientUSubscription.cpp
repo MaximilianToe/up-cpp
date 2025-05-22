@@ -101,4 +101,37 @@ RpcClientUSubscription::fetch_subscriptions(
 	return rpc_client.invokeProtoMethod<FetchSubscriptionsResponse>(fetch_subscribers_request);
 }
 
+RpcClientUSubscription::ResponseOrStatus<FetchSubscribersResponse>
+RpcClientUSubscription::fetch_subscribers(
+    const FetchSubscribersRequest& fetch_subscribers_request) {
+	communication::RpcClient rpc_client(
+	    transport_,
+	    uuri_builder_.getServiceUriWithResourceId(RESOURCE_ID_FETCH_SUBSCRIBERS),
+	    priority, USUBSCRIPTION_REQUEST_TTL);
+
+	return rpc_client.invokeProtoMethod<FetchSubscribersResponse>(fetch_subscribers_request);
+}
+
+RpcClientUSubscription::ResponseOrStatus<NotificationsResponse>
+RpcClientUSubscription::register_for_notifications(
+    const NotificationsRequest& register_notifications_request) {
+	communication::RpcClient rpc_client(
+	    transport_,
+	    uuri_builder_.getServiceUriWithResourceId(RESOURCE_ID_REGISTER_FOR_NOTIFICATIONS),
+	    priority, USUBSCRIPTION_REQUEST_TTL);
+
+	return rpc_client.invokeProtoMethod<NotificationsResponse>(register_notifications_request);
+}
+
+RpcClientUSubscription::ResponseOrStatus<NotificationsResponse>
+RpcClientUSubscription::unregister_for_notifications(
+    const NotificationsRequest& unregister_notifications_request) {
+	communication::RpcClient rpc_client(
+	    transport_,
+	    uuri_builder_.getServiceUriWithResourceId(RESOURCE_ID_UNREGISTER_FOR_NOTIFICATIONS),
+	    priority, USUBSCRIPTION_REQUEST_TTL);
+
+	return rpc_client.invokeProtoMethod<NotificationsResponse>(unregister_notifications_request);
+}
+
 }  // namespace uprotocol::core::usubscription::v3

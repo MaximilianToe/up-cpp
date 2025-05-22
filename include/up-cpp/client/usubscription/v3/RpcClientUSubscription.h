@@ -47,10 +47,25 @@ struct RpcClientUSubscription : USubscription {
 	utils::Expected<UnsubscribeResponse, v1::UStatus> unsubscribe(
 	    const UnsubscribeRequest& unsubscribe_request) override;
 	
-	/// @brief Fetch all subscriptions
+	/// @brief Fetch all subscriptions either by topic or subscriber
 	///
 	utils::Expected<FetchSubscriptionsResponse, v1::UStatus> fetch_subscriptions(
 	    const FetchSubscriptionsRequest& fetch_subscribers) override;
+
+	/// @brief Fetch all subscribers
+	///
+	utils::Expected<FetchSubscribersResponse, v1::UStatus> fetch_subscribers(
+	    const FetchSubscribersRequest& fetch_subscribers) override;
+
+	/// @brief Register for notifications
+	///
+	utils::Expected<NotificationsResponse, v1::UStatus> register_for_notifications(const
+	NotificationsRequest& register_notifications_request) override ;
+
+	/// @brief Unregister for notifications
+	///
+	utils::Expected<NotificationsResponse, v1::UStatus> unregister_for_notifications(const
+	NotificationsRequest& unregister_notifications_request) override ;
 
 	/// @brief Constructor
 	///

@@ -34,14 +34,14 @@ struct USubscription {
 	virtual ResponseOrStatus<FetchSubscriptionsResponse> fetch_subscriptions(const
 	FetchSubscriptionsRequest& fetch_subscribers_request) = 0;
 
-	// virtual NotificationsResponse register_for_notifications(const
-	// NotificationsRequest& register_notifications_request) =0 ;
+	virtual ResponseOrStatus<NotificationsResponse> register_for_notifications(const
+	NotificationsRequest& register_notifications_request) =0 ;
 
-	// virtual NotificationsResponse unregister_for_notifications(const
-	// NotificationsRequest& unregister_notifications_request) = 0;
+	virtual ResponseOrStatus<NotificationsResponse> unregister_for_notifications(const
+	NotificationsRequest& unregister_notifications_request) = 0;
 
-	// virtual FetchSubscribersResponse fetch_subscribers(const
-	// FetchSubscribersRequest& fetch_subscribers_request) = 0;
+	virtual ResponseOrStatus<FetchSubscribersResponse> fetch_subscribers(const
+	FetchSubscribersRequest& fetch_subscribers_request) = 0;
 };
 
 }  // namespace uprotocol::core::usubscription::v3
