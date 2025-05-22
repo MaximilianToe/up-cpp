@@ -12,6 +12,7 @@
 #ifndef UP_CPP_CLIENT_USUBSCRIPTION_V3_REQUESTBUILDER_H
 #define UP_CPP_CLIENT_USUBSCRIPTION_V3_REQUESTBUILDER_H
 #include <up-cpp/utils/ProtoConverter.h>
+#include <uprotocol/core/usubscription/v3/usubscription.pb.h>
 
 #include <utility>
 
@@ -71,6 +72,15 @@ struct RequestBuilder {
 	 * @return An `UnsubscribeRequest` configured for the specified topic.
 	 */
 	static UnsubscribeRequest buildUnsubscribeRequest(const v1::UUri& topic);
+
+	/**
+	 * @brief Builds an fetch subscription request for a given topic.
+	 *
+	 * @param topic The `v1::UUri` representing the topic to fetch.
+	 *
+	 * @return An `FetchSubscriptionsRequest` configured for the specified topic.
+	 */
+	static FetchSubscriptionsRequest buildFetchSubscriptionsRequest(const v1::UUri& topic);
 
 private:
 	USubscriptionOptions options_;  ///< Options used to configure the requests.

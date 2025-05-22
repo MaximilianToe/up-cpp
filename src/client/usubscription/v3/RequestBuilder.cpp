@@ -33,4 +33,12 @@ UnsubscribeRequest RequestBuilder::buildUnsubscribeRequest(
 	return utils::ProtoConverter::BuildUnSubscribeRequest(topic);
 }
 
+FetchSubscriptionsRequest RequestBuilder::buildFetchSubscriptionsRequest(
+    const v1::UUri& topic) {
+	FetchSubscriptionsRequest fetch_subscriptions_request;
+	*fetch_subscriptions_request.mutable_topic() = topic;
+
+	return fetch_subscriptions_request;
+}
+
 }  // namespace uprotocol::core::usubscription::v3
