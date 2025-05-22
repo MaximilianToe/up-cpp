@@ -31,8 +31,8 @@ struct USubscription {
 	virtual ResponseOrStatus<UnsubscribeResponse> unsubscribe(
 	    const UnsubscribeRequest& unsubscribe_request) = 0;
 
-	// virtual FetchSubscriptionsResponse fetch_subscriptions(const
-	// FetchSubscriptionsRequest& fetch_subscribers_request) = 0;
+	virtual ResponseOrStatus<FetchSubscriptionsResponse> fetch_subscriptions(const
+	FetchSubscriptionsRequest& fetch_subscribers_request) = 0;
 
 	// virtual NotificationsResponse register_for_notifications(const
 	// NotificationsRequest& register_notifications_request) =0 ;

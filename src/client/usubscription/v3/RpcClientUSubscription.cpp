@@ -21,8 +21,23 @@
 #include "up-cpp/utils/Expected.h"
 #include "up-cpp/utils/ProtoConverter.h"
 
+/// The uEntity (type) identifier of the uSubscription service.
+constexpr uint32_t USUBSCRIPTION_TYPE_ID = 0x00000000;
+/// The (latest) major version of the uSubscription service.
+constexpr uint8_t USUBSCRIPTION_VERSION_MAJOR = 0x03;
+/// The resource identifier of uSubscription's _subscribe_ operation.
 constexpr uint16_t RESOURCE_ID_SUBSCRIBE = 0x0001;
+/// The resource identifier of uSubscription's _unsubscribe_ operation.
 constexpr uint16_t RESOURCE_ID_UNSUBSCRIBE = 0x0002;
+/// The resource identifier of uSubscription's _fetch subscriptions_ operation.
+constexpr uint16_t RESOURCE_ID_FETCH_SUBSCRIPTIONS = 0x0003;
+/// The resource identifier of uSubscription's _register for notifications_ operation.
+constexpr uint16_t RESOURCE_ID_REGISTER_FOR_NOTIFICATIONS = 0x0006;
+/// The resource identifier of uSubscription's _unregister for notifications_ operation.
+constexpr uint16_t RESOURCE_ID_UNREGISTER_FOR_NOTIFICATIONS = 0x0007;
+/// The resource identifier of uSubscription's _fetch subscribers_ operation.
+constexpr uint16_t RESOURCE_ID_FETCH_SUBSCRIBERS = 0x0008;
+
 // TODO(lennart) see default_call_options() for the request in Rust
 constexpr auto USUBSCRIPTION_REQUEST_TTL =
     std::chrono::milliseconds(0x0800);  // TODO(lennart) change time
@@ -73,6 +88,17 @@ RpcClientUSubscription::unsubscribe(
 	    priority, USUBSCRIPTION_REQUEST_TTL);
 
 	return rpc_client.invokeProtoMethod<UnsubscribeResponse>(unsubscribe_request);
+}
+
+RpcClientUSubscription::ResponseOrStatus<FetchSubscriptionsResponse>
+RpcClientUSubscription::fetch_subscriptions(
+    const FetchSubscriptionsRequest& fetch_subscribers_request) {
+	communication::RpcClient rpc_client(
+	    transport_,
+	    uuri_builder_.getServiceUriWithResourceId(RESOURCE_ID_FETCH_SUBSCRIPTIONS),
+	    priority, USUBSCRIPTION_REQUEST_TTL);
+
+	return rpc_client.invokeProtoMethod<FetchSubscriptionsResponse>(fetch_subscribers_request);
 }
 
 }  // namespace uprotocol::core::usubscription::v3
