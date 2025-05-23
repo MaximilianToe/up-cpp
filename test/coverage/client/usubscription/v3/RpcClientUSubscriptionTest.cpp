@@ -51,7 +51,7 @@ protected:
 		// Create a generic transport uri
 		client_uuri.set_authority_name("random_string");
 		client_uuri.set_ue_id(TEST_UE_ID);
-		client_uuri.set_ue_version_major(3);
+		client_uuri.set_ue_version_major(USUBSCRIPTION_VERSION_MAJOR);
 		client_uuri.set_resource_id(0);
 
 		// Set up a transport
@@ -61,7 +61,7 @@ protected:
 		// Craete server default uri and set up a transport
 		server_uuri.set_authority_name("core.usubscription");
 		server_uuri.set_ue_id(0);
-		server_uuri.set_ue_version_major(3);
+		server_uuri.set_ue_version_major(USUBSCRIPTION_VERSION_MAJOR);
 		server_uuri.set_resource_id(0);
 
 		mockTransportServer_ =
@@ -70,7 +70,7 @@ protected:
 		// Create a generic subscription uri
 		subscription_uuri.set_authority_name("10.0.0.2");
 		subscription_uuri.set_ue_id(TEST_UE_ID);
-		subscription_uuri.set_ue_version_major(3);
+		subscription_uuri.set_ue_version_major(USUBSCRIPTION_VERSION_MAJOR);
 		subscription_uuri.set_resource_id(DEFAULT_RESOURCE_ID);
 	};
 	void TearDown() override {}
