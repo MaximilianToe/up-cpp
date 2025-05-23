@@ -101,7 +101,8 @@ struct RequestBuilder {
 	static FetchSubscribersRequest buildFetchSubscribersRequest(const v1::UUri& topic);
 
 	/**
-	 * @brief Build notification request for a given topic.
+	 * @brief Build notification request for a given topic. Subscription change notifications 
+	 *		  MUST use topic SubscriptionChange with resource id 0x8000, as per the protobuf definition.
 	 *
 	 * @param topic The `v1::UUri` representing the topic to (un)register for/from.
 	 *
