@@ -86,6 +86,7 @@ add_coverage_test("ConsumerTest" coverage/client/usubscription/v3/ConsumerTest.c
 
 # core
 add_coverage_test("RpcClientUSubscriptionTest" coverage/client/usubscription/v3/RpcClientUSubscriptionTest.cpp)
+add_coverage_test("RequestBuilderTest" coverage/client/usubscription/v3/RequestBuilderTest.cpp)
 
 ########################## EXTRAS #############################################
 add_extra_test("PublisherSubscriberTest" extra/PublisherSubscriberTest.cpp)
