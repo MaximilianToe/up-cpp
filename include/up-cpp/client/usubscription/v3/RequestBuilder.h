@@ -78,18 +78,23 @@ struct RequestBuilder {
 	 *
 	 * @param topic The `v1::UUri` representing the topic to fetch.
 	 *
-	 * @return An `FetchSubscriptionsRequest` configured for the specified topic.
+	 * @return An `FetchSubscriptionsRequest` configured for the specified
+	 * topic.
 	 */
-	static FetchSubscriptionsRequest buildFetchSubscriptionsRequest(const v1::UUri& topic);
+	static FetchSubscriptionsRequest buildFetchSubscriptionsRequest(
+	    const v1::UUri& topic);
 
 	/**
 	 * @brief Build fetch subscritions request for a given subscriber.
 	 *
-	 * @param subscriber The `SubscriberInfo` representing the subscriber to fetch.
+	 * @param subscriber The `SubscriberInfo` representing the subscriber to
+	 * fetch.
 	 *
-	 * @return An `FetchSubscriptionsRequest` configured for the specified subscriber.
+	 * @return An `FetchSubscriptionsRequest` configured for the specified
+	 * subscriber.
 	 */
-	static FetchSubscriptionsRequest buildFetchSubscriptionsRequest(const SubscriberInfo& subscriber);
+	static FetchSubscriptionsRequest buildFetchSubscriptionsRequest(
+	    const SubscriberInfo& subscriber);
 
 	/**
 	 * @brief Build fetch subscribers request for a given topic.
@@ -98,18 +103,20 @@ struct RequestBuilder {
 	 *
 	 * @return An `FetchSubscribersRequest` configured for the specified topic.
 	 */
-	static FetchSubscribersRequest buildFetchSubscribersRequest(const v1::UUri& topic);
+	static FetchSubscribersRequest buildFetchSubscribersRequest(
+	    const v1::UUri& topic);
 
 	/**
-	 * @brief Build notification request for a given topic. Subscription change notifications 
-	 *		  MUST use topic SubscriptionChange with resource id 0x8000, as per the protobuf definition.
+	 * @brief Build notification request for a given topic. Subscription change
+	 *notifications MUST use topic SubscriptionChange with resource id 0x8000,
+	 *as per the protobuf definition.
 	 *
-	 * @param topic The `v1::UUri` representing the topic to (un)register for/from.
+	 * @param topic The `v1::UUri` representing the topic to (un)register
+	 *for/from.
 	 *
 	 * @return An `NotificationsRequest` configured for the specified topic.
 	 */
 	static NotificationsRequest buildNotificationRequest(const v1::UUri& topic);
-	
 
 private:
 	USubscriptionOptions options_;  ///< Options used to configure the requests.

@@ -30,9 +30,11 @@ constexpr uint16_t RESOURCE_ID_SUBSCRIBE = 0x0001;
 constexpr uint16_t RESOURCE_ID_UNSUBSCRIBE = 0x0002;
 /// The resource identifier of uSubscription's _fetch subscriptions_ operation.
 constexpr uint16_t RESOURCE_ID_FETCH_SUBSCRIPTIONS = 0x0003;
-/// The resource identifier of uSubscription's _register for notifications_ operation.
+/// The resource identifier of uSubscription's _register for notifications_
+/// operation.
 constexpr uint16_t RESOURCE_ID_REGISTER_FOR_NOTIFICATIONS = 0x0006;
-/// The resource identifier of uSubscription's _unregister for notifications_ operation.
+/// The resource identifier of uSubscription's _unregister for notifications_
+/// operation.
 constexpr uint16_t RESOURCE_ID_UNREGISTER_FOR_NOTIFICATIONS = 0x0007;
 /// The resource identifier of uSubscription's _fetch subscribers_ operation.
 constexpr uint16_t RESOURCE_ID_FETCH_SUBSCRIBERS = 0x0008;
@@ -66,10 +68,11 @@ struct RpcClientUSubscription : USubscription {
 	///
 	utils::Expected<UnsubscribeResponse, v1::UStatus> unsubscribe(
 	    const UnsubscribeRequest& unsubscribe_request) override;
-	
+
 	/// @brief Fetch all subscriptions either by topic or subscriber
 	///
-	utils::Expected<FetchSubscriptionsResponse, v1::UStatus> fetch_subscriptions(
+	utils::Expected<FetchSubscriptionsResponse, v1::UStatus>
+	fetch_subscriptions(
 	    const FetchSubscriptionsRequest& fetch_subscribers) override;
 
 	/// @brief Fetch all subscribers
@@ -79,13 +82,15 @@ struct RpcClientUSubscription : USubscription {
 
 	/// @brief Register for notifications
 	///
-	utils::Expected<NotificationsResponse, v1::UStatus> register_for_notifications(const
-	NotificationsRequest& register_notifications_request) override ;
+	utils::Expected<NotificationsResponse, v1::UStatus>
+	register_for_notifications(
+	    const NotificationsRequest& register_notifications_request) override;
 
 	/// @brief Unregister for notifications
 	///
-	utils::Expected<NotificationsResponse, v1::UStatus> unregister_for_notifications(const
-	NotificationsRequest& unregister_notifications_request) override ;
+	utils::Expected<NotificationsResponse, v1::UStatus>
+	unregister_for_notifications(
+	    const NotificationsRequest& unregister_notifications_request) override;
 
 	/// @brief Constructor
 	///

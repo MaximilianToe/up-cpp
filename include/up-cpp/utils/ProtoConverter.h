@@ -80,15 +80,15 @@ struct ProtoConverter {
 	 */
 	template <typename T>
 	static TOrStatus<T> extractFromProtobuf(const v1::UMessage& message) {
-
 		switch (message.attributes().payload_format()) {
-
 			case v1::UPayloadFormat::UPAYLOAD_FORMAT_PROTOBUF: {
 				T response;
 				if (!response.ParseFromString(message.payload())) {
 					v1::UStatus status;
 					status.set_code(v1::UCode::INTERNAL);
-					status.set_message("extractFromProtobuf: Error when parsing payload from protobuf.");
+					status.set_message(
+					    "extractFromProtobuf: Error when parsing payload from "
+					    "protobuf.");
 					return TOrStatus<T>(UnexpectedStatus(status));
 				}
 				return TOrStatus<T>(response);
@@ -100,7 +100,8 @@ struct ProtoConverter {
 					v1::UStatus status;
 					status.set_code(v1::UCode::INTERNAL);
 					status.set_message(
-						"extractFromProtobuf: Error when parsing payload from protobuf any.");
+					    "extractFromProtobuf: Error when parsing payload from "
+					    "protobuf any.");
 					return TOrStatus<T>(UnexpectedStatus(status));
 				}
 				T response;
@@ -108,7 +109,7 @@ struct ProtoConverter {
 					v1::UStatus status;
 					status.set_code(v1::UCode::INTERNAL);
 					status.set_message(
-						"extractFromProtobuf: Error when unpacking any.");
+					    "extractFromProtobuf: Error when unpacking any.");
 					return TOrStatus<T>(UnexpectedStatus(status));
 				}
 				return TOrStatus<T>(response);
@@ -119,16 +120,18 @@ struct ProtoConverter {
 			case v1::UPayloadFormat::UPAYLOAD_FORMAT_RAW:
 			case v1::UPayloadFormat::UPAYLOAD_FORMAT_TEXT:
 			case v1::UPayloadFormat::UPAYLOAD_FORMAT_SHM:
-			case v1::UPayloadFormat::UPayloadFormat_INT_MIN_SENTINEL_DO_NOT_USE_:
-			case v1::UPayloadFormat::UPayloadFormat_INT_MAX_SENTINEL_DO_NOT_USE_:
+			case v1::UPayloadFormat::
+			    UPayloadFormat_INT_MIN_SENTINEL_DO_NOT_USE_:
+			case v1::UPayloadFormat::
+			    UPayloadFormat_INT_MAX_SENTINEL_DO_NOT_USE_:
 			default: {
 				v1::UStatus status;
 				status.set_code(v1::UCode::INVALID_ARGUMENT);
-				status.set_message("Unknown/invalid/unsupported payload format.");
+				status.set_message(
+				    "Unknown/invalid/unsupported payload format.");
 				return TOrStatus<T>(UnexpectedStatus(status));
 			}
-    	}
-
+		}
 	}
 
 	/**

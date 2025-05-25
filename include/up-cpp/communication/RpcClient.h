@@ -167,15 +167,15 @@ struct RpcClient {
 	///            message (if not OK).
 	///          * A UMessage containing the response from the RPC target.
 	[[nodiscard]] InvokeFuture invokeMethod();
-	
-	template<typename T, typename R>
-	ResponseOrStatus<T>	invokeProtoMethod(const R& request_message){
+
+	template <typename T, typename R>
+	ResponseOrStatus<T> invokeProtoMethod(const R& request_message) {
 		auto payload_or_status =
-			uprotocol::utils::ProtoConverter::protoToPayload(request_message);
+		    uprotocol::utils::ProtoConverter::protoToPayload(request_message);
 
 		if (!payload_or_status.has_value()) {
 			return ResponseOrStatus<T>(
-				UnexpectedStatus(payload_or_status.error()));
+			    UnexpectedStatus(payload_or_status.error()));
 		}
 		datamodel::builder::Payload payload(payload_or_status.value());
 
@@ -183,26 +183,25 @@ struct RpcClient {
 
 		if (!message_or_status.has_value()) {
 			return ResponseOrStatus<T>(
-				UnexpectedStatus(message_or_status.error()));
+			    UnexpectedStatus(message_or_status.error()));
 		}
 
 		T response_message;
 
-		auto response_or_status =
-			utils::ProtoConverter::extractFromProtobuf<T>(
-				message_or_status.value());
+		auto response_or_status = utils::ProtoConverter::extractFromProtobuf<T>(
+		    message_or_status.value());
 
 		if (!response_or_status.has_value()) {
 			spdlog::error(
-				"invokeProtoMethod: Error when extracting response from protobuf.");
+			    "invokeProtoMethod: Error when extracting response from "
+			    "protobuf.");
 			return ResponseOrStatus<T>(
-				UnexpectedStatus(response_or_status.error()));
+			    UnexpectedStatus(response_or_status.error()));
 		}
 
 		response_message = response_or_status.value();
 
-		return ResponseOrStatus<T>(
-			std::move(response_message));
+		return ResponseOrStatus<T>(std::move(response_message));
 	}
 
 	/// @brief Default move constructor (defined in RpcClient.cpp)

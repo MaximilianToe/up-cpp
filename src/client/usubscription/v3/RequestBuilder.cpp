@@ -10,6 +10,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 #include "up-cpp/client/usubscription/v3/RequestBuilder.h"
+
 #include <uprotocol/core/usubscription/v3/usubscription.pb.h>
 
 namespace uprotocol::core::usubscription::v3 {

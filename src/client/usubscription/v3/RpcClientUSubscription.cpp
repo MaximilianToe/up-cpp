@@ -37,7 +37,8 @@ RpcClientUSubscription::subscribe(
 	    priority, USUBSCRIPTION_REQUEST_TTL);
 
 	auto response_or_status =
-	    rpc_client.invokeProtoMethod<SubscriptionResponse>(subscription_request);
+	    rpc_client.invokeProtoMethod<SubscriptionResponse>(
+	        subscription_request);
 
 	if (!response_or_status.has_value()) {
 		return utils::Expected<SubscriptionResponse, v1::UStatus>(
@@ -66,7 +67,8 @@ RpcClientUSubscription::unsubscribe(
 	    uuri_builder_.getServiceUriWithResourceId(RESOURCE_ID_UNSUBSCRIBE),
 	    priority, USUBSCRIPTION_REQUEST_TTL);
 
-	return rpc_client.invokeProtoMethod<UnsubscribeResponse>(unsubscribe_request);
+	return rpc_client.invokeProtoMethod<UnsubscribeResponse>(
+	    unsubscribe_request);
 }
 
 RpcClientUSubscription::ResponseOrStatus<FetchSubscriptionsResponse>
@@ -74,10 +76,12 @@ RpcClientUSubscription::fetch_subscriptions(
     const FetchSubscriptionsRequest& fetch_subscribers_request) {
 	communication::RpcClient rpc_client(
 	    transport_,
-	    uuri_builder_.getServiceUriWithResourceId(RESOURCE_ID_FETCH_SUBSCRIPTIONS),
+	    uuri_builder_.getServiceUriWithResourceId(
+	        RESOURCE_ID_FETCH_SUBSCRIPTIONS),
 	    priority, USUBSCRIPTION_REQUEST_TTL);
 
-	return rpc_client.invokeProtoMethod<FetchSubscriptionsResponse>(fetch_subscribers_request);
+	return rpc_client.invokeProtoMethod<FetchSubscriptionsResponse>(
+	    fetch_subscribers_request);
 }
 
 RpcClientUSubscription::ResponseOrStatus<FetchSubscribersResponse>
@@ -85,10 +89,12 @@ RpcClientUSubscription::fetch_subscribers(
     const FetchSubscribersRequest& fetch_subscribers_request) {
 	communication::RpcClient rpc_client(
 	    transport_,
-	    uuri_builder_.getServiceUriWithResourceId(RESOURCE_ID_FETCH_SUBSCRIBERS),
+	    uuri_builder_.getServiceUriWithResourceId(
+	        RESOURCE_ID_FETCH_SUBSCRIBERS),
 	    priority, USUBSCRIPTION_REQUEST_TTL);
 
-	return rpc_client.invokeProtoMethod<FetchSubscribersResponse>(fetch_subscribers_request);
+	return rpc_client.invokeProtoMethod<FetchSubscribersResponse>(
+	    fetch_subscribers_request);
 }
 
 RpcClientUSubscription::ResponseOrStatus<NotificationsResponse>
@@ -96,10 +102,12 @@ RpcClientUSubscription::register_for_notifications(
     const NotificationsRequest& register_notifications_request) {
 	communication::RpcClient rpc_client(
 	    transport_,
-	    uuri_builder_.getServiceUriWithResourceId(RESOURCE_ID_REGISTER_FOR_NOTIFICATIONS),
+	    uuri_builder_.getServiceUriWithResourceId(
+	        RESOURCE_ID_REGISTER_FOR_NOTIFICATIONS),
 	    priority, USUBSCRIPTION_REQUEST_TTL);
 
-	return rpc_client.invokeProtoMethod<NotificationsResponse>(register_notifications_request);
+	return rpc_client.invokeProtoMethod<NotificationsResponse>(
+	    register_notifications_request);
 }
 
 RpcClientUSubscription::ResponseOrStatus<NotificationsResponse>
@@ -107,10 +115,12 @@ RpcClientUSubscription::unregister_for_notifications(
     const NotificationsRequest& unregister_notifications_request) {
 	communication::RpcClient rpc_client(
 	    transport_,
-	    uuri_builder_.getServiceUriWithResourceId(RESOURCE_ID_UNREGISTER_FOR_NOTIFICATIONS),
+	    uuri_builder_.getServiceUriWithResourceId(
+	        RESOURCE_ID_UNREGISTER_FOR_NOTIFICATIONS),
 	    priority, USUBSCRIPTION_REQUEST_TTL);
 
-	return rpc_client.invokeProtoMethod<NotificationsResponse>(unregister_notifications_request);
+	return rpc_client.invokeProtoMethod<NotificationsResponse>(
+	    unregister_notifications_request);
 }
 
 }  // namespace uprotocol::core::usubscription::v3
