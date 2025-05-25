@@ -1,128 +1,146 @@
-// SPDX-FileCopyrightText: 2024 Contributors to the Eclipse Foundation
-//
-// See the NOTICE file(s) distributed with this work for additional
-// information regarding copyright ownership.
-//
-// This program and the accompanying materials are made available under the
-// terms of the Apache License Version 2.0 which is available at
-// https://www.apache.org/licenses/LICENSE-2.0
-//
-// SPDX-License-Identifier: Apache-2.0
-
-#include <google/protobuf/util/message_differencer.h>
 #include <gtest/gtest.h>
-#include <up-cpp/client/usubscription/v3/RpcClientUSubscription.h>
-#include <up-cpp/communication/NotificationSource.h>
 
 #include "UTransportMock.h"
+#include "up-cpp/client/usubscription/v3/RequestBuilder.h"
+#include "up-cpp/client/usubscription/v3/RpcClientUSubscription.h"
+#include "up-cpp/communication/RpcServer.h"
+#include "up-cpp/utils/ProtoConverter.h"
+#include "uprotocol/v1/uri.pb.h"
+
+using UMessage = uprotocol::v1::UMessage;
+using Payload = uprotocol::datamodel::builder::Payload;
+using ProtoConverter = uprotocol::utils::ProtoConverter;
 
 namespace {
-using MsgDiff = google::protobuf::util::MessageDifferencer;
+
+constexpr uint32_t UE_VERSION_MAJOR = 3;
+constexpr uint32_t CLIENT_UE_ID = 23492;
 
 class RpcClientUSubscriptionTest : public testing::Test {
-private:
-	std::shared_ptr<uprotocol::test::UTransportMock> mockTransportClient_;
-	std::shared_ptr<uprotocol::test::UTransportMock> mockTransportServer_;
-	uprotocol::v1::UUri client_uuri;
-	uprotocol::v1::UUri server_uuri;
-	uprotocol::v1::UUri subscription_uuri;
-
 protected:
-	// Run once per TEST_F.
+	// Run once per TEST_F.s
 	// Used to set up clean environments per test.
-
-	std::shared_ptr<uprotocol::test::UTransportMock> getMockTransportClient()
-	    const {
-		return mockTransportClient_;
-	}
-	std::shared_ptr<uprotocol::test::UTransportMock> getMockTransportServer()
-	    const {
-		return mockTransportServer_;
-	}
-	uprotocol::v1::UUri& getClientUUri() { return client_uuri; }
-	const uprotocol::v1::UUri& getServerUUri() const { return server_uuri; }
-	const uprotocol::v1::UUri& getSubscriptionUUri() const {
-		return subscription_uuri;
-	}
-
 	void SetUp() override {
-		constexpr uint32_t TEST_UE_ID = 0x18000;
-		constexpr uint32_t DEFAULT_RESOURCE_ID = 0x8000;
-		// Create a generic transport uri
-		client_uuri.set_authority_name("random_string");
-		client_uuri.set_ue_id(TEST_UE_ID);
-		client_uuri.set_ue_version_major(USUBSCRIPTION_VERSION_MAJOR);
+		uprotocol::v1::UUri client_uuri;
+		client_uuri.set_authority_name("client.usubscription");
+		client_uuri.set_ue_id(CLIENT_UE_ID);
+		client_uuri.set_ue_version_major(UE_VERSION_MAJOR);
 		client_uuri.set_resource_id(0);
 
-		// Set up a transport
-		mockTransportClient_ =
-		    std::make_shared<uprotocol::test::UTransportMock>(client_uuri);
+		client_transport_ = std::make_shared<uprotocol::test::UTransportMock>(client_uuri);
 
-		// Craete server default uri and set up a transport
+		uprotocol::v1::UUri server_uuri;
 		server_uuri.set_authority_name("core.usubscription");
-		server_uuri.set_ue_id(0);
-		server_uuri.set_ue_version_major(USUBSCRIPTION_VERSION_MAJOR);
+		server_uuri.set_ue_id(1);
+		server_uuri.set_ue_version_major(UE_VERSION_MAJOR);
 		server_uuri.set_resource_id(0);
 
-		mockTransportServer_ =
-		    std::make_shared<uprotocol::test::UTransportMock>(server_uuri);
+		server_transport_ = std::make_shared<uprotocol::test::UTransportMock>(server_uuri);
 
-		// Create a generic subscription uri
-		subscription_uuri.set_authority_name("10.0.0.2");
-		subscription_uuri.set_ue_id(TEST_UE_ID);
-		subscription_uuri.set_ue_version_major(USUBSCRIPTION_VERSION_MAJOR);
-		subscription_uuri.set_resource_id(DEFAULT_RESOURCE_ID);
-	};
+		constexpr  uint32_t SERVER_RESOURCE_ID = 32600;
+		server_method_uuri_.set_authority_name("core.usubscription");
+		server_method_uuri_.set_ue_id(1);
+		server_method_uuri_.set_ue_version_major(UE_VERSION_MAJOR);
+		server_method_uuri_.set_resource_id(SERVER_RESOURCE_ID);
+
+		constexpr uint32_t TOPIC_UE = 2342;
+		constexpr uint32_t TOPIC_RESOURCE_ID = 12340;
+		subscription_topic_.set_authority_name("topic.usubscription");
+		subscription_topic_.set_ue_id(TOPIC_UE);
+		subscription_topic_.set_ue_version_major(UE_VERSION_MAJOR);
+		subscription_topic_.set_resource_id(TOPIC_RESOURCE_ID);
+	}
+
 	void TearDown() override {}
 
 	// Run once per execution of the test application.
 	// Used for setup of all tests. Has access to this instance.
 	RpcClientUSubscriptionTest() = default;
 
-	void buildDefaultSourceURI();
-	void buildValidNotificationURI();
-	void buildInValidNotificationURI();
-
 	// Run once per execution of the test application.
 	// Used only for global setup outside of tests.
 	static void SetUpTestSuite() {}
 	static void TearDownTestSuite() {}
 
+	std::shared_ptr<uprotocol::test::UTransportMock> getClientTransport() {
+		return client_transport_;
+	}
+
+	std::shared_ptr<uprotocol::test::UTransportMock> getServerTransport() {
+		return server_transport_;
+	}
+
+	uprotocol::v1::UUri getServerMethodUuri() {
+		return server_method_uuri_;
+	}
+
+	uprotocol::v1::UUri getSubscriptionTopic() {
+		return subscription_topic_;
+	}
+
+	uprotocol::core::usubscription::v3::RequestBuilder getRequestBuilder() {
+		return request_builder_;
+	}
+
+private:
+	std::shared_ptr<uprotocol::test::UTransportMock> client_transport_;
+	std::shared_ptr<uprotocol::test::UTransportMock> server_transport_;
+	uprotocol::core::usubscription::v3::RequestBuilder request_builder_;
+	uprotocol::v1::UUri server_method_uuri_;
+	uprotocol::v1::UUri subscription_topic_;
+
 public:
 	~RpcClientUSubscriptionTest() override = default;
 };
 
-// Negative test case with no source filter
-TEST_F(RpcClientUSubscriptionTest, ConstructorTestSuccess) {  // NOLINT
+TEST_F(RpcClientUSubscriptionTest, SubscribeRoundtripWithValidProtoPayload) {
+	bool server_callback_executed = false;
+	uprotocol::core::usubscription::v3::SubscriptionRequest server_capture;
+	uprotocol::core::usubscription::v3::SubscriptionResponse server_response;
+	*server_response.mutable_topic() = getSubscriptionTopic();
+	auto server_or_status = uprotocol::communication::RpcServer::create(getServerTransport(),getServerMethodUuri(),
+		[&server_callback_executed,&server_capture,&server_response](const UMessage& message)->std::optional<Payload> {
+			server_callback_executed = true;
+			auto request_or_status = ProtoConverter::extractFromProtobuf<uprotocol::core::usubscription::v3::SubscriptionRequest>(message);
+			if (!request_or_status.has_value()) {
+				return std::nullopt;
+			}
+			server_capture = request_or_status.value();
+			Payload response_payload(server_response);
+			return response_payload;
+		}, uprotocol::v1::UPayloadFormat::UPAYLOAD_FORMAT_PROTOBUF);
 
-	auto rpc_client_usubscription = std::make_unique<
-	    uprotocol::core::usubscription::v3::RpcClientUSubscription>(
-	    getMockTransportClient());
+	ASSERT_TRUE(server_or_status.has_value());
+	ASSERT_NE(server_or_status.value(), nullptr);
+	EXPECT_TRUE(getServerTransport()->getListener());
 
-	// Verify that the RpcClientUSubscription pointer is not null, indicating
-	// successful
-	ASSERT_NE(rpc_client_usubscription, nullptr);
+	auto client = uprotocol::core::usubscription::v3::RpcClientUSubscription(getClientTransport());
+
+	const auto subscription_request = getRequestBuilder().buildSubscriptionRequest(getSubscriptionTopic());
+
+	auto response_or_status_future = std::async(std::launch::async, [&client,&subscription_request]()->
+		uprotocol::utils::Expected<uprotocol::core::usubscription::v3::SubscriptionResponse,
+	            uprotocol::v1::UStatus>{
+		return client.subscribe(subscription_request);
+	});
+
+	//wait to give the client time to send the request. There is currently a race condition
+	sleep(0.5);
+	(*getServerTransport()->getListener())(getClientTransport()->getMessage());
+	EXPECT_TRUE(server_callback_executed);
+	EXPECT_EQ(server_capture.SerializeAsString(), subscription_request.SerializeAsString());
+
+	getClientTransport()->mockMessage(getServerTransport()->getMessage());
+	EXPECT_TRUE(getClientTransport()->getListener());
+	EXPECT_EQ(getClientTransport()->getSendCount(),1);
+	auto response_or_status = response_or_status_future.get();
+	ASSERT_TRUE(response_or_status.has_value());
+	EXPECT_EQ(response_or_status.value().SerializeAsString(),server_response.SerializeAsString());
 }
-
-// TEST_F(RpcClientUSubscriptionTest, SubscribeTestSuccess) {  // NOLINT
-//
-// 	uprotocol::core::usubscription::v3::SubscriptionRequest
-// 	    subscription_request =
-// 	        uprotocol::utils::ProtoConverter::BuildSubscriptionRequest(
-// 	            getSubscriptionUUri(),
-// 	            uprotocol::core::usubscription::v3::SubscribeAttributes());
-//
-// 	auto rpc_client_usubscription = std::make_unique<
-// 	    uprotocol::core::usubscription::v3::RpcClientUSubscription>(
-// 	    getMockTransportClient());
-//
-// 	// Verify that the RpcClientUSubscription pointer is not null, indicating
-// 	// successful
-// 	ASSERT_NE(rpc_client_usubscription, nullptr);
-//
-// 	auto result = rpc_client_usubscription->subscribe(subscription_request);
-//
-// 	ASSERT_NE(&result, nullptr);
-// }
-
-}  // namespace
+TEST_F(RpcClientUSubscriptionTest, SubscribeRoundtripWithValidProtoAnyPayload) {
+}
+TEST_F(RpcClientUSubscriptionTest, SubscribeRoundtripWithInvalidPayload) {
+}
+TEST_F(RpcClientUSubscriptionTest, SubscribeRoundtripWithInvalidResponse) {
+}
+};

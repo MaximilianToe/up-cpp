@@ -23,7 +23,7 @@
 /// The uEntity (type) identifier of the uSubscription service.
 constexpr uint32_t USUBSCRIPTION_TYPE_ID = 0x00000000;
 /// The (latest) major version of the uSubscription service.
-constexpr uint8_t USUBSCRIPTION_VERSION_MAJOR = 0x03;
+constexpr uint8_t UE_VERSION_MAJOR = 0x03;
 /// The resource identifier of uSubscription's _subscribe_ operation.
 constexpr uint16_t RESOURCE_ID_SUBSCRIBE = 0x0001;
 /// The resource identifier of uSubscription's _unsubscribe_ operation.
