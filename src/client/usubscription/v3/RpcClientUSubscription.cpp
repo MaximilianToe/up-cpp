@@ -41,8 +41,7 @@ RpcClientUSubscription::subscribe(
 	        subscription_request);
 
 	if (!response_or_status.has_value()) {
-		return utils::Expected<SubscriptionResponse, v1::UStatus>(
-		    utils::Unexpected(response_or_status.error()));
+		return response_or_status;
 	}
 	auto subscription_response = response_or_status.value();
 
@@ -73,7 +72,7 @@ RpcClientUSubscription::unsubscribe(
 
 RpcClientUSubscription::ResponseOrStatus<FetchSubscriptionsResponse>
 RpcClientUSubscription::fetch_subscriptions(
-    const FetchSubscriptionsRequest& fetch_subscribers_request) {
+    const FetchSubscriptionsRequest& fetch_subscriptions_request) {
 	communication::RpcClient rpc_client(
 	    transport_,
 	    uuri_builder_.getServiceUriWithResourceId(
@@ -81,7 +80,7 @@ RpcClientUSubscription::fetch_subscriptions(
 	    priority, USUBSCRIPTION_REQUEST_TTL);
 
 	return rpc_client.invokeProtoMethod<FetchSubscriptionsResponse>(
-	    fetch_subscribers_request);
+	    fetch_subscriptions_request);
 }
 
 RpcClientUSubscription::ResponseOrStatus<FetchSubscribersResponse>
