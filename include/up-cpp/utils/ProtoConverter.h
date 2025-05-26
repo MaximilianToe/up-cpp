@@ -22,6 +22,9 @@ using uprotocol::core::usubscription::v3::SubscribeAttributes;
 using uprotocol::core::usubscription::v3::SubscriberInfo;
 using uprotocol::core::usubscription::v3::SubscriptionRequest;
 using uprotocol::core::usubscription::v3::UnsubscribeRequest;
+using core::usubscription::v3::FetchSubscriptionsRequest;
+using core::usubscription::v3::FetchSubscribersRequest;
+using core::usubscription::v3::NotificationsRequest;
 
 struct ProtoConverter {
 	/// @brief Converts std::chrono::time_point to google::protobuf::Timestamp
@@ -63,8 +66,30 @@ struct ProtoConverter {
 	/// @return the built UnsubscribeRequest
 	static UnsubscribeRequest BuildUnSubscribeRequest(
 	    const v1::UUri& subscription_topic);
-	static UnsubscribeRequest BuildUnSubscribeRequest(
-	    const v1::UUri& uri, const SubscribeAttributes& attributes);
+	
+	/// @brief Builds a FetchSubscriptionsRequest from the given topic
+	///
+	/// @param topic the UUri of the topic to fetch subscriptions for
+	/// @return the built FetchSubscriptionsRequest
+	static FetchSubscriptionsRequest BuildFetchSubscriptionsRequest(const v1::UUri& topic);
+
+	/// @brief Builds a FetchSubscriptionsRequest from the given subscriber information
+	///
+	/// @param subscriber the SubscriberInfo containing details of the subscriber
+	/// @return the built FetchSubscriptionsRequest
+	static FetchSubscriptionsRequest BuildFetchSubscriptionsRequest(const SubscriberInfo& subscriber);
+
+	/// @brief Builds a FetchSubscribersRequest from the given topic
+	///
+	/// @param topic the UUri of the topic to fetch subscribers for
+	/// @return the built FetchSubscribersRequest
+	static FetchSubscribersRequest BuildFetchSubscribersRequest(const v1::UUri& topic);
+
+	/// @brief Builds a NotificationsRequest from the given topic
+	///
+	/// @param topic the UUri of the topic to build a notification request for
+	/// @return the built NotificationsRequest
+	static NotificationsRequest BuildNotificationsRequest(const v1::UUri& topic);
 
 	/**
 	 * @brief Deserializes a protobuf message from a given payload.
