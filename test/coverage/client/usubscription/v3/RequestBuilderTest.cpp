@@ -29,10 +29,12 @@ namespace uprotocol::core::usubscription::v3 {
 class RequestBuilderTest : public ::testing::Test {
 private:
 	v1::UUri source_;
+	v1::UUri wrong_topic_;
 
 protected:
 	USubscriptionOptions options_;
 	const v1::UUri& getSource() const { return source_; }
+	const v1::UUri& getWrongTopic() const { return wrong_topic_; }
 
 	void SetUp() override {
 		// Create a UUri object for testing
@@ -40,6 +42,11 @@ protected:
 		source_.set_ue_id(SOURCE_UE_ID);
 		source_.set_ue_version_major(SOURCE_UE_VERSION_MAJOR);
 		source_.set_resource_id(SOURCE_RESOURCE_ID);
+
+		wrong_topic_.set_authority_name("10.0.0.2");  // random different authority
+		wrong_topic_.set_ue_id(SOURCE_UE_ID);
+		wrong_topic_.set_ue_version_major(SOURCE_UE_VERSION_MAJOR);
+		wrong_topic_.set_resource_id(SOURCE_RESOURCE_ID);
 
 		options_.permission_level = 2;
 		options_.token = "sample_token";
@@ -71,29 +78,75 @@ TEST_F(RequestBuilderTest, BuildSubscriptionRequestWithOptions) {
 	SubscriptionRequest request = builder.buildSubscriptionRequest(topic);
 
 	// Verify the attributes in the request
+	EXPECT_TRUE(request.has_topic());
+	EXPECT_TRUE(request.has_attributes());
 	EXPECT_EQ(request.topic().SerializeAsString(), topic.SerializeAsString());
-	std::cout << "request.SerializeAsString(): " << request.SerializeAsString()
-	          << std::endl;
-	std::cout << "request.attributes: "
-	          << request.attributes().SerializeAsString() << std::endl;
+	EXPECT_NE(request.topic().SerializeAsString(),
+	          getWrongTopic().SerializeAsString());
+	EXPECT_EQ(request.GetTypeName(), "uprotocol.core.usubscription.v3.SubscriptionRequest");
 }
 
-TEST_F(RequestBuilderTest, BuildSubscriptionRequestWrongTopic) {
-	v1::UUri topic = getSource();
+TEST_F(RequestBuilderTest, BuildUnsubscribeRequest) {
+    v1::UUri topic = getSource();
+    RequestBuilder builder(options_);
+
+    UnsubscribeRequest request = builder.buildUnsubscribeRequest(topic);
+
+    // Verify the attributes in the request
+    EXPECT_TRUE(request.has_topic());
+    EXPECT_EQ(request.topic().SerializeAsString(), topic.SerializeAsString());
+	EXPECT_NE(request.topic().SerializeAsString(), getWrongTopic().SerializeAsString());
+    EXPECT_EQ(request.GetTypeName(), "uprotocol.core.usubscription.v3.UnsubscribeRequest");
+}
+
+TEST_F(RequestBuilderTest, BuildFetchSubscriptionsRequestWithTopic) {
+    v1::UUri topic = getSource();
 	RequestBuilder builder(options_);
 
-	v1::UUri wrong_topic;
+    FetchSubscriptionsRequest request = builder.buildFetchSubscriptionsRequest(topic);
 
-	wrong_topic.set_authority_name("10.0.0.2");  // random different authority
-	wrong_topic.set_ue_id(SOURCE_UE_ID);
-	wrong_topic.set_ue_version_major(SOURCE_UE_VERSION_MAJOR);
-	wrong_topic.set_resource_id(SOURCE_RESOURCE_ID);
+    // Verify the attributes in the request
+    EXPECT_TRUE(request.has_topic());
+	EXPECT_EQ(request.topic().SerializeAsString(), topic.SerializeAsString());
+	EXPECT_NE(request.topic().SerializeAsString(), getWrongTopic().SerializeAsString());
+    EXPECT_EQ(request.GetTypeName(), "uprotocol.core.usubscription.v3.FetchSubscriptionsRequest");
+}
 
-	SubscriptionRequest request = builder.buildSubscriptionRequest(topic);
+TEST_F(RequestBuilderTest, BuildFetchSubscriptionsRequestWithSubscriberInfo) {
+    SubscriberInfo subscriber;
+	RequestBuilder builder(options_);
 
-	// Verify the attributes in the request
-	EXPECT_NE(request.topic().SerializeAsString(),
-	          wrong_topic.SerializeAsString());
+    FetchSubscriptionsRequest request = builder.buildFetchSubscriptionsRequest(subscriber);
+
+    // Verify the attributes in the request
+    EXPECT_FALSE(request.has_topic());
+    EXPECT_EQ(request.GetTypeName(), "uprotocol.core.usubscription.v3.FetchSubscriptionsRequest");
+}
+
+TEST_F(RequestBuilderTest, BuildFetchSubscribersRequest) {
+    v1::UUri topic = getSource();
+    RequestBuilder builder(options_);
+
+    FetchSubscribersRequest request = builder.buildFetchSubscribersRequest(topic);
+
+    // Verify the attributes in the request
+    EXPECT_TRUE(request.has_topic());
+    EXPECT_EQ(request.topic().SerializeAsString(), topic.SerializeAsString());
+	EXPECT_NE(request.topic().SerializeAsString(), getWrongTopic().SerializeAsString());
+    EXPECT_EQ(request.GetTypeName(), "uprotocol.core.usubscription.v3.FetchSubscribersRequest");
+}
+
+TEST_F(RequestBuilderTest, BuildNotificationsRequest) {
+    v1::UUri topic = getSource();
+    RequestBuilder builder(options_);
+
+    NotificationsRequest request = builder.buildNotificationsRequest(topic);
+
+    // Verify the attributes in the request
+    EXPECT_TRUE(request.has_topic());
+    EXPECT_EQ(request.topic().SerializeAsString(), topic.SerializeAsString());
+	EXPECT_NE(request.topic().SerializeAsString(), getWrongTopic().SerializeAsString());
+    EXPECT_EQ(request.GetTypeName(), "uprotocol.core.usubscription.v3.NotificationsRequest");
 }
 
 }  // namespace uprotocol::core::usubscription::v3

@@ -185,9 +185,7 @@ struct RpcClient {
 			return ResponseOrStatus<T>(
 			    UnexpectedStatus(message_or_status.error()));
 		}
-
-		T response_message;
-
+		std::cout << "message_or_status.value().GetTypeName(): "<< message_or_status.value().GetTypeName() << std::endl;
 		auto response_or_status = utils::ProtoConverter::extractFromProtobuf<T>(
 		    message_or_status.value());
 
@@ -198,8 +196,7 @@ struct RpcClient {
 			return ResponseOrStatus<T>(
 			    UnexpectedStatus(response_or_status.error()));
 		}
-
-		response_message = response_or_status.value();
+		T response_message = response_or_status.value();
 
 		return ResponseOrStatus<T>(std::move(response_message));
 	}
