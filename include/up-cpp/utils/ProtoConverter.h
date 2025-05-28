@@ -66,7 +66,7 @@ struct ProtoConverter {
 	/// @return the built UnsubscribeRequest
 	static UnsubscribeRequest BuildUnSubscribeRequest(
 	    const v1::UUri& subscription_topic);
-	
+
 	/// @brief Builds a FetchSubscriptionsRequest from the given topic
 	///
 	/// @param topic the UUri of the topic to fetch subscriptions for
@@ -91,18 +91,11 @@ struct ProtoConverter {
 	/// @return the built NotificationsRequest
 	static NotificationsRequest BuildNotificationsRequest(const v1::UUri& topic);
 
-	/**
-	 * @brief Deserializes a protobuf message from a given payload.
-	 *
-	 * Parses the payload in `v1::UMessage` using `google::protobuf::Any`,
-	 * returning a deserialized object of type `T` or an error if parsing fails.
-	 *
-	 * @tparam T The type to deserialize the message into.
-	 *
-	 * @param message The `v1::UMessage` containing the payload.
-	 *
-	 * @return `TOrStatus<T>` with the deserialized object or an error status.
-	 */
+	/// @brief Deserializes a protobuf message from a given payload.
+	///
+	/// @tparam T The type to deserialize the message into.
+	/// @param message The `v1::UMessage` containing the payload.
+	/// @return `TOrStatus<T>` with the deserialized object or an error status.
 	template <typename T>
 	static TOrStatus<T> extractFromProtobuf(const v1::UMessage& message) {
 		switch (message.attributes().payload_format()) {
@@ -165,19 +158,11 @@ struct ProtoConverter {
 		}
 	}
 
-	/**
-	 * @brief Serializes a protobuf object into a payload.
-	 *
-	 * Converts the given `proto` object to a payload using
-	 * `google::protobuf::Any`. Returns the payload or an error status if
-	 * serialization fails.
-	 *
-	 * @tparam T The type of the protobuf object to serialize.
-	 *
-	 * @param proto The protobuf object to be converted into a payload.
-	 *
-	 * @return `PayloadOrStatus` containing the payload or an error status.
-	 */
+	/// @brief Serializes a protobuf object into a payload.
+	///
+	/// @tparam T The type of the protobuf object to serialize.
+	/// @param proto The protobuf object to be converted into a payload.
+	/// @return `PayloadOrStatus` containing the payload or an error status.
 	template <typename T>
 	static PayloadOrStatus protoToPayload(const T& proto) {
 		google::protobuf::Any any;
