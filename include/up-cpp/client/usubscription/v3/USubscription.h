@@ -32,7 +32,7 @@ struct USubscription {
 	    const UnsubscribeRequest& unsubscribe_request) = 0;
 
 	virtual ResponseOrStatus<FetchSubscriptionsResponse> fetch_subscriptions(
-	    const FetchSubscriptionsRequest& fetch_subscribers_request) = 0;
+	    const FetchSubscriptionsRequest& fetch_subscriptions_request) = 0;
 
 	virtual ResponseOrStatus<NotificationsResponse> register_for_notifications(
 	    const NotificationsRequest& register_notifications_request) = 0;

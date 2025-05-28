@@ -73,12 +73,12 @@ struct RpcClientUSubscription : USubscription {
 	///
 	utils::Expected<FetchSubscriptionsResponse, v1::UStatus>
 	fetch_subscriptions(
-	    const FetchSubscriptionsRequest& fetch_subscribers) override;
+	    const FetchSubscriptionsRequest& fetch_subscriptions_request) override;
 
 	/// @brief Fetch all subscribers
 	///
 	utils::Expected<FetchSubscribersResponse, v1::UStatus> fetch_subscribers(
-	    const FetchSubscribersRequest& fetch_subscribers) override;
+	    const FetchSubscribersRequest& fetch_subscribers_request) override;
 
 	/// @brief Register for notifications
 	///

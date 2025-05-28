@@ -107,8 +107,8 @@ struct RequestBuilder {
 	    const v1::UUri& topic);
 
 	/**
-	 * @brief Build notification request for a given topic. Subscription change
-	 *notifications MUST use topic SubscriptionChange with resource id 0x8000,
+	 * @brief Build notifications request for a given topic. Subscription change
+	 *notifications MUST use topic SubscriptionsChange with resource id 0x8000,
 	 *as per the protobuf definition.
 	 *
 	 * @param topic The `v1::UUri` representing the topic to (un)register
@@ -116,7 +116,7 @@ struct RequestBuilder {
 	 *
 	 * @return An `NotificationsRequest` configured for the specified topic.
 	 */
-	static NotificationsRequest buildNotificationRequest(const v1::UUri& topic);
+	static NotificationsRequest buildNotificationsRequest(const v1::UUri& topic);
 
 private:
 	USubscriptionOptions options_;  ///< Options used to configure the requests.
