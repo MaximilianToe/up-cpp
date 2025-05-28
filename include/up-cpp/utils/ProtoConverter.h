@@ -148,7 +148,13 @@ struct ProtoConverter {
 			case v1::UPayloadFormat::
 			    UPayloadFormat_INT_MIN_SENTINEL_DO_NOT_USE_:
 			case v1::UPayloadFormat::
-			    UPayloadFormat_INT_MAX_SENTINEL_DO_NOT_USE_:
+			    UPayloadFormat_INT_MAX_SENTINEL_DO_NOT_USE_: {
+				v1::UStatus status;
+				status.set_code(v1::UCode::UNIMPLEMENTED);
+				status.set_message(
+				    "Unimplemented payload format.");
+				return TOrStatus<T>(UnexpectedStatus(status));
+			}
 			default: {
 				v1::UStatus status;
 				status.set_code(v1::UCode::INVALID_ARGUMENT);
