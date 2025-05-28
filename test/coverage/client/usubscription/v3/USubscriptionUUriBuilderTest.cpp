@@ -21,20 +21,14 @@ namespace uprotocol::core::usubscription::v3 {
 class USubscriptionUUriBuilderTest : public ::testing::Test {
 private:
 	v1::UUri expected_uri_;
-	v1::UUri wrong_uri_;
 
 protected:
 	v1::UUri getExpectedUri() const { return expected_uri_; }
-	v1::UUri getWrongUri() const { return wrong_uri_; }
+
 	void SetUp() override {
 		expected_uri_.set_authority_name("core.usubscription");
 		expected_uri_.set_ue_id(0);
 		expected_uri_.set_ue_version_major(3);
-
-		wrong_uri_.set_authority_name("core.usubscription_wrong");
-		wrong_uri_.set_ue_id(1);
-		wrong_uri_.set_ue_version_major(1);
-		wrong_uri_.set_resource_id(1);
 	}
 
 	void TearDown() override {}
@@ -44,14 +38,12 @@ TEST_F(USubscriptionUUriBuilderTest, GetServiceUriWithResourceId) {
 	// Example test case for building a subscription UUri
 	auto expected_uri = getExpectedUri();
 	expected_uri.set_resource_id(RESOURCE_ID_TEST);
-	USubscriptionUUriBuilder builder;
-	v1::UUri actual_uri = builder.getServiceUriWithResourceId(RESOURCE_ID_TEST);
+	const USubscriptionUUriBuilder builder;
+	const v1::UUri actual_uri = builder.getServiceUriWithResourceId(RESOURCE_ID_TEST);
 
 	EXPECT_TRUE(actual_uri.IsInitialized());
 	EXPECT_EQ(actual_uri.GetTypeName(), "uprotocol.v1.UUri");
 	EXPECT_EQ(actual_uri.SerializeAsString(), expected_uri.SerializeAsString());
-	EXPECT_NE(actual_uri.SerializeAsString(),
-	          getWrongUri().SerializeAsString());
 }
 
 TEST_F(USubscriptionUUriBuilderTest, GetNotificationUri) {
@@ -62,8 +54,6 @@ TEST_F(USubscriptionUUriBuilderTest, GetNotificationUri) {
 	EXPECT_TRUE(actual_uri.IsInitialized());
 	EXPECT_EQ(actual_uri.GetTypeName(), "uprotocol.v1.UUri");
 	EXPECT_EQ(actual_uri.SerializeAsString(), expected_uri.SerializeAsString());
-	EXPECT_NE(actual_uri.SerializeAsString(),
-	          getWrongUri().SerializeAsString());
 }
 
 }  // namespace uprotocol::core::usubscription::v3

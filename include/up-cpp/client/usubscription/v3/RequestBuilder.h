@@ -61,7 +61,7 @@ struct RequestBuilder {
 	/// @param topic The `v1::UUri` representing the topic to unsubscribe from.
 	///
 	/// @return An `UnsubscribeRequest` configured for the specified topic.
-	static UnsubscribeRequest buildUnsubscribeRequest(const v1::UUri& topic);
+	UnsubscribeRequest buildUnsubscribeRequest(const v1::UUri& topic) const;
 
 	/// @brief Build fetch subscritions request for a given topic.
 	///
@@ -69,8 +69,8 @@ struct RequestBuilder {
 	///
 	/// @return An `FetchSubscriptionsRequest` configured for the specified
 	/// topic.
-	static FetchSubscriptionsRequest buildFetchSubscriptionsRequest(
-	    const v1::UUri& topic);
+	FetchSubscriptionsRequest buildFetchSubscriptionsRequest(
+	    const v1::UUri& topic) const;
 
 	/// @brief Build fetch subscritions request for a given subscriber.
 	///
@@ -79,16 +79,16 @@ struct RequestBuilder {
 	///
 	/// @return An `FetchSubscriptionsRequest` configured for the specified
 	/// subscriber.
-	static FetchSubscriptionsRequest buildFetchSubscriptionsRequest(
-	    const SubscriberInfo& subscriber);
+	FetchSubscriptionsRequest buildFetchSubscriptionsRequest(
+	    const SubscriberInfo& subscriber) const;
 
 	/// @brief Build fetch subscribers request for a given topic.
 	///
 	/// @param topic The `v1::UUri` representing the topic to fetch.
 	///
 	/// @return An `FetchSubscribersRequest` configured for the specified topic.
-	static FetchSubscribersRequest buildFetchSubscribersRequest(
-	    const v1::UUri& topic);
+	FetchSubscribersRequest buildFetchSubscribersRequest(
+	    const v1::UUri& topic) const ;
 
 	/// @brief Build notifications request for a given topic. Subscription
 	/// change
@@ -99,8 +99,8 @@ struct RequestBuilder {
 	/// for/from.
 	///
 	/// @return An `NotificationsRequest` configured for the specified topic.
-	static NotificationsRequest buildNotificationsRequest(
-	    const v1::UUri& topic);
+	NotificationsRequest buildNotificationsRequest(
+	    const v1::UUri& topic) const;
 
 private:
 	USubscriptionOptions options_;  ///< Options used to configure the requests.
