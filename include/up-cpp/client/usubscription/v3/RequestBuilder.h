@@ -42,7 +42,6 @@ struct USubscriptionOptions {
 /// This struct facilitates the construction of requests based on
 /// `USubscriptionOptions`, providing methods to build different requests.
 struct RequestBuilder {
-
 	/// @brief Constructs a RequestBuilder with the given subscription options.
 	///
 	/// @param options Subscription options to configure the requests. Defaults
@@ -91,15 +90,17 @@ struct RequestBuilder {
 	static FetchSubscribersRequest buildFetchSubscribersRequest(
 	    const v1::UUri& topic);
 
-	/// @brief Build notifications request for a given topic. Subscription change
-	///notifications MUST use topic SubscriptionsChange with resource id 0x8000,
-	///as per the protobuf definition.
+	/// @brief Build notifications request for a given topic. Subscription
+	/// change
+	/// notifications MUST use topic SubscriptionsChange with resource id
+	/// 0x8000, as per the protobuf definition.
 	///
 	/// @param topic The `v1::UUri` representing the topic to (un)register
-	///for/from.
+	/// for/from.
 	///
 	/// @return An `NotificationsRequest` configured for the specified topic.
-	static NotificationsRequest buildNotificationsRequest(const v1::UUri& topic);
+	static NotificationsRequest buildNotificationsRequest(
+	    const v1::UUri& topic);
 
 private:
 	USubscriptionOptions options_;  ///< Options used to configure the requests.

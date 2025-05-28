@@ -185,7 +185,7 @@ struct RpcClient {
 			return ResponseOrStatus<T>(
 			    UnexpectedStatus(message_or_status.error()));
 		}
-		
+
 		auto response_or_status = utils::ProtoConverter::extractFromProtobuf<T>(
 		    message_or_status.value());
 

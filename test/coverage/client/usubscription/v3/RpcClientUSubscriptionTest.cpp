@@ -11,8 +11,10 @@
 using UMessage = uprotocol::v1::UMessage;
 using Payload = uprotocol::datamodel::builder::Payload;
 using ProtoConverter = uprotocol::utils::ProtoConverter;
-using SubscriptionRequest = uprotocol::core::usubscription::v3::SubscriptionRequest;
-using SubscriptionResponse = uprotocol::core::usubscription::v3::SubscriptionResponse;
+using SubscriptionRequest =
+    uprotocol::core::usubscription::v3::SubscriptionRequest;
+using SubscriptionResponse =
+    uprotocol::core::usubscription::v3::SubscriptionResponse;
 
 namespace {
 
@@ -104,9 +106,9 @@ TEST_F(RpcClientUSubscriptionTest, SubscribeRoundtripWithValidProtoPayload) {
 	    [&server_callback_executed, &server_capture,
 	     &server_response](const UMessage& message) -> std::optional<Payload> {
 		    server_callback_executed = true;
-		    auto request_or_status = ProtoConverter::extractFromProtobuf<
-		        SubscriptionRequest>(
-		        message);
+		    auto request_or_status =
+		        ProtoConverter::extractFromProtobuf<SubscriptionRequest>(
+		            message);
 		    if (!request_or_status.has_value()) {
 			    return std::nullopt;
 		    }
@@ -126,14 +128,13 @@ TEST_F(RpcClientUSubscriptionTest, SubscribeRoundtripWithValidProtoPayload) {
 	const auto subscription_request =
 	    getRequestBuilder().buildSubscriptionRequest(getSubscriptionTopic());
 
-	auto response_or_status_future = std::async(
-	    std::launch::async,
-	    [&client, &subscription_request]()
-	        -> uprotocol::utils::Expected<
-	            SubscriptionResponse,
-	            uprotocol::v1::UStatus> {
-		    return client.subscribe(subscription_request);
-	    });
+	auto response_or_status_future =
+	    std::async(std::launch::async,
+	               [&client, &subscription_request]()
+	                   -> uprotocol::utils::Expected<SubscriptionResponse,
+	                                                 uprotocol::v1::UStatus> {
+		               return client.subscribe(subscription_request);
+	               });
 
 	// wait to give the client time to send the request. Otherwise this would
 	// cause a race condition
@@ -172,19 +173,19 @@ TEST_F(RpcClientUSubscriptionTest, SubscribeRoundtripWithValidProtoAnyPayload) {
 	    [&server_callback_executed, &server_capture,
 	     &server_response](const UMessage& message) -> std::optional<Payload> {
 		    server_callback_executed = true;
-		    auto request_or_status = ProtoConverter::extractFromProtobuf<
-		        SubscriptionRequest>(
-		        message);
+		    auto request_or_status =
+		        ProtoConverter::extractFromProtobuf<SubscriptionRequest>(
+		            message);
 		    if (!request_or_status.has_value()) {
 			    return std::nullopt;
 		    }
 		    server_capture = request_or_status.value();
-			google::protobuf::Any any;
-			if(!any.PackFrom(server_response)) {
-				return std::nullopt;
-			}
-			Payload response_payload(any);
-			return response_payload;
+		    google::protobuf::Any any;
+		    if (!any.PackFrom(server_response)) {
+			    return std::nullopt;
+		    }
+		    Payload response_payload(any);
+		    return response_payload;
 	    },
 	    uprotocol::v1::UPayloadFormat::UPAYLOAD_FORMAT_PROTOBUF_WRAPPED_IN_ANY);
 
@@ -198,14 +199,13 @@ TEST_F(RpcClientUSubscriptionTest, SubscribeRoundtripWithValidProtoAnyPayload) {
 	const auto subscription_request =
 	    getRequestBuilder().buildSubscriptionRequest(getSubscriptionTopic());
 
-	auto response_or_status_future = std::async(
-	    std::launch::async,
-	    [&client, &subscription_request]()
-	        -> uprotocol::utils::Expected<
-	            SubscriptionResponse,
-	            uprotocol::v1::UStatus> {
-		    return client.subscribe(subscription_request);
-	    });
+	auto response_or_status_future =
+	    std::async(std::launch::async,
+	               [&client, &subscription_request]()
+	                   -> uprotocol::utils::Expected<SubscriptionResponse,
+	                                                 uprotocol::v1::UStatus> {
+		               return client.subscribe(subscription_request);
+	               });
 
 	// wait to give the client time to send the request. Otherwise this would
 	// cause a race condition
@@ -234,11 +234,12 @@ TEST_F(RpcClientUSubscriptionTest, SubscribeRoundtripWithValidProtoAnyPayload) {
 	          server_response.SerializeAsString());
 }
 
-TEST_F(RpcClientUSubscriptionTest, SubscribeRoundtripWithValidProtoPayloadDifferentTopic) {
+TEST_F(RpcClientUSubscriptionTest,
+       SubscribeRoundtripWithValidProtoPayloadDifferentTopic) {
 	bool server_callback_executed = false;
 	SubscriptionRequest server_capture;
 	SubscriptionResponse server_response;
-	
+
 	constexpr uint32_t TOPIC_UE = 4321;
 	constexpr uint32_t TOPIC_RESOURCE_ID = 54321;
 	uprotocol::v1::UUri wrong_subscription_topic;
@@ -253,9 +254,9 @@ TEST_F(RpcClientUSubscriptionTest, SubscribeRoundtripWithValidProtoPayloadDiffer
 	    [&server_callback_executed, &server_capture,
 	     &server_response](const UMessage& message) -> std::optional<Payload> {
 		    server_callback_executed = true;
-		    auto request_or_status = ProtoConverter::extractFromProtobuf<
-		        SubscriptionRequest>(
-		        message);
+		    auto request_or_status =
+		        ProtoConverter::extractFromProtobuf<SubscriptionRequest>(
+		            message);
 		    if (!request_or_status.has_value()) {
 			    return std::nullopt;
 		    }
@@ -275,14 +276,13 @@ TEST_F(RpcClientUSubscriptionTest, SubscribeRoundtripWithValidProtoPayloadDiffer
 	const auto subscription_request =
 	    getRequestBuilder().buildSubscriptionRequest(getSubscriptionTopic());
 
-	auto response_or_status_future = std::async(
-	    std::launch::async,
-	    [&client, &subscription_request]()
-	        -> uprotocol::utils::Expected<
-	            SubscriptionResponse,
-	            uprotocol::v1::UStatus> {
-		    return client.subscribe(subscription_request);
-	    });
+	auto response_or_status_future =
+	    std::async(std::launch::async,
+	               [&client, &subscription_request]()
+	                   -> uprotocol::utils::Expected<SubscriptionResponse,
+	                                                 uprotocol::v1::UStatus> {
+		               return client.subscribe(subscription_request);
+	               });
 
 	// wait to give the client time to send the request. Otherwise this would
 	// cause a race condition
@@ -306,7 +306,9 @@ TEST_F(RpcClientUSubscriptionTest, SubscribeRoundtripWithValidProtoPayloadDiffer
 	EXPECT_TRUE(getClientTransport()->getListener());
 	EXPECT_EQ(getClientTransport()->getSendCount(), 1);
 	auto response_or_status = response_or_status_future.get();
-	ASSERT_FALSE(response_or_status.has_value());	// Should fail because the topics do not match
+	ASSERT_FALSE(
+	    response_or_status
+	        .has_value());  // Should fail because the topics do not match
 }
 
 };  // namespace
