@@ -23,7 +23,7 @@ constexpr uint32_t CLIENT_UE_ID = 23492;
 
 constexpr int ITERATIONS_TILL_TIMEOUT = 10;
 constexpr std::chrono::milliseconds MILLISECONDS_PER_ITERATION =
-	std::chrono::milliseconds(50);
+    std::chrono::milliseconds(50);
 
 class RpcClientUSubscriptionTest : public testing::Test {
 protected:
@@ -101,7 +101,7 @@ public:
 };
 
 //
-//Tests for subscribe method
+// Tests for subscribe method
 //
 
 TEST_F(RpcClientUSubscriptionTest, SubscribeRoundtripWithValidProtoPayload) {
@@ -311,11 +311,13 @@ TEST_F(RpcClientUSubscriptionTest,
 }
 
 ////////////////////////////////
-//Tests for unsubscribe method//
+// Tests for unsubscribe method//
 ////////////////////////////////
 
-using UnsubscibeRequest = uprotocol::core::usubscription::v3::UnsubscribeRequest;
-using UnsubscribeResponse = uprotocol::core::usubscription::v3::UnsubscribeResponse;
+using UnsubscibeRequest =
+    uprotocol::core::usubscription::v3::UnsubscribeRequest;
+using UnsubscribeResponse =
+    uprotocol::core::usubscription::v3::UnsubscribeResponse;
 
 TEST_F(RpcClientUSubscriptionTest, UnsubscribeRoundtripWithValidProtoPayload) {
 	bool server_callback_executed = false;
@@ -327,8 +329,7 @@ TEST_F(RpcClientUSubscriptionTest, UnsubscribeRoundtripWithValidProtoPayload) {
 	     &server_response](const UMessage& message) -> std::optional<Payload> {
 		    server_callback_executed = true;
 		    auto request_or_status =
-		        ProtoConverter::extractFromProtobuf<UnsubscibeRequest>(
-		            message);
+		        ProtoConverter::extractFromProtobuf<UnsubscibeRequest>(message);
 		    if (!request_or_status.has_value()) {
 			    return std::nullopt;
 		    }
@@ -380,7 +381,8 @@ TEST_F(RpcClientUSubscriptionTest, UnsubscribeRoundtripWithValidProtoPayload) {
 	          server_response.SerializeAsString());
 }
 
-TEST_F(RpcClientUSubscriptionTest, UnsubscribeRoundtripWithValidProtoAnyPayload) {
+TEST_F(RpcClientUSubscriptionTest,
+       UnsubscribeRoundtripWithValidProtoAnyPayload) {
 	bool server_callback_executed = false;
 	UnsubscibeRequest server_capture;
 	UnsubscribeResponse server_response;
@@ -390,8 +392,7 @@ TEST_F(RpcClientUSubscriptionTest, UnsubscribeRoundtripWithValidProtoAnyPayload)
 	     &server_response](const UMessage& message) -> std::optional<Payload> {
 		    server_callback_executed = true;
 		    auto request_or_status =
-		        ProtoConverter::extractFromProtobuf<UnsubscibeRequest>(
-		            message);
+		        ProtoConverter::extractFromProtobuf<UnsubscibeRequest>(message);
 		    if (!request_or_status.has_value()) {
 			    return std::nullopt;
 		    }
@@ -448,13 +449,16 @@ TEST_F(RpcClientUSubscriptionTest, UnsubscribeRoundtripWithValidProtoAnyPayload)
 }
 
 ////////////////////////////////
-//Tests for fetch_subscribers method//
+// Tests for fetch_subscribers method//
 ////////////////////////////////
 
-using FetchSubscribersRequest = uprotocol::core::usubscription::v3::FetchSubscribersRequest;
-using FetchSubscribersResponse = uprotocol::core::usubscription::v3::FetchSubscribersResponse;
+using FetchSubscribersRequest =
+    uprotocol::core::usubscription::v3::FetchSubscribersRequest;
+using FetchSubscribersResponse =
+    uprotocol::core::usubscription::v3::FetchSubscribersResponse;
 
-TEST_F(RpcClientUSubscriptionTest, fetchSubscriberRoundtripWithValidProtoPayload) {
+TEST_F(RpcClientUSubscriptionTest,
+       fetchSubscriberRoundtripWithValidProtoPayload) {
 	bool server_callback_executed = false;
 	FetchSubscribersRequest server_capture;
 	FetchSubscribersResponse server_response;
@@ -483,15 +487,16 @@ TEST_F(RpcClientUSubscriptionTest, fetchSubscriberRoundtripWithValidProtoPayload
 	    getClientTransport());
 
 	const auto fetch_subscribers_request =
-	    getRequestBuilder().buildFetchSubscribersRequest(getSubscriptionTopic());
+	    getRequestBuilder().buildFetchSubscribersRequest(
+	        getSubscriptionTopic());
 
-	auto response_or_status_future =
-	    std::async(std::launch::async,
-	               [&client, &fetch_subscribers_request]()
-	                   -> uprotocol::utils::Expected<FetchSubscribersResponse,
-	                                                 uprotocol::v1::UStatus> {
-		               return client.fetch_subscribers(fetch_subscribers_request);
-	               });
+	auto response_or_status_future = std::async(
+	    std::launch::async,
+	    [&client, &fetch_subscribers_request]()
+	        -> uprotocol::utils::Expected<FetchSubscribersResponse,
+	                                      uprotocol::v1::UStatus> {
+		    return client.fetch_subscribers(fetch_subscribers_request);
+	    });
 
 	// wait to give the client time to send the request. Otherwise this would
 	// cause a race condition
@@ -517,7 +522,8 @@ TEST_F(RpcClientUSubscriptionTest, fetchSubscriberRoundtripWithValidProtoPayload
 	          server_response.SerializeAsString());
 }
 
-TEST_F(RpcClientUSubscriptionTest, FetchSubscriberRoundtripWithValidProtoAnyPayload) {
+TEST_F(RpcClientUSubscriptionTest,
+       FetchSubscriberRoundtripWithValidProtoAnyPayload) {
 	bool server_callback_executed = false;
 	FetchSubscribersRequest server_capture;
 	FetchSubscribersResponse server_response;
@@ -550,15 +556,16 @@ TEST_F(RpcClientUSubscriptionTest, FetchSubscriberRoundtripWithValidProtoAnyPayl
 	    getClientTransport());
 
 	const auto fetch_subscribers_request =
-	    getRequestBuilder().buildFetchSubscribersRequest(getSubscriptionTopic());
+	    getRequestBuilder().buildFetchSubscribersRequest(
+	        getSubscriptionTopic());
 
-	auto response_or_status_future =
-	    std::async(std::launch::async,
-	               [&client, &fetch_subscribers_request]()
-	                   -> uprotocol::utils::Expected<FetchSubscribersResponse,
-	                                                 uprotocol::v1::UStatus> {
-		               return client.fetch_subscribers(fetch_subscribers_request);
-	               });
+	auto response_or_status_future = std::async(
+	    std::launch::async,
+	    [&client, &fetch_subscribers_request]()
+	        -> uprotocol::utils::Expected<FetchSubscribersResponse,
+	                                      uprotocol::v1::UStatus> {
+		    return client.fetch_subscribers(fetch_subscribers_request);
+	    });
 
 	// wait to give the client time to send the request. Otherwise this would
 	// cause a race condition
@@ -583,4 +590,430 @@ TEST_F(RpcClientUSubscriptionTest, FetchSubscriberRoundtripWithValidProtoAnyPayl
 	EXPECT_EQ(response_or_status.value().SerializeAsString(),
 	          server_response.SerializeAsString());
 }
+
+////////////////////////////////
+// Tests for fetch_subscriptions method//
+////////////////////////////////
+
+using FetchSubscriptionsRequest =
+    uprotocol::core::usubscription::v3::FetchSubscriptionsRequest;
+using FetchSubscriptionsResponse =
+    uprotocol::core::usubscription::v3::FetchSubscriptionsResponse;
+
+TEST_F(RpcClientUSubscriptionTest,
+       fetchSubscriptionsRoundtripWithValidProtoPayload) {
+	bool server_callback_executed = false;
+	FetchSubscriptionsRequest server_capture;
+	FetchSubscriptionsResponse server_response;
+	auto server_or_status = uprotocol::communication::RpcServer::create(
+	    getServerTransport(), getServerMethodUuri(),
+	    [&server_callback_executed, &server_capture,
+	     &server_response](const UMessage& message) -> std::optional<Payload> {
+		    server_callback_executed = true;
+		    auto request_or_status =
+		        ProtoConverter::extractFromProtobuf<FetchSubscriptionsRequest>(
+		            message);
+		    if (!request_or_status.has_value()) {
+			    return std::nullopt;
+		    }
+		    server_capture = request_or_status.value();
+		    Payload response_payload(server_response);
+		    return response_payload;
+	    },
+	    uprotocol::v1::UPayloadFormat::UPAYLOAD_FORMAT_PROTOBUF);
+
+	ASSERT_TRUE(server_or_status.has_value());
+	ASSERT_NE(server_or_status.value(), nullptr);
+	EXPECT_TRUE(getServerTransport()->getListener());
+
+	auto client = uprotocol::core::usubscription::v3::RpcClientUSubscription(
+	    getClientTransport());
+
+	const uprotocol::core::usubscription::v3::SubscriberInfo subscriber_info;
+	const auto fetch_subscriptions_request =
+	    getRequestBuilder().buildFetchSubscriptionsRequest(subscriber_info);
+
+	auto response_or_status_future = std::async(
+	    std::launch::async,
+	    [&client, &fetch_subscriptions_request]()
+	        -> uprotocol::utils::Expected<FetchSubscriptionsResponse,
+	                                      uprotocol::v1::UStatus> {
+		    return client.fetch_subscriptions(fetch_subscriptions_request);
+	    });
+
+	// wait to give the client time to send the request. Otherwise this would
+	// cause a race condition
+	int counter = ITERATIONS_TILL_TIMEOUT;
+	while (counter > 0 && getClientTransport()->getSendCount() == 0) {
+		counter--;
+		std::this_thread::sleep_for(MILLISECONDS_PER_ITERATION);
+	}
+	ASSERT_EQ(getClientTransport()->getSendCount(), 1);
+	EXPECT_TRUE(getClientTransport()->getListener());
+
+	(*getServerTransport()->getListener())(getClientTransport()->getMessage());
+	EXPECT_TRUE(server_callback_executed);
+	EXPECT_EQ(server_capture.SerializeAsString(),
+	          fetch_subscriptions_request.SerializeAsString());
+
+	getClientTransport()->mockMessage(getServerTransport()->getMessage());
+	EXPECT_TRUE(getClientTransport()->getListener());
+	EXPECT_EQ(getClientTransport()->getSendCount(), 1);
+	auto response_or_status = response_or_status_future.get();
+	ASSERT_TRUE(response_or_status.has_value());
+	EXPECT_EQ(response_or_status.value().SerializeAsString(),
+	          server_response.SerializeAsString());
+}
+
+TEST_F(RpcClientUSubscriptionTest,
+       fetchSubscriptionRoundtripWithValidProtoAnyPayload) {
+	bool server_callback_executed = false;
+	FetchSubscriptionsRequest server_capture;
+	FetchSubscriptionsResponse server_response;
+	auto server_or_status = uprotocol::communication::RpcServer::create(
+	    getServerTransport(), getServerMethodUuri(),
+	    [&server_callback_executed, &server_capture,
+	     &server_response](const UMessage& message) -> std::optional<Payload> {
+		    server_callback_executed = true;
+		    auto request_or_status =
+		        ProtoConverter::extractFromProtobuf<FetchSubscriptionsRequest>(
+		            message);
+		    if (!request_or_status.has_value()) {
+			    return std::nullopt;
+		    }
+		    server_capture = request_or_status.value();
+		    google::protobuf::Any any;
+		    if (!any.PackFrom(server_response)) {
+			    return std::nullopt;
+		    }
+		    Payload response_payload(any);
+		    return response_payload;
+	    },
+	    uprotocol::v1::UPayloadFormat::UPAYLOAD_FORMAT_PROTOBUF_WRAPPED_IN_ANY);
+
+	ASSERT_TRUE(server_or_status.has_value());
+	ASSERT_NE(server_or_status.value(), nullptr);
+	EXPECT_TRUE(getServerTransport()->getListener());
+
+	auto client = uprotocol::core::usubscription::v3::RpcClientUSubscription(
+	    getClientTransport());
+
+	const uprotocol::core::usubscription::v3::SubscriberInfo subscriber_info;
+	const auto fetch_subscribers_request =
+	    getRequestBuilder().buildFetchSubscriptionsRequest(subscriber_info);
+
+	auto response_or_status_future = std::async(
+	    std::launch::async,
+	    [&client, &fetch_subscribers_request]()
+	        -> uprotocol::utils::Expected<FetchSubscriptionsResponse,
+	                                      uprotocol::v1::UStatus> {
+		    return client.fetch_subscriptions(fetch_subscribers_request);
+	    });
+
+	// wait to give the client time to send the request. Otherwise this would
+	// cause a race condition
+	int counter = ITERATIONS_TILL_TIMEOUT;
+	while (counter > 0 && getClientTransport()->getSendCount() == 0) {
+		counter--;
+		std::this_thread::sleep_for(MILLISECONDS_PER_ITERATION);
+	}
+	ASSERT_EQ(getClientTransport()->getSendCount(), 1);
+	EXPECT_TRUE(getClientTransport()->getListener());
+
+	(*getServerTransport()->getListener())(getClientTransport()->getMessage());
+	EXPECT_TRUE(server_callback_executed);
+	EXPECT_EQ(server_capture.SerializeAsString(),
+	          fetch_subscribers_request.SerializeAsString());
+
+	getClientTransport()->mockMessage(getServerTransport()->getMessage());
+	EXPECT_TRUE(getClientTransport()->getListener());
+	EXPECT_EQ(getClientTransport()->getSendCount(), 1);
+	auto response_or_status = response_or_status_future.get();
+	ASSERT_TRUE(response_or_status.has_value());
+	EXPECT_EQ(response_or_status.value().SerializeAsString(),
+	          server_response.SerializeAsString());
+}
+
+////////////////////////////////
+// Tests for register_for_notification method//
+////////////////////////////////
+
+using NotificationsRequest =
+    uprotocol::core::usubscription::v3::NotificationsRequest;
+using NotificationsResponse =
+    uprotocol::core::usubscription::v3::NotificationsResponse;
+
+TEST_F(RpcClientUSubscriptionTest,
+       registerNotificationRoundtripWithValidProtoPayload) {
+	bool server_callback_executed = false;
+	NotificationsRequest server_capture;
+	NotificationsResponse server_response;
+	auto server_or_status = uprotocol::communication::RpcServer::create(
+	    getServerTransport(), getServerMethodUuri(),
+	    [&server_callback_executed, &server_capture,
+	     &server_response](const UMessage& message) -> std::optional<Payload> {
+		    server_callback_executed = true;
+		    auto request_or_status =
+		        ProtoConverter::extractFromProtobuf<NotificationsRequest>(
+		            message);
+		    if (!request_or_status.has_value()) {
+			    return std::nullopt;
+		    }
+		    server_capture = request_or_status.value();
+		    Payload response_payload(server_response);
+		    return response_payload;
+	    },
+	    uprotocol::v1::UPayloadFormat::UPAYLOAD_FORMAT_PROTOBUF);
+
+	ASSERT_TRUE(server_or_status.has_value());
+	ASSERT_NE(server_or_status.value(), nullptr);
+	EXPECT_TRUE(getServerTransport()->getListener());
+
+	auto client = uprotocol::core::usubscription::v3::RpcClientUSubscription(
+	    getClientTransport());
+
+	const auto notifications_request =
+	    getRequestBuilder().buildNotificationsRequest(getSubscriptionTopic());
+
+	auto response_or_status_future = std::async(
+	    std::launch::async,
+	    [&client, &notifications_request]()
+	        -> uprotocol::utils::Expected<NotificationsResponse,
+	                                      uprotocol::v1::UStatus> {
+		    return client.register_for_notifications(notifications_request);
+	    });
+
+	// wait to give the client time to send the request. Otherwise this would
+	// cause a race condition
+	int counter = ITERATIONS_TILL_TIMEOUT;
+	while (counter > 0 && getClientTransport()->getSendCount() == 0) {
+		counter--;
+		std::this_thread::sleep_for(MILLISECONDS_PER_ITERATION);
+	}
+	ASSERT_EQ(getClientTransport()->getSendCount(), 1);
+	EXPECT_TRUE(getClientTransport()->getListener());
+
+	(*getServerTransport()->getListener())(getClientTransport()->getMessage());
+	EXPECT_TRUE(server_callback_executed);
+	EXPECT_EQ(server_capture.SerializeAsString(),
+	          notifications_request.SerializeAsString());
+
+	getClientTransport()->mockMessage(getServerTransport()->getMessage());
+	EXPECT_TRUE(getClientTransport()->getListener());
+	EXPECT_EQ(getClientTransport()->getSendCount(), 1);
+	auto response_or_status = response_or_status_future.get();
+	ASSERT_TRUE(response_or_status.has_value());
+	EXPECT_EQ(response_or_status.value().SerializeAsString(),
+	          server_response.SerializeAsString());
+}
+
+TEST_F(RpcClientUSubscriptionTest,
+       registerNotificationRoundtripWithValidProtoAnyPayload) {
+	bool server_callback_executed = false;
+	NotificationsRequest server_capture;
+	NotificationsResponse server_response;
+	auto server_or_status = uprotocol::communication::RpcServer::create(
+	    getServerTransport(), getServerMethodUuri(),
+	    [&server_callback_executed, &server_capture,
+	     &server_response](const UMessage& message) -> std::optional<Payload> {
+		    server_callback_executed = true;
+		    auto request_or_status =
+		        ProtoConverter::extractFromProtobuf<NotificationsRequest>(
+		            message);
+		    if (!request_or_status.has_value()) {
+			    return std::nullopt;
+		    }
+		    server_capture = request_or_status.value();
+		    google::protobuf::Any any;
+		    if (!any.PackFrom(server_response)) {
+			    return std::nullopt;
+		    }
+		    Payload response_payload(any);
+		    return response_payload;
+	    },
+	    uprotocol::v1::UPayloadFormat::UPAYLOAD_FORMAT_PROTOBUF_WRAPPED_IN_ANY);
+
+	ASSERT_TRUE(server_or_status.has_value());
+	ASSERT_NE(server_or_status.value(), nullptr);
+	EXPECT_TRUE(getServerTransport()->getListener());
+
+	auto client = uprotocol::core::usubscription::v3::RpcClientUSubscription(
+	    getClientTransport());
+
+	const auto notifications_request =
+	    getRequestBuilder().buildNotificationsRequest(getSubscriptionTopic());
+
+	auto response_or_status_future = std::async(
+	    std::launch::async,
+	    [&client, &notifications_request]()
+	        -> uprotocol::utils::Expected<NotificationsResponse,
+	                                      uprotocol::v1::UStatus> {
+		    return client.register_for_notifications(notifications_request);
+	    });
+
+	// wait to give the client time to send the request. Otherwise this would
+	// cause a race condition
+	int counter = ITERATIONS_TILL_TIMEOUT;
+	while (counter > 0 && getClientTransport()->getSendCount() == 0) {
+		counter--;
+		std::this_thread::sleep_for(MILLISECONDS_PER_ITERATION);
+	}
+	ASSERT_EQ(getClientTransport()->getSendCount(), 1);
+	EXPECT_TRUE(getClientTransport()->getListener());
+
+	(*getServerTransport()->getListener())(getClientTransport()->getMessage());
+	EXPECT_TRUE(server_callback_executed);
+	EXPECT_EQ(server_capture.SerializeAsString(),
+	          notifications_request.SerializeAsString());
+
+	getClientTransport()->mockMessage(getServerTransport()->getMessage());
+	EXPECT_TRUE(getClientTransport()->getListener());
+	EXPECT_EQ(getClientTransport()->getSendCount(), 1);
+	auto response_or_status = response_or_status_future.get();
+	ASSERT_TRUE(response_or_status.has_value());
+	EXPECT_EQ(response_or_status.value().SerializeAsString(),
+	          server_response.SerializeAsString());
+}
+
+////////////////////////////////
+// Tests for unregister_for_notification method//
+////////////////////////////////
+
+using NotificationsRequest =
+    uprotocol::core::usubscription::v3::NotificationsRequest;
+using NotificationsResponse =
+    uprotocol::core::usubscription::v3::NotificationsResponse;
+
+TEST_F(RpcClientUSubscriptionTest,
+       unregisterNotificationRoundtripWithValidProtoPayload) {
+	bool server_callback_executed = false;
+	NotificationsRequest server_capture;
+	NotificationsResponse server_response;
+	auto server_or_status = uprotocol::communication::RpcServer::create(
+	    getServerTransport(), getServerMethodUuri(),
+	    [&server_callback_executed, &server_capture,
+	     &server_response](const UMessage& message) -> std::optional<Payload> {
+		    server_callback_executed = true;
+		    auto request_or_status =
+		        ProtoConverter::extractFromProtobuf<NotificationsRequest>(
+		            message);
+		    if (!request_or_status.has_value()) {
+			    return std::nullopt;
+		    }
+		    server_capture = request_or_status.value();
+		    Payload response_payload(server_response);
+		    return response_payload;
+	    },
+	    uprotocol::v1::UPayloadFormat::UPAYLOAD_FORMAT_PROTOBUF);
+
+	ASSERT_TRUE(server_or_status.has_value());
+	ASSERT_NE(server_or_status.value(), nullptr);
+	EXPECT_TRUE(getServerTransport()->getListener());
+
+	auto client = uprotocol::core::usubscription::v3::RpcClientUSubscription(
+	    getClientTransport());
+
+	const auto notifications_request =
+	    getRequestBuilder().buildNotificationsRequest(getSubscriptionTopic());
+
+	auto response_or_status_future = std::async(
+	    std::launch::async,
+	    [&client, &notifications_request]()
+	        -> uprotocol::utils::Expected<NotificationsResponse,
+	                                      uprotocol::v1::UStatus> {
+		    return client.unregister_for_notifications(notifications_request);
+	    });
+
+	// wait to give the client time to send the request. Otherwise this would
+	// cause a race condition
+	int counter = ITERATIONS_TILL_TIMEOUT;
+	while (counter > 0 && getClientTransport()->getSendCount() == 0) {
+		counter--;
+		std::this_thread::sleep_for(MILLISECONDS_PER_ITERATION);
+	}
+	ASSERT_EQ(getClientTransport()->getSendCount(), 1);
+	EXPECT_TRUE(getClientTransport()->getListener());
+
+	(*getServerTransport()->getListener())(getClientTransport()->getMessage());
+	EXPECT_TRUE(server_callback_executed);
+	EXPECT_EQ(server_capture.SerializeAsString(),
+	          notifications_request.SerializeAsString());
+
+	getClientTransport()->mockMessage(getServerTransport()->getMessage());
+	EXPECT_TRUE(getClientTransport()->getListener());
+	EXPECT_EQ(getClientTransport()->getSendCount(), 1);
+	auto response_or_status = response_or_status_future.get();
+	ASSERT_TRUE(response_or_status.has_value());
+	EXPECT_EQ(response_or_status.value().SerializeAsString(),
+	          server_response.SerializeAsString());
+}
+
+TEST_F(RpcClientUSubscriptionTest,
+       unregisterNotificationRoundtripWithValidProtoAnyPayload) {
+	bool server_callback_executed = false;
+	NotificationsRequest server_capture;
+	NotificationsResponse server_response;
+	auto server_or_status = uprotocol::communication::RpcServer::create(
+	    getServerTransport(), getServerMethodUuri(),
+	    [&server_callback_executed, &server_capture,
+	     &server_response](const UMessage& message) -> std::optional<Payload> {
+		    server_callback_executed = true;
+		    auto request_or_status =
+		        ProtoConverter::extractFromProtobuf<NotificationsRequest>(
+		            message);
+		    if (!request_or_status.has_value()) {
+			    return std::nullopt;
+		    }
+		    server_capture = request_or_status.value();
+		    google::protobuf::Any any;
+		    if (!any.PackFrom(server_response)) {
+			    return std::nullopt;
+		    }
+		    Payload response_payload(any);
+		    return response_payload;
+	    },
+	    uprotocol::v1::UPayloadFormat::UPAYLOAD_FORMAT_PROTOBUF_WRAPPED_IN_ANY);
+
+	ASSERT_TRUE(server_or_status.has_value());
+	ASSERT_NE(server_or_status.value(), nullptr);
+	EXPECT_TRUE(getServerTransport()->getListener());
+
+	auto client = uprotocol::core::usubscription::v3::RpcClientUSubscription(
+	    getClientTransport());
+
+	const auto notifications_request =
+	    getRequestBuilder().buildNotificationsRequest(getSubscriptionTopic());
+
+	auto response_or_status_future = std::async(
+	    std::launch::async,
+	    [&client, &notifications_request]()
+	        -> uprotocol::utils::Expected<NotificationsResponse,
+	                                      uprotocol::v1::UStatus> {
+		    return client.unregister_for_notifications(notifications_request);
+	    });
+
+	// wait to give the client time to send the request. Otherwise this would
+	// cause a race condition
+	int counter = ITERATIONS_TILL_TIMEOUT;
+	while (counter > 0 && getClientTransport()->getSendCount() == 0) {
+		counter--;
+		std::this_thread::sleep_for(MILLISECONDS_PER_ITERATION);
+	}
+	ASSERT_EQ(getClientTransport()->getSendCount(), 1);
+	EXPECT_TRUE(getClientTransport()->getListener());
+
+	(*getServerTransport()->getListener())(getClientTransport()->getMessage());
+	EXPECT_TRUE(server_callback_executed);
+	EXPECT_EQ(server_capture.SerializeAsString(),
+	          notifications_request.SerializeAsString());
+
+	getClientTransport()->mockMessage(getServerTransport()->getMessage());
+	EXPECT_TRUE(getClientTransport()->getListener());
+	EXPECT_EQ(getClientTransport()->getSendCount(), 1);
+	auto response_or_status = response_or_status_future.get();
+	ASSERT_TRUE(response_or_status.has_value());
+	EXPECT_EQ(response_or_status.value().SerializeAsString(),
+	          server_response.SerializeAsString());
+}
+
 };  // namespace

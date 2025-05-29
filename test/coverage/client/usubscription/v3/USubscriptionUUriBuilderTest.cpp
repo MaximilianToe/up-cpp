@@ -39,7 +39,8 @@ TEST_F(USubscriptionUUriBuilderTest, GetServiceUriWithResourceId) {
 	auto expected_uri = getExpectedUri();
 	expected_uri.set_resource_id(RESOURCE_ID_TEST);
 	const USubscriptionUUriBuilder builder;
-	const v1::UUri actual_uri = builder.getServiceUriWithResourceId(RESOURCE_ID_TEST);
+	const v1::UUri actual_uri =
+	    builder.getServiceUriWithResourceId(RESOURCE_ID_TEST);
 
 	EXPECT_TRUE(actual_uri.IsInitialized());
 	EXPECT_EQ(actual_uri.GetTypeName(), "uprotocol.v1.UUri");

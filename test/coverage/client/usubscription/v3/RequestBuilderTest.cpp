@@ -72,7 +72,8 @@ TEST_F(RequestBuilderTest, BuildSubscriptionRequestWithOptions) {
 	ASSERT_NO_THROW(request = builder.buildSubscriptionRequest(topic));
 
 	// Verify the attributes in the request
-	//TODO(max) there should probably be some test that explicitely checks data from the options
+	// TODO(max) there should probably be some test that explicitely checks data
+	// from the options
 	EXPECT_TRUE(request.has_topic());
 	EXPECT_TRUE(request.has_attributes());
 	EXPECT_EQ(request.topic().SerializeAsString(), topic.SerializeAsString());
@@ -113,7 +114,8 @@ TEST_F(RequestBuilderTest, BuildFetchSubscriptionsRequestWithSubscriberInfo) {
 	const RequestBuilder builder(options_);
 
 	FetchSubscriptionsRequest request;
-	ASSERT_NO_THROW(request =builder.buildFetchSubscriptionsRequest(subscriber));
+	ASSERT_NO_THROW(request =
+	                    builder.buildFetchSubscriptionsRequest(subscriber));
 
 	// Verify the attributes in the request
 	EXPECT_FALSE(request.has_topic());

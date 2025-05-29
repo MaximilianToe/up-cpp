@@ -42,8 +42,6 @@ struct USubscriptionOptions {
 /// This struct facilitates the construction of requests based on
 /// `USubscriptionOptions`, providing methods to build different requests.
 struct RequestBuilder {
-
-
 	/// @brief Constructs a RequestBuilder with the given subscription options.
 	///
 	/// @param options Subscription options to configure the requests. Defaults
@@ -96,7 +94,7 @@ struct RequestBuilder {
 	///
 	/// @return An `FetchSubscribersRequest` configured for the specified topic.
 	FetchSubscribersRequest buildFetchSubscribersRequest(
-	    const v1::UUri& topic) const ;
+	    const v1::UUri& topic) const;
 
 	/// @brief Build notifications request for a given topic. Subscription
 	/// change
@@ -107,8 +105,7 @@ struct RequestBuilder {
 	/// for/from.
 	///
 	/// @return An `NotificationsRequest` configured for the specified topic.
-	NotificationsRequest buildNotificationsRequest(
-	    const v1::UUri& topic) const;
+	NotificationsRequest buildNotificationsRequest(const v1::UUri& topic) const;
 
 private:
 	USubscriptionOptions options_;  ///< Options used to configure the requests.
