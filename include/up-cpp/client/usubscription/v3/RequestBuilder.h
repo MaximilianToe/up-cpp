@@ -42,12 +42,20 @@ struct USubscriptionOptions {
 /// This struct facilitates the construction of requests based on
 /// `USubscriptionOptions`, providing methods to build different requests.
 struct RequestBuilder {
+
+
 	/// @brief Constructs a RequestBuilder with the given subscription options.
 	///
 	/// @param options Subscription options to configure the requests. Defaults
 	/// to empty options.
 	explicit RequestBuilder(USubscriptionOptions options = {})
 	    : options_(std::move(options)) {}
+
+	/// @brief Sets the permission level for the requests build by the builder
+	///
+	/// @param permission_level to be set
+	/// @return returns a reference to the builder struct to allow chaining
+	RequestBuilder& setPremissionLevel(uint32_t permission_level);
 
 	/// @brief Builds a subscription request for a given topic.
 	///

@@ -24,6 +24,12 @@ SubscriptionRequest RequestBuilder::buildSubscriptionRequest(
 	return utils::ProtoConverter::BuildSubscriptionRequest(topic, attributes);
 }
 
+RequestBuilder& RequestBuilder::setPremissionLevel(uint32_t permission_level) {
+	options_.permission_level = permission_level;
+	return *this;
+}
+
+
 UnsubscribeRequest RequestBuilder::buildUnsubscribeRequest(
     const v1::UUri& topic) const {
 	return utils::ProtoConverter::BuildUnSubscribeRequest(topic);
