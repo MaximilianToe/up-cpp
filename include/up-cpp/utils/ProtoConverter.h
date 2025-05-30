@@ -18,13 +18,13 @@ using TOrStatus = utils::Expected<T, v1::UStatus>;
 using UnexpectedStatus = utils::Unexpected<v1::UStatus>;
 using PayloadOrStatus =
     utils::Expected<datamodel::builder::Payload, v1::UStatus>;
+using core::usubscription::v3::FetchSubscribersRequest;
+using core::usubscription::v3::FetchSubscriptionsRequest;
+using core::usubscription::v3::NotificationsRequest;
 using uprotocol::core::usubscription::v3::SubscribeAttributes;
 using uprotocol::core::usubscription::v3::SubscriberInfo;
 using uprotocol::core::usubscription::v3::SubscriptionRequest;
 using uprotocol::core::usubscription::v3::UnsubscribeRequest;
-using core::usubscription::v3::FetchSubscriptionsRequest;
-using core::usubscription::v3::FetchSubscribersRequest;
-using core::usubscription::v3::NotificationsRequest;
 
 struct ProtoConverter {
 	/// @brief Converts std::chrono::time_point to google::protobuf::Timestamp
@@ -66,43 +66,42 @@ struct ProtoConverter {
 	/// @return the built UnsubscribeRequest
 	static UnsubscribeRequest BuildUnSubscribeRequest(
 	    const v1::UUri& subscription_topic);
-	
+
 	/// @brief Builds a FetchSubscriptionsRequest from the given topic
 	///
 	/// @param topic the UUri of the topic to fetch subscriptions for
 	/// @return the built FetchSubscriptionsRequest
-	static FetchSubscriptionsRequest BuildFetchSubscriptionsRequest(const v1::UUri& topic);
+	static FetchSubscriptionsRequest BuildFetchSubscriptionsRequest(
+	    const v1::UUri& topic);
 
-	/// @brief Builds a FetchSubscriptionsRequest from the given subscriber information
+	/// @brief Builds a FetchSubscriptionsRequest from the given subscriber
+	/// information
 	///
-	/// @param subscriber the SubscriberInfo containing details of the subscriber
+	/// @param subscriber the SubscriberInfo containing details of the
+	/// subscriber
 	/// @return the built FetchSubscriptionsRequest
-	static FetchSubscriptionsRequest BuildFetchSubscriptionsRequest(const SubscriberInfo& subscriber);
+	static FetchSubscriptionsRequest BuildFetchSubscriptionsRequest(
+	    const SubscriberInfo& subscriber);
 
 	/// @brief Builds a FetchSubscribersRequest from the given topic
 	///
 	/// @param topic the UUri of the topic to fetch subscribers for
 	/// @return the built FetchSubscribersRequest
-	static FetchSubscribersRequest BuildFetchSubscribersRequest(const v1::UUri& topic);
+	static FetchSubscribersRequest BuildFetchSubscribersRequest(
+	    const v1::UUri& topic);
 
 	/// @brief Builds a NotificationsRequest from the given topic
 	///
 	/// @param topic the UUri of the topic to build a notification request for
 	/// @return the built NotificationsRequest
-	static NotificationsRequest BuildNotificationsRequest(const v1::UUri& topic);
+	static NotificationsRequest BuildNotificationsRequest(
+	    const v1::UUri& topic);
 
-	/**
-	 * @brief Deserializes a protobuf message from a given payload.
-	 *
-	 * Parses the payload in `v1::UMessage` using `google::protobuf::Any`,
-	 * returning a deserialized object of type `T` or an error if parsing fails.
-	 *
-	 * @tparam T The type to deserialize the message into.
-	 *
-	 * @param message The `v1::UMessage` containing the payload.
-	 *
-	 * @return `TOrStatus<T>` with the deserialized object or an error status.
-	 */
+	/// @brief Deserializes a protobuf message from a given payload.
+	///
+	/// @tparam T The type to deserialize the message into.
+	/// @param message The `v1::UMessage` containing the payload.
+	/// @return `TOrStatus<T>` with the deserialized object or an error status.
 	template <typename T>
 	static TOrStatus<T> extractFromProtobuf(const v1::UMessage& message) {
 		switch (message.attributes().payload_format()) {
@@ -151,8 +150,7 @@ struct ProtoConverter {
 			    UPayloadFormat_INT_MAX_SENTINEL_DO_NOT_USE_: {
 				v1::UStatus status;
 				status.set_code(v1::UCode::UNIMPLEMENTED);
-				status.set_message(
-				    "Unimplemented payload format.");
+				status.set_message("Unimplemented payload format.");
 				return TOrStatus<T>(UnexpectedStatus(status));
 			}
 			default: {
@@ -165,19 +163,11 @@ struct ProtoConverter {
 		}
 	}
 
-	/**
-	 * @brief Serializes a protobuf object into a payload.
-	 *
-	 * Converts the given `proto` object to a payload using
-	 * `google::protobuf::Any`. Returns the payload or an error status if
-	 * serialization fails.
-	 *
-	 * @tparam T The type of the protobuf object to serialize.
-	 *
-	 * @param proto The protobuf object to be converted into a payload.
-	 *
-	 * @return `PayloadOrStatus` containing the payload or an error status.
-	 */
+	/// @brief Serializes a protobuf object into a payload.
+	///
+	/// @tparam T The type of the protobuf object to serialize.
+	/// @param proto The protobuf object to be converted into a payload.
+	/// @return `PayloadOrStatus` containing the payload or an error status.
 	template <typename T>
 	static PayloadOrStatus protoToPayload(const T& proto) {
 		google::protobuf::Any any;

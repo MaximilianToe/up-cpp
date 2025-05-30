@@ -177,15 +177,17 @@ struct RpcClient {
 			return ResponseOrStatus<T>(
 			    UnexpectedStatus(payload_or_status.error()));
 		}
-		datamodel::builder::Payload payload(payload_or_status.value());
 
-		auto message_or_status = this->invokeMethod(std::move(payload)).get();
+		datamodel::builder::Payload tmp_payload(payload_or_status.value());
+
+		auto message_or_status =
+		    this->invokeMethod(std::move(tmp_payload)).get();
 
 		if (!message_or_status.has_value()) {
 			return ResponseOrStatus<T>(
 			    UnexpectedStatus(message_or_status.error()));
 		}
-		
+
 		auto response_or_status = utils::ProtoConverter::extractFromProtobuf<T>(
 		    message_or_status.value());
 
@@ -193,12 +195,10 @@ struct RpcClient {
 			spdlog::error(
 			    "invokeProtoMethod: Error when extracting response from "
 			    "protobuf.");
-			return ResponseOrStatus<T>(
-			    UnexpectedStatus(response_or_status.error()));
+			return response_or_status;
 		}
-		T response_message = response_or_status.value();
 
-		return ResponseOrStatus<T>(std::move(response_message));
+		return ResponseOrStatus<T>(response_or_status.value());
 	}
 
 	/// @brief Default move constructor (defined in RpcClient.cpp)

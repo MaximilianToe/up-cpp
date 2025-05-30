@@ -24,28 +24,33 @@ SubscriptionRequest RequestBuilder::buildSubscriptionRequest(
 	return utils::ProtoConverter::BuildSubscriptionRequest(topic, attributes);
 }
 
+RequestBuilder& RequestBuilder::setPremissionLevel(uint32_t permission_level) {
+	options_.permission_level = permission_level;
+	return *this;
+}
+
 UnsubscribeRequest RequestBuilder::buildUnsubscribeRequest(
-    const v1::UUri& topic) {
+    const v1::UUri& topic) const {
 	return utils::ProtoConverter::BuildUnSubscribeRequest(topic);
 }
 
 FetchSubscriptionsRequest RequestBuilder::buildFetchSubscriptionsRequest(
-    const v1::UUri& topic) {
+    const v1::UUri& topic) const {
 	return utils::ProtoConverter::BuildFetchSubscriptionsRequest(topic);
 }
 
 FetchSubscriptionsRequest RequestBuilder::buildFetchSubscriptionsRequest(
-    const SubscriberInfo& subscriber) {
+    const SubscriberInfo& subscriber) const {
 	return utils::ProtoConverter::BuildFetchSubscriptionsRequest(subscriber);
 }
 
 FetchSubscribersRequest RequestBuilder::buildFetchSubscribersRequest(
-    const v1::UUri& topic) {
+    const v1::UUri& topic) const {
 	return utils::ProtoConverter::BuildFetchSubscribersRequest(topic);
 }
 
 NotificationsRequest RequestBuilder::buildNotificationsRequest(
-    const v1::UUri& topic) {
+    const v1::UUri& topic) const {
 	return utils::ProtoConverter::BuildNotificationsRequest(topic);
 }
 
