@@ -67,8 +67,9 @@ TEST_F(RequestBuilderTest, BuildSubscriptionRequestWithOptions) {  // NOLINT
 	const v1::UUri topic = getSource();
 
 	SubscriptionRequest request;
-	ASSERT_NO_THROW(
-	    request = RequestBuilder::buildSubscriptionRequest(topic));  // NOLINT
+	ASSERT_NO_THROW(  // NOLINT
+	    request =
+	        RequestBuilder::buildSubscriptionRequest(topic, getOptions()));
 
 	// Verify the attributes in the request
 	// TODO(max) there should probably be some test that explicitely checks data
