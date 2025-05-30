@@ -84,8 +84,8 @@ TEST_F(RequestBuilderTest, BuildUnsubscribeRequest) {  // NOLINT
 	const v1::UUri topic = getSource();
 
 	UnsubscribeRequest request;
-	ASSERT_NO_THROW( // NOLINT
-	    request = RequestBuilder::buildUnsubscribeRequest(topic));  
+	ASSERT_NO_THROW(  // NOLINT
+	    request = RequestBuilder::buildUnsubscribeRequest(topic));
 
 	// Verify the attributes in the request
 	EXPECT_TRUE(request.has_topic());
@@ -140,8 +140,8 @@ TEST_F(RequestBuilderTest, BuildNotificationsRequest) {  // NOLINT
 	const v1::UUri topic = getSource();
 
 	NotificationsRequest request;
-	ASSERT_NO_THROW( // NOLINT
-	    request = RequestBuilder::buildNotificationsRequest(topic));  
+	ASSERT_NO_THROW(  // NOLINT
+	    request = RequestBuilder::buildNotificationsRequest(topic));
 
 	// Verify the attributes in the request
 	EXPECT_TRUE(request.has_topic());
