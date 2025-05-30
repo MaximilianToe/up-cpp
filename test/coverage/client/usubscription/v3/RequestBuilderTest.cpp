@@ -67,7 +67,8 @@ TEST_F(RequestBuilderTest, BuildSubscriptionRequestWithOptions) {  // NOLINT
 	const v1::UUri topic = getSource();
 
 	SubscriptionRequest request;
-	ASSERT_NO_THROW(request = RequestBuilder::buildSubscriptionRequest(topic)); // NOLINT
+	ASSERT_NO_THROW(
+	    request = RequestBuilder::buildSubscriptionRequest(topic));  // NOLINT
 
 	// Verify the attributes in the request
 	// TODO(max) there should probably be some test that explicitely checks data
@@ -83,7 +84,8 @@ TEST_F(RequestBuilderTest, BuildUnsubscribeRequest) {  // NOLINT
 	const v1::UUri topic = getSource();
 
 	UnsubscribeRequest request;
-	ASSERT_NO_THROW(request = RequestBuilder::buildUnsubscribeRequest(topic)); // NOLINT
+	ASSERT_NO_THROW( // NOLINT
+	    request = RequestBuilder::buildUnsubscribeRequest(topic));  
 
 	// Verify the attributes in the request
 	EXPECT_TRUE(request.has_topic());
@@ -96,8 +98,8 @@ TEST_F(RequestBuilderTest, BuildFetchSubscriptionsRequestWithTopic) {  // NOLINT
 	const v1::UUri topic = getSource();
 
 	FetchSubscriptionsRequest request;
-	ASSERT_NO_THROW(request = // NOLINT
-	                    RequestBuilder::buildFetchSubscriptionsRequest(topic));
+	ASSERT_NO_THROW(request =  // NOLINT
+	                RequestBuilder::buildFetchSubscriptionsRequest(topic));
 
 	// Verify the attributes in the request
 	EXPECT_TRUE(request.has_topic());
@@ -106,12 +108,12 @@ TEST_F(RequestBuilderTest, BuildFetchSubscriptionsRequestWithTopic) {  // NOLINT
 	          "uprotocol.core.usubscription.v3.FetchSubscriptionsRequest");
 }
 
-TEST_F(RequestBuilderTest, // NOLINT
-       BuildFetchSubscriptionsRequestWithSubscriberInfo) {  
+TEST_F(RequestBuilderTest,  // NOLINT
+       BuildFetchSubscriptionsRequestWithSubscriberInfo) {
 	const SubscriberInfo subscriber;
 
 	FetchSubscriptionsRequest request;
-	ASSERT_NO_THROW( // NOLINT
+	ASSERT_NO_THROW(  // NOLINT
 	    request = RequestBuilder::buildFetchSubscriptionsRequest(subscriber));
 
 	// Verify the attributes in the request
@@ -124,8 +126,8 @@ TEST_F(RequestBuilderTest, BuildFetchSubscribersRequest) {  // NOLINT
 	const v1::UUri topic = getSource();
 
 	FetchSubscribersRequest request;
-	ASSERT_NO_THROW(request = // NOLINT
-	                    RequestBuilder::buildFetchSubscribersRequest(topic));
+	ASSERT_NO_THROW(request =  // NOLINT
+	                RequestBuilder::buildFetchSubscribersRequest(topic));
 
 	// Verify the attributes in the request
 	EXPECT_TRUE(request.has_topic());
@@ -138,7 +140,8 @@ TEST_F(RequestBuilderTest, BuildNotificationsRequest) {  // NOLINT
 	const v1::UUri topic = getSource();
 
 	NotificationsRequest request;
-	ASSERT_NO_THROW(request = RequestBuilder::buildNotificationsRequest(topic)); // NOLINT
+	ASSERT_NO_THROW( // NOLINT
+	    request = RequestBuilder::buildNotificationsRequest(topic));  
 
 	// Verify the attributes in the request
 	EXPECT_TRUE(request.has_topic());

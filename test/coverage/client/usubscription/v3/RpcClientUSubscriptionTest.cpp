@@ -100,8 +100,8 @@ public:
 // Tests for subscribe method
 //
 
-TEST_F(RpcClientUSubscriptionTest, // NOLINT
-       SubscribeRoundtripWithValidProtoPayload) {  
+TEST_F(RpcClientUSubscriptionTest,  // NOLINT
+       SubscribeRoundtripWithValidProtoPayload) {
 	bool server_callback_executed = false;
 	SubscriptionRequest server_capture;
 	SubscriptionResponse server_response;
@@ -165,8 +165,8 @@ TEST_F(RpcClientUSubscriptionTest, // NOLINT
 	          server_response.SerializeAsString());
 }
 
-TEST_F(RpcClientUSubscriptionTest, // NOLINT
-       SubscribeRoundtripWithValidProtoAnyPayload) {  
+TEST_F(RpcClientUSubscriptionTest,  // NOLINT
+       SubscribeRoundtripWithValidProtoAnyPayload) {
 	bool server_callback_executed = false;
 	SubscriptionRequest server_capture;
 	SubscriptionResponse server_response;
@@ -317,8 +317,8 @@ using UnsubscibeRequest =
 using UnsubscribeResponse =
     uprotocol::core::usubscription::v3::UnsubscribeResponse;
 
-TEST_F(RpcClientUSubscriptionTest, // NOLINT
-       UnsubscribeRoundtripWithValidProtoPayload) {  
+TEST_F(RpcClientUSubscriptionTest,  // NOLINT
+       UnsubscribeRoundtripWithValidProtoPayload) {
 	bool server_callback_executed = false;
 	UnsubscibeRequest server_capture;
 	UnsubscribeResponse server_response;
