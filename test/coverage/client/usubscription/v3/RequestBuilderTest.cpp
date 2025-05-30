@@ -14,9 +14,7 @@
 #include <uprotocol/core/usubscription/v3/usubscription.pb.h>
 
 #include <chrono>
-#include <iostream>
 #include <optional>
-#include <ostream>
 
 #include "up-cpp/client/usubscription/v3/RequestBuilder.h"
 
@@ -29,10 +27,10 @@ namespace uprotocol::core::usubscription::v3 {
 class RequestBuilderTest : public ::testing::Test {
 private:
 	v1::UUri source_;
-
-protected:
 	USubscriptionOptions options_;
+protected:
 	const v1::UUri& getSource() const { return source_; }
+	const USubscriptionOptions& getOptions() const { return options_; }
 
 	void SetUp() override {
 		// Create a UUri object for testing
@@ -66,7 +64,7 @@ public:
 
 TEST_F(RequestBuilderTest, BuildSubscriptionRequestWithOptions) {
 	const v1::UUri topic = getSource();
-	const RequestBuilder builder(options_);
+	const RequestBuilder builder(getOptions());
 
 	SubscriptionRequest request;
 	ASSERT_NO_THROW(request = builder.buildSubscriptionRequest(topic));
@@ -83,7 +81,7 @@ TEST_F(RequestBuilderTest, BuildSubscriptionRequestWithOptions) {
 
 TEST_F(RequestBuilderTest, BuildUnsubscribeRequest) {
 	const v1::UUri topic = getSource();
-	const RequestBuilder builder(options_);
+	const RequestBuilder builder(getOptions());
 
 	UnsubscribeRequest request;
 	ASSERT_NO_THROW(request = builder.buildUnsubscribeRequest(topic));
@@ -97,7 +95,7 @@ TEST_F(RequestBuilderTest, BuildUnsubscribeRequest) {
 
 TEST_F(RequestBuilderTest, BuildFetchSubscriptionsRequestWithTopic) {
 	const v1::UUri topic = getSource();
-	const RequestBuilder builder(options_);
+	const RequestBuilder builder(getOptions());
 
 	FetchSubscriptionsRequest request;
 	ASSERT_NO_THROW(request = builder.buildFetchSubscriptionsRequest(topic));
@@ -111,7 +109,7 @@ TEST_F(RequestBuilderTest, BuildFetchSubscriptionsRequestWithTopic) {
 
 TEST_F(RequestBuilderTest, BuildFetchSubscriptionsRequestWithSubscriberInfo) {
 	const SubscriberInfo subscriber;
-	const RequestBuilder builder(options_);
+	const RequestBuilder builder(getOptions());
 
 	FetchSubscriptionsRequest request;
 	ASSERT_NO_THROW(request =
@@ -125,7 +123,7 @@ TEST_F(RequestBuilderTest, BuildFetchSubscriptionsRequestWithSubscriberInfo) {
 
 TEST_F(RequestBuilderTest, BuildFetchSubscribersRequest) {
 	const v1::UUri topic = getSource();
-	const RequestBuilder builder(options_);
+	const RequestBuilder builder(getOptions());
 
 	FetchSubscribersRequest request;
 	ASSERT_NO_THROW(request = builder.buildFetchSubscribersRequest(topic));
@@ -139,7 +137,7 @@ TEST_F(RequestBuilderTest, BuildFetchSubscribersRequest) {
 
 TEST_F(RequestBuilderTest, BuildNotificationsRequest) {
 	const v1::UUri topic = getSource();
-	const RequestBuilder builder(options_);
+	const RequestBuilder builder(getOptions());
 
 	NotificationsRequest request;
 	ASSERT_NO_THROW(request = builder.buildNotificationsRequest(topic));
