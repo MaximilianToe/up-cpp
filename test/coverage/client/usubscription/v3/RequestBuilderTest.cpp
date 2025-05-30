@@ -14,9 +14,7 @@
 #include <uprotocol/core/usubscription/v3/usubscription.pb.h>
 
 #include <chrono>
-#include <iostream>
 #include <optional>
-#include <ostream>
 
 #include "up-cpp/client/usubscription/v3/RequestBuilder.h"
 
@@ -29,10 +27,11 @@ namespace uprotocol::core::usubscription::v3 {
 class RequestBuilderTest : public ::testing::Test {
 private:
 	v1::UUri source_;
+	USubscriptionOptions options_;
 
 protected:
-	USubscriptionOptions options_;
 	const v1::UUri& getSource() const { return source_; }
+	const USubscriptionOptions& getOptions() const { return options_; }
 
 	void SetUp() override {
 		// Create a UUri object for testing
@@ -64,12 +63,13 @@ public:
 	~RequestBuilderTest() override = default;
 };
 
-TEST_F(RequestBuilderTest, BuildSubscriptionRequestWithOptions) {
+TEST_F(RequestBuilderTest, BuildSubscriptionRequestWithOptions) {  // NOLINT
 	const v1::UUri topic = getSource();
-	const RequestBuilder builder(options_);
 
 	SubscriptionRequest request;
-	ASSERT_NO_THROW(request = builder.buildSubscriptionRequest(topic));
+	ASSERT_NO_THROW(  // NOLINT
+	    request =
+	        RequestBuilder::buildSubscriptionRequest(topic, getOptions()));
 
 	// Verify the attributes in the request
 	// TODO(max) there should probably be some test that explicitely checks data
@@ -81,12 +81,12 @@ TEST_F(RequestBuilderTest, BuildSubscriptionRequestWithOptions) {
 	          "uprotocol.core.usubscription.v3.SubscriptionRequest");
 }
 
-TEST_F(RequestBuilderTest, BuildUnsubscribeRequest) {
+TEST_F(RequestBuilderTest, BuildUnsubscribeRequest) {  // NOLINT
 	const v1::UUri topic = getSource();
-	const RequestBuilder builder(options_);
 
 	UnsubscribeRequest request;
-	ASSERT_NO_THROW(request = builder.buildUnsubscribeRequest(topic));
+	ASSERT_NO_THROW(  // NOLINT
+	    request = RequestBuilder::buildUnsubscribeRequest(topic));
 
 	// Verify the attributes in the request
 	EXPECT_TRUE(request.has_topic());
@@ -95,12 +95,12 @@ TEST_F(RequestBuilderTest, BuildUnsubscribeRequest) {
 	          "uprotocol.core.usubscription.v3.UnsubscribeRequest");
 }
 
-TEST_F(RequestBuilderTest, BuildFetchSubscriptionsRequestWithTopic) {
+TEST_F(RequestBuilderTest, BuildFetchSubscriptionsRequestWithTopic) {  // NOLINT
 	const v1::UUri topic = getSource();
-	const RequestBuilder builder(options_);
 
 	FetchSubscriptionsRequest request;
-	ASSERT_NO_THROW(request = builder.buildFetchSubscriptionsRequest(topic));
+	ASSERT_NO_THROW(request =  // NOLINT
+	                RequestBuilder::buildFetchSubscriptionsRequest(topic));
 
 	// Verify the attributes in the request
 	EXPECT_TRUE(request.has_topic());
@@ -109,13 +109,13 @@ TEST_F(RequestBuilderTest, BuildFetchSubscriptionsRequestWithTopic) {
 	          "uprotocol.core.usubscription.v3.FetchSubscriptionsRequest");
 }
 
-TEST_F(RequestBuilderTest, BuildFetchSubscriptionsRequestWithSubscriberInfo) {
+TEST_F(RequestBuilderTest,  // NOLINT
+       BuildFetchSubscriptionsRequestWithSubscriberInfo) {
 	const SubscriberInfo subscriber;
-	const RequestBuilder builder(options_);
 
 	FetchSubscriptionsRequest request;
-	ASSERT_NO_THROW(request =
-	                    builder.buildFetchSubscriptionsRequest(subscriber));
+	ASSERT_NO_THROW(  // NOLINT
+	    request = RequestBuilder::buildFetchSubscriptionsRequest(subscriber));
 
 	// Verify the attributes in the request
 	EXPECT_FALSE(request.has_topic());
@@ -123,12 +123,12 @@ TEST_F(RequestBuilderTest, BuildFetchSubscriptionsRequestWithSubscriberInfo) {
 	          "uprotocol.core.usubscription.v3.FetchSubscriptionsRequest");
 }
 
-TEST_F(RequestBuilderTest, BuildFetchSubscribersRequest) {
+TEST_F(RequestBuilderTest, BuildFetchSubscribersRequest) {  // NOLINT
 	const v1::UUri topic = getSource();
-	const RequestBuilder builder(options_);
 
 	FetchSubscribersRequest request;
-	ASSERT_NO_THROW(request = builder.buildFetchSubscribersRequest(topic));
+	ASSERT_NO_THROW(request =  // NOLINT
+	                RequestBuilder::buildFetchSubscribersRequest(topic));
 
 	// Verify the attributes in the request
 	EXPECT_TRUE(request.has_topic());
@@ -137,12 +137,12 @@ TEST_F(RequestBuilderTest, BuildFetchSubscribersRequest) {
 	          "uprotocol.core.usubscription.v3.FetchSubscribersRequest");
 }
 
-TEST_F(RequestBuilderTest, BuildNotificationsRequest) {
+TEST_F(RequestBuilderTest, BuildNotificationsRequest) {  // NOLINT
 	const v1::UUri topic = getSource();
-	const RequestBuilder builder(options_);
 
 	NotificationsRequest request;
-	ASSERT_NO_THROW(request = builder.buildNotificationsRequest(topic));
+	ASSERT_NO_THROW(  // NOLINT
+	    request = RequestBuilder::buildNotificationsRequest(topic));
 
 	// Verify the attributes in the request
 	EXPECT_TRUE(request.has_topic());

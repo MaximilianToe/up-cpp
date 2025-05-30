@@ -38,9 +38,8 @@ constexpr uint16_t RESOURCE_ID_REGISTER_FOR_NOTIFICATIONS = 0x0006;
 constexpr uint16_t RESOURCE_ID_UNREGISTER_FOR_NOTIFICATIONS = 0x0007;
 /// The resource identifier of uSubscription's _fetch subscribers_ operation.
 constexpr uint16_t RESOURCE_ID_FETCH_SUBSCRIBERS = 0x0008;
-// TODO(lennart) see default_call_options() for the request in Rust
-constexpr auto USUBSCRIPTION_REQUEST_TTL =
-    std::chrono::milliseconds(0x0800);  // TODO(lennart) change time
+
+constexpr auto USUBSCRIPTION_REQUEST_TTL = std::chrono::milliseconds(5000);
 
 namespace uprotocol::core::usubscription::v3 {
 using v3::SubscriptionRequest;

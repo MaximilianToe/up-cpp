@@ -34,7 +34,7 @@ protected:
 	void TearDown() override {}
 };
 
-TEST_F(USubscriptionUUriBuilderTest, GetServiceUriWithResourceId) {
+TEST_F(USubscriptionUUriBuilderTest, GetServiceUriWithResourceId) {  // NOLINT
 	// Example test case for building a subscription UUri
 	auto expected_uri = getExpectedUri();
 	expected_uri.set_resource_id(RESOURCE_ID_TEST);
@@ -47,7 +47,7 @@ TEST_F(USubscriptionUUriBuilderTest, GetServiceUriWithResourceId) {
 	EXPECT_EQ(actual_uri.SerializeAsString(), expected_uri.SerializeAsString());
 }
 
-TEST_F(USubscriptionUUriBuilderTest, GetNotificationUri) {
+TEST_F(USubscriptionUUriBuilderTest, GetNotificationUri) {  // NOLINT
 	auto expected_uri = getExpectedUri();
 	expected_uri.set_resource_id(RESOURCE_ID_NOTIFICATION_ID);
 	USubscriptionUUriBuilder builder;
