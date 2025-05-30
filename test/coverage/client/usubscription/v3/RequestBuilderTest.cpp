@@ -28,6 +28,7 @@ class RequestBuilderTest : public ::testing::Test {
 private:
 	v1::UUri source_;
 	USubscriptionOptions options_;
+
 protected:
 	const v1::UUri& getSource() const { return source_; }
 	const USubscriptionOptions& getOptions() const { return options_; }
@@ -62,11 +63,11 @@ public:
 	~RequestBuilderTest() override = default;
 };
 
-TEST_F(RequestBuilderTest, BuildSubscriptionRequestWithOptions) {
+TEST_F(RequestBuilderTest, BuildSubscriptionRequestWithOptions) {  // NOLINT
 	const v1::UUri topic = getSource();
 
 	SubscriptionRequest request;
-	ASSERT_NO_THROW(request = RequestBuilder::buildSubscriptionRequest(topic));
+	ASSERT_NO_THROW(request = RequestBuilder::buildSubscriptionRequest(topic)); // NOLINT
 
 	// Verify the attributes in the request
 	// TODO(max) there should probably be some test that explicitely checks data
@@ -78,11 +79,11 @@ TEST_F(RequestBuilderTest, BuildSubscriptionRequestWithOptions) {
 	          "uprotocol.core.usubscription.v3.SubscriptionRequest");
 }
 
-TEST_F(RequestBuilderTest, BuildUnsubscribeRequest) {
+TEST_F(RequestBuilderTest, BuildUnsubscribeRequest) {  // NOLINT
 	const v1::UUri topic = getSource();
 
 	UnsubscribeRequest request;
-	ASSERT_NO_THROW(request = RequestBuilder::buildUnsubscribeRequest(topic));
+	ASSERT_NO_THROW(request = RequestBuilder::buildUnsubscribeRequest(topic)); // NOLINT
 
 	// Verify the attributes in the request
 	EXPECT_TRUE(request.has_topic());
@@ -91,11 +92,12 @@ TEST_F(RequestBuilderTest, BuildUnsubscribeRequest) {
 	          "uprotocol.core.usubscription.v3.UnsubscribeRequest");
 }
 
-TEST_F(RequestBuilderTest, BuildFetchSubscriptionsRequestWithTopic) {
+TEST_F(RequestBuilderTest, BuildFetchSubscriptionsRequestWithTopic) {  // NOLINT
 	const v1::UUri topic = getSource();
 
 	FetchSubscriptionsRequest request;
-	ASSERT_NO_THROW(request = RequestBuilder::buildFetchSubscriptionsRequest(topic));
+	ASSERT_NO_THROW(request = // NOLINT
+	                    RequestBuilder::buildFetchSubscriptionsRequest(topic));
 
 	// Verify the attributes in the request
 	EXPECT_TRUE(request.has_topic());
@@ -104,12 +106,13 @@ TEST_F(RequestBuilderTest, BuildFetchSubscriptionsRequestWithTopic) {
 	          "uprotocol.core.usubscription.v3.FetchSubscriptionsRequest");
 }
 
-TEST_F(RequestBuilderTest, BuildFetchSubscriptionsRequestWithSubscriberInfo) {
+TEST_F(RequestBuilderTest, // NOLINT
+       BuildFetchSubscriptionsRequestWithSubscriberInfo) {  
 	const SubscriberInfo subscriber;
 
 	FetchSubscriptionsRequest request;
-	ASSERT_NO_THROW(request =
-	                    RequestBuilder::buildFetchSubscriptionsRequest(subscriber));
+	ASSERT_NO_THROW( // NOLINT
+	    request = RequestBuilder::buildFetchSubscriptionsRequest(subscriber));
 
 	// Verify the attributes in the request
 	EXPECT_FALSE(request.has_topic());
@@ -117,11 +120,12 @@ TEST_F(RequestBuilderTest, BuildFetchSubscriptionsRequestWithSubscriberInfo) {
 	          "uprotocol.core.usubscription.v3.FetchSubscriptionsRequest");
 }
 
-TEST_F(RequestBuilderTest, BuildFetchSubscribersRequest) {
+TEST_F(RequestBuilderTest, BuildFetchSubscribersRequest) {  // NOLINT
 	const v1::UUri topic = getSource();
 
 	FetchSubscribersRequest request;
-	ASSERT_NO_THROW(request = RequestBuilder::buildFetchSubscribersRequest(topic));
+	ASSERT_NO_THROW(request = // NOLINT
+	                    RequestBuilder::buildFetchSubscribersRequest(topic));
 
 	// Verify the attributes in the request
 	EXPECT_TRUE(request.has_topic());
@@ -130,11 +134,11 @@ TEST_F(RequestBuilderTest, BuildFetchSubscribersRequest) {
 	          "uprotocol.core.usubscription.v3.FetchSubscribersRequest");
 }
 
-TEST_F(RequestBuilderTest, BuildNotificationsRequest) {
+TEST_F(RequestBuilderTest, BuildNotificationsRequest) {  // NOLINT
 	const v1::UUri topic = getSource();
 
 	NotificationsRequest request;
-	ASSERT_NO_THROW(request = RequestBuilder::buildNotificationsRequest(topic));
+	ASSERT_NO_THROW(request = RequestBuilder::buildNotificationsRequest(topic)); // NOLINT
 
 	// Verify the attributes in the request
 	EXPECT_TRUE(request.has_topic());

@@ -47,8 +47,8 @@ struct RequestBuilder {
 	/// @param topic The `v1::UUri` representing the topic for the subscription.
 	///
 	/// @return A `SubscriptionRequest` configured for the specified topic.
-	static SubscriptionRequest buildSubscriptionRequest(const v1::UUri& topic, 
-	                                                     const USubscriptionOptions& options = {});
+	static SubscriptionRequest buildSubscriptionRequest(
+	    const v1::UUri& topic, const USubscriptionOptions& options = {});
 
 	/// @brief Builds an unsubscription request for a given topic.
 	///
@@ -93,7 +93,8 @@ struct RequestBuilder {
 	/// for/from.
 	///
 	/// @return An `NotificationsRequest` configured for the specified topic.
-	static NotificationsRequest buildNotificationsRequest(const v1::UUri& topic);
+	static NotificationsRequest buildNotificationsRequest(
+	    const v1::UUri& topic);
 };
 
 }  // namespace uprotocol::core::usubscription::v3

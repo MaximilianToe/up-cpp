@@ -30,7 +30,7 @@ UnsubscribeRequest RequestBuilder::buildUnsubscribeRequest(
 }
 
 FetchSubscriptionsRequest RequestBuilder::buildFetchSubscriptionsRequest(
-    const v1::UUri& topic)  {
+    const v1::UUri& topic) {
 	return utils::ProtoConverter::BuildFetchSubscriptionsRequest(topic);
 }
 

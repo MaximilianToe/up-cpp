@@ -15,6 +15,7 @@ using SubscriptionRequest =
     uprotocol::core::usubscription::v3::SubscriptionRequest;
 using SubscriptionResponse =
     uprotocol::core::usubscription::v3::SubscriptionResponse;
+using RequestBuilder = uprotocol::core::usubscription::v3::RequestBuilder;
 
 namespace {
 
@@ -85,14 +86,9 @@ protected:
 
 	uprotocol::v1::UUri getSubscriptionTopic() { return subscription_topic_; }
 
-	uprotocol::core::usubscription::v3::RequestBuilder getRequestBuilder() {
-		return request_builder_;
-	}
-
 private:
 	std::shared_ptr<uprotocol::test::UTransportMock> client_transport_;
 	std::shared_ptr<uprotocol::test::UTransportMock> server_transport_;
-	uprotocol::core::usubscription::v3::RequestBuilder request_builder_;
 	uprotocol::v1::UUri server_method_uuri_;
 	uprotocol::v1::UUri subscription_topic_;
 
@@ -104,7 +100,8 @@ public:
 // Tests for subscribe method
 //
 
-TEST_F(RpcClientUSubscriptionTest, SubscribeRoundtripWithValidProtoPayload) {
+TEST_F(RpcClientUSubscriptionTest, // NOLINT
+       SubscribeRoundtripWithValidProtoPayload) {  
 	bool server_callback_executed = false;
 	SubscriptionRequest server_capture;
 	SubscriptionResponse server_response;
@@ -134,7 +131,7 @@ TEST_F(RpcClientUSubscriptionTest, SubscribeRoundtripWithValidProtoPayload) {
 	    getClientTransport());
 
 	const auto subscription_request =
-	    getRequestBuilder().buildSubscriptionRequest(getSubscriptionTopic());
+	    RequestBuilder::buildSubscriptionRequest(getSubscriptionTopic());
 
 	auto response_or_status_future =
 	    std::async(std::launch::async,
@@ -168,7 +165,8 @@ TEST_F(RpcClientUSubscriptionTest, SubscribeRoundtripWithValidProtoPayload) {
 	          server_response.SerializeAsString());
 }
 
-TEST_F(RpcClientUSubscriptionTest, SubscribeRoundtripWithValidProtoAnyPayload) {
+TEST_F(RpcClientUSubscriptionTest, // NOLINT
+       SubscribeRoundtripWithValidProtoAnyPayload) {  
 	bool server_callback_executed = false;
 	SubscriptionRequest server_capture;
 	SubscriptionResponse server_response;
@@ -202,7 +200,7 @@ TEST_F(RpcClientUSubscriptionTest, SubscribeRoundtripWithValidProtoAnyPayload) {
 	    getClientTransport());
 
 	const auto subscription_request =
-	    getRequestBuilder().buildSubscriptionRequest(getSubscriptionTopic());
+	    RequestBuilder::buildSubscriptionRequest(getSubscriptionTopic());
 
 	auto response_or_status_future =
 	    std::async(std::launch::async,
@@ -236,7 +234,7 @@ TEST_F(RpcClientUSubscriptionTest, SubscribeRoundtripWithValidProtoAnyPayload) {
 	          server_response.SerializeAsString());
 }
 
-TEST_F(RpcClientUSubscriptionTest,
+TEST_F(RpcClientUSubscriptionTest,  // NOLINT
        SubscribeRoundtripWithValidProtoPayloadDifferentTopic) {
 	bool server_callback_executed = false;
 	SubscriptionRequest server_capture;
@@ -276,7 +274,7 @@ TEST_F(RpcClientUSubscriptionTest,
 	    getClientTransport());
 
 	const auto subscription_request =
-	    getRequestBuilder().buildSubscriptionRequest(getSubscriptionTopic());
+	    RequestBuilder::buildSubscriptionRequest(getSubscriptionTopic());
 
 	auto response_or_status_future =
 	    std::async(std::launch::async,
@@ -319,7 +317,8 @@ using UnsubscibeRequest =
 using UnsubscribeResponse =
     uprotocol::core::usubscription::v3::UnsubscribeResponse;
 
-TEST_F(RpcClientUSubscriptionTest, UnsubscribeRoundtripWithValidProtoPayload) {
+TEST_F(RpcClientUSubscriptionTest, // NOLINT
+       UnsubscribeRoundtripWithValidProtoPayload) {  
 	bool server_callback_executed = false;
 	UnsubscibeRequest server_capture;
 	UnsubscribeResponse server_response;
@@ -347,7 +346,7 @@ TEST_F(RpcClientUSubscriptionTest, UnsubscribeRoundtripWithValidProtoPayload) {
 	    getClientTransport());
 
 	const auto unsubscribe_request =
-	    getRequestBuilder().buildUnsubscribeRequest(getSubscriptionTopic());
+	    RequestBuilder::buildUnsubscribeRequest(getSubscriptionTopic());
 
 	auto response_or_status_future =
 	    std::async(std::launch::async,
@@ -381,7 +380,7 @@ TEST_F(RpcClientUSubscriptionTest, UnsubscribeRoundtripWithValidProtoPayload) {
 	          server_response.SerializeAsString());
 }
 
-TEST_F(RpcClientUSubscriptionTest,
+TEST_F(RpcClientUSubscriptionTest,  // NOLINT
        UnsubscribeRoundtripWithValidProtoAnyPayload) {
 	bool server_callback_executed = false;
 	UnsubscibeRequest server_capture;
@@ -414,7 +413,7 @@ TEST_F(RpcClientUSubscriptionTest,
 	    getClientTransport());
 
 	const auto unsubscribe_request =
-	    getRequestBuilder().buildUnsubscribeRequest(getSubscriptionTopic());
+	    RequestBuilder::buildUnsubscribeRequest(getSubscriptionTopic());
 
 	auto response_or_status_future =
 	    std::async(std::launch::async,
@@ -457,7 +456,7 @@ using FetchSubscribersRequest =
 using FetchSubscribersResponse =
     uprotocol::core::usubscription::v3::FetchSubscribersResponse;
 
-TEST_F(RpcClientUSubscriptionTest,
+TEST_F(RpcClientUSubscriptionTest,  // NOLINT
        fetchSubscriberRoundtripWithValidProtoPayload) {
 	bool server_callback_executed = false;
 	FetchSubscribersRequest server_capture;
@@ -487,8 +486,7 @@ TEST_F(RpcClientUSubscriptionTest,
 	    getClientTransport());
 
 	const auto fetch_subscribers_request =
-	    getRequestBuilder().buildFetchSubscribersRequest(
-	        getSubscriptionTopic());
+	    RequestBuilder::buildFetchSubscribersRequest(getSubscriptionTopic());
 
 	auto response_or_status_future = std::async(
 	    std::launch::async,
@@ -522,7 +520,7 @@ TEST_F(RpcClientUSubscriptionTest,
 	          server_response.SerializeAsString());
 }
 
-TEST_F(RpcClientUSubscriptionTest,
+TEST_F(RpcClientUSubscriptionTest,  // NOLINT
        FetchSubscriberRoundtripWithValidProtoAnyPayload) {
 	bool server_callback_executed = false;
 	FetchSubscribersRequest server_capture;
@@ -556,8 +554,7 @@ TEST_F(RpcClientUSubscriptionTest,
 	    getClientTransport());
 
 	const auto fetch_subscribers_request =
-	    getRequestBuilder().buildFetchSubscribersRequest(
-	        getSubscriptionTopic());
+	    RequestBuilder::buildFetchSubscribersRequest(getSubscriptionTopic());
 
 	auto response_or_status_future = std::async(
 	    std::launch::async,
@@ -600,7 +597,7 @@ using FetchSubscriptionsRequest =
 using FetchSubscriptionsResponse =
     uprotocol::core::usubscription::v3::FetchSubscriptionsResponse;
 
-TEST_F(RpcClientUSubscriptionTest,
+TEST_F(RpcClientUSubscriptionTest,  // NOLINT
        fetchSubscriptionsRoundtripWithValidProtoPayload) {
 	bool server_callback_executed = false;
 	FetchSubscriptionsRequest server_capture;
@@ -631,7 +628,7 @@ TEST_F(RpcClientUSubscriptionTest,
 
 	const uprotocol::core::usubscription::v3::SubscriberInfo subscriber_info;
 	const auto fetch_subscriptions_request =
-	    getRequestBuilder().buildFetchSubscriptionsRequest(subscriber_info);
+	    RequestBuilder::buildFetchSubscriptionsRequest(subscriber_info);
 
 	auto response_or_status_future = std::async(
 	    std::launch::async,
@@ -665,7 +662,7 @@ TEST_F(RpcClientUSubscriptionTest,
 	          server_response.SerializeAsString());
 }
 
-TEST_F(RpcClientUSubscriptionTest,
+TEST_F(RpcClientUSubscriptionTest,  // NOLINT
        fetchSubscriptionRoundtripWithValidProtoAnyPayload) {
 	bool server_callback_executed = false;
 	FetchSubscriptionsRequest server_capture;
@@ -700,7 +697,7 @@ TEST_F(RpcClientUSubscriptionTest,
 
 	const uprotocol::core::usubscription::v3::SubscriberInfo subscriber_info;
 	const auto fetch_subscribers_request =
-	    getRequestBuilder().buildFetchSubscriptionsRequest(subscriber_info);
+	    RequestBuilder::buildFetchSubscriptionsRequest(subscriber_info);
 
 	auto response_or_status_future = std::async(
 	    std::launch::async,
@@ -743,7 +740,7 @@ using NotificationsRequest =
 using NotificationsResponse =
     uprotocol::core::usubscription::v3::NotificationsResponse;
 
-TEST_F(RpcClientUSubscriptionTest,
+TEST_F(RpcClientUSubscriptionTest,  // NOLINT
        registerNotificationRoundtripWithValidProtoPayload) {
 	bool server_callback_executed = false;
 	NotificationsRequest server_capture;
@@ -773,7 +770,7 @@ TEST_F(RpcClientUSubscriptionTest,
 	    getClientTransport());
 
 	const auto notifications_request =
-	    getRequestBuilder().buildNotificationsRequest(getSubscriptionTopic());
+	    RequestBuilder::buildNotificationsRequest(getSubscriptionTopic());
 
 	auto response_or_status_future = std::async(
 	    std::launch::async,
@@ -807,7 +804,7 @@ TEST_F(RpcClientUSubscriptionTest,
 	          server_response.SerializeAsString());
 }
 
-TEST_F(RpcClientUSubscriptionTest,
+TEST_F(RpcClientUSubscriptionTest,  // NOLINT
        registerNotificationRoundtripWithValidProtoAnyPayload) {
 	bool server_callback_executed = false;
 	NotificationsRequest server_capture;
@@ -841,7 +838,7 @@ TEST_F(RpcClientUSubscriptionTest,
 	    getClientTransport());
 
 	const auto notifications_request =
-	    getRequestBuilder().buildNotificationsRequest(getSubscriptionTopic());
+	    RequestBuilder::buildNotificationsRequest(getSubscriptionTopic());
 
 	auto response_or_status_future = std::async(
 	    std::launch::async,
@@ -884,7 +881,7 @@ using NotificationsRequest =
 using NotificationsResponse =
     uprotocol::core::usubscription::v3::NotificationsResponse;
 
-TEST_F(RpcClientUSubscriptionTest,
+TEST_F(RpcClientUSubscriptionTest,  // NOLINT
        unregisterNotificationRoundtripWithValidProtoPayload) {
 	bool server_callback_executed = false;
 	NotificationsRequest server_capture;
@@ -914,7 +911,7 @@ TEST_F(RpcClientUSubscriptionTest,
 	    getClientTransport());
 
 	const auto notifications_request =
-	    getRequestBuilder().buildNotificationsRequest(getSubscriptionTopic());
+	    RequestBuilder::buildNotificationsRequest(getSubscriptionTopic());
 
 	auto response_or_status_future = std::async(
 	    std::launch::async,
@@ -948,7 +945,7 @@ TEST_F(RpcClientUSubscriptionTest,
 	          server_response.SerializeAsString());
 }
 
-TEST_F(RpcClientUSubscriptionTest,
+TEST_F(RpcClientUSubscriptionTest,  // NOLINT
        unregisterNotificationRoundtripWithValidProtoAnyPayload) {
 	bool server_callback_executed = false;
 	NotificationsRequest server_capture;
@@ -982,7 +979,7 @@ TEST_F(RpcClientUSubscriptionTest,
 	    getClientTransport());
 
 	const auto notifications_request =
-	    getRequestBuilder().buildNotificationsRequest(getSubscriptionTopic());
+	    RequestBuilder::buildNotificationsRequest(getSubscriptionTopic());
 
 	auto response_or_status_future = std::async(
 	    std::launch::async,
