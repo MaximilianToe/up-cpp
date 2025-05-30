@@ -42,32 +42,20 @@ struct USubscriptionOptions {
 /// This struct facilitates the construction of requests based on
 /// `USubscriptionOptions`, providing methods to build different requests.
 struct RequestBuilder {
-	/// @brief Constructs a RequestBuilder with the given subscription options.
-	///
-	/// @param options Subscription options to configure the requests. Defaults
-	/// to empty options.
-	explicit RequestBuilder(USubscriptionOptions options = {})
-	    : options_(std::move(options)) {}
-
-	/// @brief Sets the permission level for the requests build by the builder
-	///
-	/// @param permission_level to be set
-	/// @return returns a reference to the builder struct to allow chaining
-	RequestBuilder& setPremissionLevel(uint32_t permission_level);
-
 	/// @brief Builds a subscription request for a given topic.
 	///
 	/// @param topic The `v1::UUri` representing the topic for the subscription.
 	///
 	/// @return A `SubscriptionRequest` configured for the specified topic.
-	SubscriptionRequest buildSubscriptionRequest(const v1::UUri& topic) const;
+	static SubscriptionRequest buildSubscriptionRequest(const v1::UUri& topic, 
+	                                                     const USubscriptionOptions& options = {});
 
 	/// @brief Builds an unsubscription request for a given topic.
 	///
 	/// @param topic The `v1::UUri` representing the topic to unsubscribe from.
 	///
 	/// @return An `UnsubscribeRequest` configured for the specified topic.
-	UnsubscribeRequest buildUnsubscribeRequest(const v1::UUri& topic) const;
+	static UnsubscribeRequest buildUnsubscribeRequest(const v1::UUri& topic);
 
 	/// @brief Build fetch subscritions request for a given topic.
 	///
@@ -75,8 +63,8 @@ struct RequestBuilder {
 	///
 	/// @return An `FetchSubscriptionsRequest` configured for the specified
 	/// topic.
-	FetchSubscriptionsRequest buildFetchSubscriptionsRequest(
-	    const v1::UUri& topic) const;
+	static FetchSubscriptionsRequest buildFetchSubscriptionsRequest(
+	    const v1::UUri& topic);
 
 	/// @brief Build fetch subscritions request for a given subscriber.
 	///
@@ -85,16 +73,16 @@ struct RequestBuilder {
 	///
 	/// @return An `FetchSubscriptionsRequest` configured for the specified
 	/// subscriber.
-	FetchSubscriptionsRequest buildFetchSubscriptionsRequest(
-	    const SubscriberInfo& subscriber) const;
+	static FetchSubscriptionsRequest buildFetchSubscriptionsRequest(
+	    const SubscriberInfo& subscriber);
 
 	/// @brief Build fetch subscribers request for a given topic.
 	///
 	/// @param topic The `v1::UUri` representing the topic to fetch.
 	///
 	/// @return An `FetchSubscribersRequest` configured for the specified topic.
-	FetchSubscribersRequest buildFetchSubscribersRequest(
-	    const v1::UUri& topic) const;
+	static FetchSubscribersRequest buildFetchSubscribersRequest(
+	    const v1::UUri& topic);
 
 	/// @brief Build notifications request for a given topic. Subscription
 	/// change
@@ -105,10 +93,7 @@ struct RequestBuilder {
 	/// for/from.
 	///
 	/// @return An `NotificationsRequest` configured for the specified topic.
-	NotificationsRequest buildNotificationsRequest(const v1::UUri& topic) const;
-
-private:
-	USubscriptionOptions options_;  ///< Options used to configure the requests.
+	static NotificationsRequest buildNotificationsRequest(const v1::UUri& topic);
 };
 
 }  // namespace uprotocol::core::usubscription::v3

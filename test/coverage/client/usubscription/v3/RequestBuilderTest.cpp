@@ -64,10 +64,9 @@ public:
 
 TEST_F(RequestBuilderTest, BuildSubscriptionRequestWithOptions) {
 	const v1::UUri topic = getSource();
-	const RequestBuilder builder(getOptions());
 
 	SubscriptionRequest request;
-	ASSERT_NO_THROW(request = builder.buildSubscriptionRequest(topic));
+	ASSERT_NO_THROW(request = RequestBuilder::buildSubscriptionRequest(topic));
 
 	// Verify the attributes in the request
 	// TODO(max) there should probably be some test that explicitely checks data
@@ -81,10 +80,9 @@ TEST_F(RequestBuilderTest, BuildSubscriptionRequestWithOptions) {
 
 TEST_F(RequestBuilderTest, BuildUnsubscribeRequest) {
 	const v1::UUri topic = getSource();
-	const RequestBuilder builder(getOptions());
 
 	UnsubscribeRequest request;
-	ASSERT_NO_THROW(request = builder.buildUnsubscribeRequest(topic));
+	ASSERT_NO_THROW(request = RequestBuilder::buildUnsubscribeRequest(topic));
 
 	// Verify the attributes in the request
 	EXPECT_TRUE(request.has_topic());
@@ -95,10 +93,9 @@ TEST_F(RequestBuilderTest, BuildUnsubscribeRequest) {
 
 TEST_F(RequestBuilderTest, BuildFetchSubscriptionsRequestWithTopic) {
 	const v1::UUri topic = getSource();
-	const RequestBuilder builder(getOptions());
 
 	FetchSubscriptionsRequest request;
-	ASSERT_NO_THROW(request = builder.buildFetchSubscriptionsRequest(topic));
+	ASSERT_NO_THROW(request = RequestBuilder::buildFetchSubscriptionsRequest(topic));
 
 	// Verify the attributes in the request
 	EXPECT_TRUE(request.has_topic());
@@ -109,11 +106,10 @@ TEST_F(RequestBuilderTest, BuildFetchSubscriptionsRequestWithTopic) {
 
 TEST_F(RequestBuilderTest, BuildFetchSubscriptionsRequestWithSubscriberInfo) {
 	const SubscriberInfo subscriber;
-	const RequestBuilder builder(getOptions());
 
 	FetchSubscriptionsRequest request;
 	ASSERT_NO_THROW(request =
-	                    builder.buildFetchSubscriptionsRequest(subscriber));
+	                    RequestBuilder::buildFetchSubscriptionsRequest(subscriber));
 
 	// Verify the attributes in the request
 	EXPECT_FALSE(request.has_topic());
@@ -123,10 +119,9 @@ TEST_F(RequestBuilderTest, BuildFetchSubscriptionsRequestWithSubscriberInfo) {
 
 TEST_F(RequestBuilderTest, BuildFetchSubscribersRequest) {
 	const v1::UUri topic = getSource();
-	const RequestBuilder builder(getOptions());
 
 	FetchSubscribersRequest request;
-	ASSERT_NO_THROW(request = builder.buildFetchSubscribersRequest(topic));
+	ASSERT_NO_THROW(request = RequestBuilder::buildFetchSubscribersRequest(topic));
 
 	// Verify the attributes in the request
 	EXPECT_TRUE(request.has_topic());
@@ -137,10 +132,9 @@ TEST_F(RequestBuilderTest, BuildFetchSubscribersRequest) {
 
 TEST_F(RequestBuilderTest, BuildNotificationsRequest) {
 	const v1::UUri topic = getSource();
-	const RequestBuilder builder(getOptions());
 
 	NotificationsRequest request;
-	ASSERT_NO_THROW(request = builder.buildNotificationsRequest(topic));
+	ASSERT_NO_THROW(request = RequestBuilder::buildNotificationsRequest(topic));
 
 	// Verify the attributes in the request
 	EXPECT_TRUE(request.has_topic());

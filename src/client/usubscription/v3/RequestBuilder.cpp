@@ -16,41 +16,36 @@
 namespace uprotocol::core::usubscription::v3 {
 
 SubscriptionRequest RequestBuilder::buildSubscriptionRequest(
-    const v1::UUri& topic) const {
+    const v1::UUri& topic, const USubscriptionOptions& options) {
 	auto attributes = utils::ProtoConverter::BuildSubscribeAttributes(
-	    options_.when_expire, options_.subscription_details,
-	    options_.sample_period_ms);
+	    options.when_expire, options.subscription_details,
+	    options.sample_period_ms);
 
 	return utils::ProtoConverter::BuildSubscriptionRequest(topic, attributes);
 }
 
-RequestBuilder& RequestBuilder::setPremissionLevel(uint32_t permission_level) {
-	options_.permission_level = permission_level;
-	return *this;
-}
-
 UnsubscribeRequest RequestBuilder::buildUnsubscribeRequest(
-    const v1::UUri& topic) const {
+    const v1::UUri& topic) {
 	return utils::ProtoConverter::BuildUnSubscribeRequest(topic);
 }
 
 FetchSubscriptionsRequest RequestBuilder::buildFetchSubscriptionsRequest(
-    const v1::UUri& topic) const {
+    const v1::UUri& topic)  {
 	return utils::ProtoConverter::BuildFetchSubscriptionsRequest(topic);
 }
 
 FetchSubscriptionsRequest RequestBuilder::buildFetchSubscriptionsRequest(
-    const SubscriberInfo& subscriber) const {
+    const SubscriberInfo& subscriber) {
 	return utils::ProtoConverter::BuildFetchSubscriptionsRequest(subscriber);
 }
 
 FetchSubscribersRequest RequestBuilder::buildFetchSubscribersRequest(
-    const v1::UUri& topic) const {
+    const v1::UUri& topic) {
 	return utils::ProtoConverter::BuildFetchSubscribersRequest(topic);
 }
 
 NotificationsRequest RequestBuilder::buildNotificationsRequest(
-    const v1::UUri& topic) const {
+    const v1::UUri& topic) {
 	return utils::ProtoConverter::BuildNotificationsRequest(topic);
 }
 
