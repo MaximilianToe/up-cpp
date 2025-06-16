@@ -13,6 +13,8 @@
 
 namespace uprotocol::core::usubscription::v3 {
 
+constexpr uint32_t SERVICE_ID_BITMASK = 0x0000FFFF;
+
 USubscriptionUUriBuilder::USubscriptionUUriBuilder() {
 	// Get the service descriptor
 	const google::protobuf::ServiceDescriptor* service =
@@ -20,8 +22,6 @@ USubscriptionUUriBuilder::USubscriptionUUriBuilder() {
 	const auto& service_options = service->options();
 
 	// Get the service options
-	const auto& service_name =
-	    service_options.GetExtension(uprotocol::service_name);
 	const auto& service_version_major =
 	    service_options.GetExtension(uprotocol::service_version_major);
 	const auto& service_id =
@@ -30,11 +30,31 @@ USubscriptionUUriBuilder::USubscriptionUUriBuilder() {
 	    service_options.GetExtension(uprotocol::notification_topic, 0);
 
 	// Set the values in the URI
-	base_uri_.set_authority_name(service_name);
 	base_uri_.set_ue_id(service_id);
 	base_uri_.set_ue_version_major(service_version_major);
 	sink_resource_id_ = notification_topic.id();
 }
+
+USubscriptionUUriBuilder USubscriptionUUriBuilder::setAuthorityName(
+    const std::string& authority_name) {
+	base_uri_.set_authority_name(authority_name);
+	return *this;
+}
+
+USubscriptionUUriBuilder USubscriptionUUriBuilder::setUEntityId(
+    u_int32_t ue_id) {
+	base_uri_.set_ue_id(ue_id);
+	return *this;
+}
+
+USubscriptionUUriBuilder USubscriptionUUriBuilder::setInstanceId(
+    u_int16_t instance_id) {
+	auto updated_ue_id = (SERVICE_ID_BITMASK & base_uri_.ue_id()) + instance_id<<sizeof(u_int16_t);
+	base_uri_.set_ue_id(updated_ue_id);
+	return *this;
+}
+
+
 
 v1::UUri USubscriptionUUriBuilder::getServiceUriWithResourceId(
     uint32_t resource_id) const {
