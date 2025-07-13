@@ -67,14 +67,14 @@ RpcClientUSubscription::RpcClientUSubscription(
 communication::RpcClient::InvokeProtoFuture<SubscriptionResponse>
 RpcClientUSubscription::subscribe(
     const SubscriptionRequest& subscription_request) {
-	return subscribe_client_->invokeProtoMethod<SubscriptionResponse>(
+	return subscribe_client_->invokeProtoMethodFromProto<SubscriptionResponse>(
 	    subscription_request);
 }
 
 communication::RpcClient::InvokeProtoFuture<UnsubscribeResponse>
 RpcClientUSubscription::unsubscribe(
     const UnsubscribeRequest& unsubscribe_request) {
-	return unsubscribe_client_->invokeProtoMethod<UnsubscribeResponse>(
+	return unsubscribe_client_->invokeProtoMethodFromProto<UnsubscribeResponse>(
 	    unsubscribe_request);
 }
 
@@ -82,7 +82,7 @@ communication::RpcClient::InvokeProtoFuture<FetchSubscriptionsResponse>
 RpcClientUSubscription::fetch_subscriptions(
     const FetchSubscriptionsRequest& fetch_subscriptions_request) {
 	return fetch_subscriptions_client_
-	    ->invokeProtoMethod<FetchSubscriptionsResponse>(
+	    ->invokeProtoMethodFromProto<FetchSubscriptionsResponse>(
 	        fetch_subscriptions_request);
 }
 
@@ -90,7 +90,7 @@ communication::RpcClient::InvokeProtoFuture<FetchSubscribersResponse>
 RpcClientUSubscription::fetch_subscribers(
     const FetchSubscribersRequest& fetch_subscribers_request) {
 	return fetch_subscribers_client_
-	    ->invokeProtoMethod<FetchSubscribersResponse>(
+	    ->invokeProtoMethodFromProto<FetchSubscribersResponse>(
 	        fetch_subscribers_request);
 }
 
@@ -98,7 +98,7 @@ communication::RpcClient::InvokeProtoFuture<NotificationsResponse>
 RpcClientUSubscription::register_for_notifications(
     const NotificationsRequest& register_notifications_request) {
 	return register_for_notification_client_
-	    ->invokeProtoMethod<NotificationsResponse>(
+	    ->invokeProtoMethodFromProto<NotificationsResponse>(
 	        register_notifications_request);
 }
 
@@ -106,7 +106,7 @@ communication::RpcClient::InvokeProtoFuture<NotificationsResponse>
 RpcClientUSubscription::unregister_for_notifications(
     const NotificationsRequest& unregister_notifications_request) {
 	return unregister_for_notification_client_
-	    ->invokeProtoMethod<NotificationsResponse>(
+	    ->invokeProtoMethodFromProto<NotificationsResponse>(
 	        unregister_notifications_request);
 }
 

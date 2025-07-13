@@ -176,8 +176,8 @@ struct RpcClient {
 	[[nodiscard]] InvokeFuture invokeMethod();
 
 	template <typename R>
-	InvokeHandle invokeProtoMethod(const R& request_message,
-	                               Callback&& callback) {
+	[[nodiscard]] InvokeHandle invokeMethodFromProto(const R& request_message,
+	                                                 Callback&& callback) {
 		auto payload_or_status =
 		    uprotocol::utils::ProtoConverter::protoToPayload(request_message);
 
@@ -193,12 +193,13 @@ struct RpcClient {
 	}
 
 	template <typename T, typename R>
-	InvokeProtoFuture<T> invokeProtoMethod(const R& request_message) {
+	[[nodiscard]] InvokeProtoFuture<T> invokeProtoMethodFromProto(
+	    const R& request_message) {
 		auto result_promise =
 		    std::make_shared<std::promise<ResponseOrStatus<T>>>();
 		auto future = result_promise->get_future();
 
-		auto handle = invokeProtoMethod(
+		auto handle = invokeMethodFromProto(
 		    request_message,
 		    [result_promise](const MessageOrStatus& message_or_status) {
 			    if (!message_or_status.has_value()) {
@@ -227,12 +228,12 @@ struct RpcClient {
 	}
 
 	template <typename R>
-	InvokeFuture invokeProtoMethod(const R& request_message) {
+	[[nodiscard]] InvokeFuture invokeMethodFromProto(const R& request_message) {
 		auto result_promise =
 		    std::make_shared<std::promise<ResponseOrStatus<v1::UMessage>>>();
 		auto future = result_promise->get_future();
 
-		auto handle = invokeProtoMethod(
+		auto handle = invokeMethodFromProto(
 		    request_message,
 		    [result_promise](const MessageOrStatus& message_or_status) {
 			    if (!message_or_status.has_value()) {
