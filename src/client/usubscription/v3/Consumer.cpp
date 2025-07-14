@@ -110,8 +110,9 @@ v1::UStatus Consumer::subscribe(
 	SubscriptionRequest const subscription_request = buildSubscriptionRequest();
 	auto payload = datamodel::builder::Payload(subscription_request);
 
-	rpc_handle_ =
-	    rpc_client_->invokeMethod(std::move(payload), std::move(on_response));
+	rpc_handle_ = rpc_client_->invokeMethod(
+	    uSubscriptionUUriBuilder_.getServiceUriWithResourceId(1),
+	    std::move(payload), std::move(on_response));
 
 	// Create a L2 subscription
 	auto result = communication::Subscriber::subscribe(
@@ -147,8 +148,9 @@ void Consumer::unsubscribe(v1::UPriority priority,
 	UnsubscribeRequest const unsubscribe_request = buildUnsubscriptionRequest();
 	auto payload = datamodel::builder::Payload(unsubscribe_request);
 
-	rpc_handle_ =
-	    rpc_client_->invokeMethod(std::move(payload), std::move(on_response));
+	rpc_handle_ = rpc_client_->invokeMethod(
+	    uSubscriptionUUriBuilder_.getServiceUriWithResourceId(2),
+	    std::move(payload), std::move(on_response));
 
 	subscriber_.reset();
 }

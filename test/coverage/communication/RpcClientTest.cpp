@@ -203,14 +203,15 @@ TEST_F(RpcClientTest,  // NOLINT
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// RpcClient::invokeMethod()
+// RpcClient::invokeMethod(methodUri())
 TEST_F(RpcClientTest, InvokeFutureWithoutPayload) {  // NOLINT
 	auto client = communication::RpcClient(getTransport(), methodUri(),
 	                                       v1::UPriority::UPRIORITY_CS4,
 	                                       TEN_MILLISECONDS);
 
-	decltype(client.invokeMethod()) invoke_future;
-	EXPECT_NO_THROW(invoke_future = client.invokeMethod());  // NOLINT
+	decltype(client.invokeMethod(methodUri())) invoke_future;
+	EXPECT_NO_THROW(invoke_future =
+	                    client.invokeMethod(methodUri()));  // NOLINT
 
 	EXPECT_TRUE(invoke_future.valid());
 	validateLastRequest(1);
@@ -238,7 +239,7 @@ TEST_F(RpcClientTest, InvokeFutureWithoutPayloadAndFormatSet) {  // NOLINT
 	    TEN_MILLISECONDS, v1::UPayloadFormat::UPAYLOAD_FORMAT_SOMEIP);
 
 	EXPECT_THROW(  // NOLINT
-	    auto invoke_future = client.invokeMethod(),
+	    auto invoke_future = client.invokeMethod(methodUri()),
 	    datamodel::builder::UMessageBuilder::UnexpectedFormat);
 
 	EXPECT_EQ(getTransport()->getSendCount(), 0);
@@ -250,9 +251,10 @@ TEST_F(RpcClientTest, InvokeFutureWithoutPayloadTimeout) {  // NOLINT
 	                                       v1::UPriority::UPRIORITY_CS4,
 	                                       TEN_MILLISECONDS);
 
-	decltype(client.invokeMethod()) invoke_future;
+	decltype(client.invokeMethod(methodUri())) invoke_future;
 	auto when_requested = std::chrono::steady_clock::now();
-	EXPECT_NO_THROW(invoke_future = client.invokeMethod());  // NOLINT
+	EXPECT_NO_THROW(invoke_future =
+	                    client.invokeMethod(methodUri()));  // NOLINT
 
 	EXPECT_TRUE(invoke_future.valid());
 	auto is_ready = invoke_future.wait_for(ONE_HUNDRED_FIFTY_MILLISECONDS);
@@ -276,8 +278,9 @@ TEST_F(RpcClientTest, InvokeFutureWithoutPayloadListenFail) {  // NOLINT
 	getTransport()->getRegisterListenerStatus().set_code(
 	    v1::UCode::RESOURCE_EXHAUSTED);
 
-	decltype(client.invokeMethod()) invoke_future;
-	EXPECT_NO_THROW(invoke_future = client.invokeMethod());  // NOLINT
+	decltype(client.invokeMethod(methodUri())) invoke_future;
+	EXPECT_NO_THROW(invoke_future =
+	                    client.invokeMethod(methodUri()));  // NOLINT
 
 	EXPECT_EQ(getTransport()->getSendCount(), 0);
 	EXPECT_TRUE(invoke_future.valid());
@@ -297,8 +300,9 @@ TEST_F(RpcClientTest, InvokeFutureWithoutPayloadSendFail) {  // NOLINT
 
 	getTransport()->getSendStatus().set_code(v1::UCode::FAILED_PRECONDITION);
 
-	decltype(client.invokeMethod()) invoke_future;
-	EXPECT_NO_THROW(invoke_future = client.invokeMethod());  // NOLINT
+	decltype(client.invokeMethod(methodUri())) invoke_future;
+	EXPECT_NO_THROW(invoke_future =
+	                    client.invokeMethod(methodUri()));  // NOLINT
 
 	EXPECT_TRUE(invoke_future.valid());
 	auto is_ready = invoke_future.wait_for(ZERO_MILLISECONDS);
@@ -318,7 +322,8 @@ TEST_F(RpcClientTest, InvokeFutureWithoutPayloadClientDestroyed) {  // NOLINT
 		                                       v1::UPriority::UPRIORITY_CS4,
 		                                       TEN_MILLISECONDS);
 
-		EXPECT_NO_THROW(invoke_future = client.invokeMethod());  // NOLINT
+		EXPECT_NO_THROW(invoke_future =
+		                    client.invokeMethod(methodUri()));  // NOLINT
 	}
 
 	EXPECT_TRUE(invoke_future.valid());
@@ -337,8 +342,9 @@ TEST_F(RpcClientTest, InvokeFutureWithoutPayloadCommstatus) {  // NOLINT
 	                                       v1::UPriority::UPRIORITY_CS4,
 	                                       TEN_MILLISECONDS);
 
-	decltype(client.invokeMethod()) invoke_future;
-	EXPECT_NO_THROW(invoke_future = client.invokeMethod());  // NOLINT
+	decltype(client.invokeMethod(methodUri())) invoke_future;
+	EXPECT_NO_THROW(invoke_future =
+	                    client.invokeMethod(methodUri()));  // NOLINT
 
 	using UMessageBuilder = datamodel::builder::UMessageBuilder;
 	auto response_builder =
@@ -358,7 +364,7 @@ TEST_F(RpcClientTest, InvokeFutureWithoutPayloadCommstatus) {  // NOLINT
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// RpcClient::invokeMethod(Payload)
+// RpcClient::invokeMethod(methodUri()Payload)
 TEST_F(RpcClientTest, InvokeFutureWithPayload) {  // NOLINT
 	auto client = communication::RpcClient(getTransport(), methodUri(),
 	                                       v1::UPriority::UPRIORITY_CS4,
@@ -367,9 +373,10 @@ TEST_F(RpcClientTest, InvokeFutureWithPayload) {  // NOLINT
 	auto payload = fakePayload();
 	auto payload_content = payload.buildCopy();
 
-	decltype(client.invokeMethod(std::move(payload))) invoke_future;
+	decltype(client.invokeMethod(methodUri(),
+	                             std::move(payload))) invoke_future;
 	EXPECT_NO_THROW(invoke_future =  // NOLINT
-	                client.invokeMethod(std::move(payload)));
+	                client.invokeMethod(methodUri(), std::move(payload)));
 
 	EXPECT_TRUE(invoke_future.valid());
 	validateLastRequest(1);
@@ -403,9 +410,10 @@ TEST_F(RpcClientTest, InvokeFutureWithPayloadAndFormatSet) {  // NOLINT
 	auto payload = fakePayload();
 	auto payload_content = payload.buildCopy();
 
-	decltype(client.invokeMethod(std::move(payload))) invoke_future;
+	decltype(client.invokeMethod(methodUri(),
+	                             std::move(payload))) invoke_future;
 	EXPECT_NO_THROW(invoke_future =  // NOLINT
-	                client.invokeMethod(std::move(payload)));
+	                client.invokeMethod(methodUri(), std::move(payload)));
 
 	EXPECT_TRUE(invoke_future.valid());
 	validateLastRequest(1);
@@ -437,7 +445,7 @@ TEST_F(RpcClientTest, InvokeFutureWithPayloadAndWrongFormatSet) {  // NOLINT
 	    TEN_MILLISECONDS, v1::UPayloadFormat::UPAYLOAD_FORMAT_JSON);
 
 	EXPECT_THROW(  // NOLINT
-	    auto invoke_future = client.invokeMethod(fakePayload()),
+	    auto invoke_future = client.invokeMethod(methodUri(), fakePayload()),
 	    datamodel::builder::UMessageBuilder::UnexpectedFormat);
 
 	EXPECT_EQ(getTransport()->getSendCount(), 0);
@@ -449,10 +457,10 @@ TEST_F(RpcClientTest, InvokeFutureWithPayloadTimeout) {  // NOLINT
 	                                       v1::UPriority::UPRIORITY_CS4,
 	                                       TEN_MILLISECONDS);
 
-	decltype(client.invokeMethod()) invoke_future;
+	decltype(client.invokeMethod(methodUri())) invoke_future;
 	auto when_requested = std::chrono::steady_clock::now();
 	EXPECT_NO_THROW(invoke_future =  // NOLINT
-	                client.invokeMethod(fakePayload()));
+	                client.invokeMethod(methodUri(), fakePayload()));
 
 	EXPECT_TRUE(invoke_future.valid());
 	auto is_ready = invoke_future.wait_for(ONE_HUNDRED_FIFTY_MILLISECONDS);
@@ -476,9 +484,9 @@ TEST_F(RpcClientTest, InvokeFutureWithPayloadListenFail) {  // NOLINT
 	getTransport()->getRegisterListenerStatus().set_code(
 	    v1::UCode::RESOURCE_EXHAUSTED);
 
-	decltype(client.invokeMethod()) invoke_future;
+	decltype(client.invokeMethod(methodUri())) invoke_future;
 	EXPECT_NO_THROW(invoke_future =  // NOLINT
-	                client.invokeMethod(fakePayload()));
+	                client.invokeMethod(methodUri(), fakePayload()));
 
 	EXPECT_EQ(getTransport()->getSendCount(), 0);
 	EXPECT_TRUE(invoke_future.valid());
@@ -498,9 +506,9 @@ TEST_F(RpcClientTest, InvokeFutureWithPayloadSendFail) {  // NOLINT
 
 	getTransport()->getSendStatus().set_code(v1::UCode::FAILED_PRECONDITION);
 
-	decltype(client.invokeMethod()) invoke_future;
+	decltype(client.invokeMethod(methodUri())) invoke_future;
 	EXPECT_NO_THROW(invoke_future =  // NOLINT
-	                client.invokeMethod(fakePayload()));
+	                client.invokeMethod(methodUri(), fakePayload()));
 
 	EXPECT_TRUE(invoke_future.valid());
 	auto is_ready = invoke_future.wait_for(ZERO_MILLISECONDS);
@@ -521,7 +529,7 @@ TEST_F(RpcClientTest, InvokeFutureWithPayloadClientDestroyed) {  // NOLINT
 		                                       TEN_MILLISECONDS);
 
 		EXPECT_NO_THROW(invoke_future =  // NOLINT
-		                client.invokeMethod(fakePayload()));
+		                client.invokeMethod(methodUri(), fakePayload()));
 	}
 
 	EXPECT_TRUE(invoke_future.valid());
@@ -539,9 +547,9 @@ TEST_F(RpcClientTest, InvokeFutureWithPayloadCommstatus) {  // NOLINT
 	                                       v1::UPriority::UPRIORITY_CS4,
 	                                       TEN_MILLISECONDS);
 
-	decltype(client.invokeMethod()) invoke_future;
+	decltype(client.invokeMethod(methodUri())) invoke_future;
 	EXPECT_NO_THROW(invoke_future =  // NOLINT
-	                client.invokeMethod(fakePayload()));
+	                client.invokeMethod(methodUri(), fakePayload()));
 
 	using UMessageBuilder = datamodel::builder::UMessageBuilder;
 	auto response_builder =
@@ -561,7 +569,7 @@ TEST_F(RpcClientTest, InvokeFutureWithPayloadCommstatus) {  // NOLINT
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// RpcClient::invokeMethod(Callback)
+// RpcClient::invokeMethod(methodUri()Callback)
 TEST_F(RpcClientTest, InvokeCallbackWithoutPayload) {  // NOLINT
 	auto client = communication::RpcClient(getTransport(), methodUri(),
 	                                       v1::UPriority::UPRIORITY_CS4,
@@ -573,6 +581,7 @@ TEST_F(RpcClientTest, InvokeCallbackWithoutPayload) {  // NOLINT
 	communication::RpcClient::InvokeHandle handle;
 	EXPECT_NO_THROW(  // NOLINT
 	    handle = client.invokeMethod(
+	        methodUri(),
 	        [&callback_called, &received_response](auto maybe_response) {
 		        callback_called = true;
 		        EXPECT_TRUE(maybe_response);
@@ -599,7 +608,7 @@ TEST_F(RpcClientTest, InvokeCallbackWithoutPayloadAndFormatSet) {  // NOLINT
 
 	communication::RpcClient::InvokeHandle handle;
 	EXPECT_THROW(  // NOLINT
-	    handle = client.invokeMethod([](auto) {}),
+	    handle = client.invokeMethod(methodUri(), [](auto) {}),
 	    datamodel::builder::UMessageBuilder::UnexpectedFormat);
 
 	EXPECT_EQ(getTransport()->getSendCount(), 0);
@@ -617,12 +626,14 @@ TEST_F(RpcClientTest, InvokeCallbackWithoutPayloadTimeout) {  // NOLINT
 
 	communication::RpcClient::InvokeHandle handle;
 	EXPECT_NO_THROW(  // NOLINT
-	    handle = client.invokeMethod([&callback_called, &callback_event](
-	                                     const auto& maybe_response) {
-		    callback_called = true;
-		    checkErrorResponse(maybe_response, v1::UCode::DEADLINE_EXCEEDED);
-		    callback_event.notify_all();
-	    }));
+	    handle = client.invokeMethod(
+	        methodUri(),
+	        [&callback_called, &callback_event](const auto& maybe_response) {
+		        callback_called = true;
+		        checkErrorResponse(maybe_response,
+		                           v1::UCode::DEADLINE_EXCEEDED);
+		        callback_event.notify_all();
+	        }));
 
 	std::mutex mtx;
 	std::unique_lock lock(mtx);
@@ -649,8 +660,8 @@ TEST_F(RpcClientTest, InvokeCallbackWithoutPayloadListenFail) {  // NOLINT
 
 	communication::RpcClient::InvokeHandle handle;
 	EXPECT_NO_THROW(  // NOLINT
-	    handle =
-	        client.invokeMethod([&callback_called](const auto& maybe_response) {
+	    handle = client.invokeMethod(
+	        methodUri(), [&callback_called](const auto& maybe_response) {
 		        callback_called = true;
 		        checkErrorResponse(maybe_response,
 		                           v1::UCode::RESOURCE_EXHAUSTED);
@@ -671,8 +682,8 @@ TEST_F(RpcClientTest, InvokeCallbackWithoutPayloadSendFail) {  // NOLINT
 
 	communication::RpcClient::InvokeHandle handle;
 	EXPECT_NO_THROW(  // NOLINT
-	    handle =
-	        client.invokeMethod([&callback_called](const auto& maybe_response) {
+	    handle = client.invokeMethod(
+	        methodUri(), [&callback_called](const auto& maybe_response) {
 		        callback_called = true;
 		        checkErrorResponse(maybe_response,
 		                           v1::UCode::FAILED_PRECONDITION);
@@ -694,7 +705,7 @@ TEST_F(RpcClientTest, InvokeCallbackWithoutPayloadClientDestroyed) {  // NOLINT
 
 		EXPECT_NO_THROW(  // NOLINT
 		    handle = client.invokeMethod(
-		        [&callback_called](const auto& maybe_response) {
+		        methodUri(), [&callback_called](const auto& maybe_response) {
 			        callback_called = true;
 			        checkErrorResponse(maybe_response, v1::UCode::CANCELLED);
 		        }));
@@ -712,8 +723,8 @@ TEST_F(RpcClientTest, InvokeCallbackWithoutPayloadCommstatus) {  // NOLINT
 
 	communication::RpcClient::InvokeHandle handle;
 	EXPECT_NO_THROW(  // NOLINT
-	    handle =
-	        client.invokeMethod([&callback_called](const auto& maybe_response) {
+	    handle = client.invokeMethod(
+	        methodUri(), [&callback_called](const auto& maybe_response) {
 		        callback_called = true;
 		        checkErrorResponse(maybe_response,
 		                           v1::UCode::PERMISSION_DENIED);
@@ -730,7 +741,7 @@ TEST_F(RpcClientTest, InvokeCallbackWithoutPayloadCommstatus) {  // NOLINT
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// RpcClient::invokeMethod(Payload, Callback)
+// RpcClient::invokeMethod(methodUri()Payload, Callback)
 TEST_F(RpcClientTest, InvokeCallbackWithPayload) {  // NOLINT
 	auto client = communication::RpcClient(getTransport(), methodUri(),
 	                                       v1::UPriority::UPRIORITY_CS4,
@@ -745,7 +756,7 @@ TEST_F(RpcClientTest, InvokeCallbackWithPayload) {  // NOLINT
 	communication::RpcClient::InvokeHandle handle;
 	EXPECT_NO_THROW(  // NOLINT
 	    handle = client.invokeMethod(
-	        std::move(payload),
+	        methodUri(), std::move(payload),
 	        [&callback_called, &received_response](auto maybe_response) {
 		        callback_called = true;
 		        EXPECT_TRUE(maybe_response);
@@ -783,7 +794,7 @@ TEST_F(RpcClientTest, InvokeCallbackWithPayloadAndFormatSet) {  // NOLINT
 	communication::RpcClient::InvokeHandle handle;
 	EXPECT_NO_THROW(  // NOLINT
 	    handle = client.invokeMethod(
-	        std::move(payload),
+	        methodUri(), std::move(payload),
 	        [&callback_called, &received_response](auto maybe_response) {
 		        callback_called = true;
 		        EXPECT_TRUE(maybe_response);
@@ -814,7 +825,7 @@ TEST_F(RpcClientTest, InvokeCallbackWithPayloadAndWrongFormatSet) {  // NOLINT
 
 	communication::RpcClient::InvokeHandle handle;
 	EXPECT_THROW(  // NOLINT
-	    handle = client.invokeMethod(fakePayload(), [](auto) {}),
+	    handle = client.invokeMethod(methodUri(), fakePayload(), [](auto) {}),
 	    datamodel::builder::UMessageBuilder::UnexpectedFormat);
 
 	EXPECT_EQ(getTransport()->getSendCount(), 0);
@@ -833,7 +844,7 @@ TEST_F(RpcClientTest, InvokeCallbackWithPayloadTimeout) {  // NOLINT
 	auto when_requested = std::chrono::steady_clock::now();
 	EXPECT_NO_THROW(  // NOLINT
 	    handle = client.invokeMethod(
-	        fakePayload(),
+	        methodUri(), fakePayload(),
 	        [&callback_called, &callback_event](auto maybe_response) {
 		        callback_called = true;
 		        checkErrorResponse(maybe_response,
@@ -866,11 +877,13 @@ TEST_F(RpcClientTest, InvokeCallbackWithPayloadListenFail) {  // NOLINT
 
 	communication::RpcClient::InvokeHandle handle;
 	EXPECT_NO_THROW(  // NOLINT
-	    handle = client.invokeMethod(fakePayload(), [&callback_called](
-	                                                    auto maybe_response) {
-		    callback_called = true;
-		    checkErrorResponse(maybe_response, v1::UCode::RESOURCE_EXHAUSTED);
-	    }));
+	    handle = client.invokeMethod(methodUri(), fakePayload(),
+	                                 [&callback_called](auto maybe_response) {
+		                                 callback_called = true;
+		                                 checkErrorResponse(
+		                                     maybe_response,
+		                                     v1::UCode::RESOURCE_EXHAUSTED);
+	                                 }));
 
 	EXPECT_EQ(getTransport()->getSendCount(), 0);
 	EXPECT_TRUE(callback_called);
@@ -887,11 +900,13 @@ TEST_F(RpcClientTest, InvokeCallbackWithPayloadSendFail) {  // NOLINT
 
 	communication::RpcClient::InvokeHandle handle;
 	EXPECT_NO_THROW(  // NOLINT
-	    handle = client.invokeMethod(fakePayload(), [&callback_called](
-	                                                    auto maybe_response) {
-		    callback_called = true;
-		    checkErrorResponse(maybe_response, v1::UCode::FAILED_PRECONDITION);
-	    }));
+	    handle = client.invokeMethod(methodUri(), fakePayload(),
+	                                 [&callback_called](auto maybe_response) {
+		                                 callback_called = true;
+		                                 checkErrorResponse(
+		                                     maybe_response,
+		                                     v1::UCode::FAILED_PRECONDITION);
+	                                 }));
 
 	EXPECT_TRUE(callback_called);
 }
@@ -909,7 +924,8 @@ TEST_F(RpcClientTest, InvokeCallbackWithPayloadClientDestroyed) {  // NOLINT
 
 		EXPECT_NO_THROW(  // NOLINT
 		    handle = client.invokeMethod(
-		        fakePayload(), [&callback_called](auto maybe_response) {
+		        methodUri(), fakePayload(),
+		        [&callback_called](auto maybe_response) {
 			        callback_called = true;
 			        checkErrorResponse(maybe_response, v1::UCode::CANCELLED);
 		        }));
@@ -927,11 +943,13 @@ TEST_F(RpcClientTest, InvokeCallbackWithPayloadCommstatus) {  // NOLINT
 
 	communication::RpcClient::InvokeHandle handle;
 	EXPECT_NO_THROW(  // NOLINT
-	    handle = client.invokeMethod(fakePayload(), [&callback_called](
-	                                                    auto maybe_response) {
-		    callback_called = true;
-		    checkErrorResponse(maybe_response, v1::UCode::PERMISSION_DENIED);
-	    }));
+	    handle = client.invokeMethod(methodUri(), fakePayload(),
+	                                 [&callback_called](auto maybe_response) {
+		                                 callback_called = true;
+		                                 checkErrorResponse(
+		                                     maybe_response,
+		                                     v1::UCode::PERMISSION_DENIED);
+	                                 }));
 
 	using UMessageBuilder = datamodel::builder::UMessageBuilder;
 	auto response_builder =
@@ -951,24 +969,24 @@ TEST_F(RpcClientTest, MultiplePendingInvocationsOnOneClient) {  // NOLINT
 	                                       v1::UPriority::UPRIORITY_CS4,
 	                                       TWO_HUNDRED_FIFTY_MILLISECONDS);
 
-	std::list<decltype(client.invokeMethod())> futures;
+	std::list<decltype(client.invokeMethod(methodUri()))> futures;
 	std::list<std::decay_t<decltype(getTransport()->getListener().value())>>
 	    callables;
 	std::list<v1::UMessage> requests;
 
-	futures.push_back(client.invokeMethod());
+	futures.push_back(client.invokeMethod(methodUri()));
 	callables.push_back(getTransport()->getListener().value());
 	requests.push_back(getTransport()->getMessage());
 
-	futures.push_back(client.invokeMethod(fakePayload()));
+	futures.push_back(client.invokeMethod(methodUri(), fakePayload()));
 	callables.push_back(getTransport()->getListener().value());
 	requests.push_back(getTransport()->getMessage());
 
-	futures.push_back(client.invokeMethod());
+	futures.push_back(client.invokeMethod(methodUri()));
 	callables.push_back(getTransport()->getListener().value());
 	requests.push_back(getTransport()->getMessage());
 
-	futures.push_back(client.invokeMethod(fakePayload()));
+	futures.push_back(client.invokeMethod(methodUri(), fakePayload()));
 	callables.push_back(getTransport()->getListener().value());
 	requests.push_back(getTransport()->getMessage());
 
@@ -977,19 +995,21 @@ TEST_F(RpcClientTest, MultiplePendingInvocationsOnOneClient) {  // NOLINT
 	int callback_count = 0;
 	auto callback = [&callback_count](const auto&) { ++callback_count; };
 
-	handles.push_back(client.invokeMethod(callback));
+	handles.push_back(client.invokeMethod(methodUri(), callback));
 	callables.push_back(getTransport()->getListener().value());
 	requests.push_back(getTransport()->getMessage());
 
-	handles.push_back(client.invokeMethod(fakePayload(), callback));
+	handles.push_back(
+	    client.invokeMethod(methodUri(), fakePayload(), callback));
 	callables.push_back(getTransport()->getListener().value());
 	requests.push_back(getTransport()->getMessage());
 
-	handles.push_back(client.invokeMethod(callback));
+	handles.push_back(client.invokeMethod(methodUri(), callback));
 	callables.push_back(getTransport()->getListener().value());
 	requests.push_back(getTransport()->getMessage());
 
-	handles.push_back(client.invokeMethod(fakePayload(), callback));
+	handles.push_back(
+	    client.invokeMethod(methodUri(), fakePayload(), callback));
 	callables.push_back(getTransport()->getListener().value());
 	requests.push_back(getTransport()->getMessage());
 
@@ -1072,9 +1092,9 @@ TEST_F(RpcClientTest, PendingRequestsExpireInOrder) {  // NOLINT
 		auto client_id = std::get<0>(*entry);
 		auto& client = std::get<1>(*entry);
 
-		auto handle =
-		    client.invokeMethod([client_id, &expire_mtx, &expire_order,
-		                         &expire_signal](const auto& maybe_response) {
+		auto handle = client.invokeMethod(
+		    methodUri(), [client_id, &expire_mtx, &expire_order,
+		                  &expire_signal](const auto& maybe_response) {
 			    if (!maybe_response) {
 				    const auto& some_status = maybe_response.error();
 				    if (some_status.code() != v1::UCode::DEADLINE_EXCEEDED) {
@@ -1114,7 +1134,7 @@ TEST_F(RpcClientTest, ExpireWorkerWakesForRightPendingRequest) {  // NOLINT
 	auto slow_client = communication::RpcClient(
 	    getTransport(), methodUri(), v1::UPriority::UPRIORITY_CS4, TEN_SECONDS);
 
-	auto slow_future = slow_client.invokeMethod();
+	auto slow_future = slow_client.invokeMethod(methodUri());
 
 	// Waits long enough for the worker to wake and go back to sleep with the
 	// 10s TTL for the slow request as the next scheduled wake time.
@@ -1125,7 +1145,7 @@ TEST_F(RpcClientTest, ExpireWorkerWakesForRightPendingRequest) {  // NOLINT
 	                                            v1::UPriority::UPRIORITY_CS4,
 	                                            TWENTY_FIVE_MILLISECONDS);
 
-	auto fast_future = fast_client.invokeMethod();
+	auto fast_future = fast_client.invokeMethod(methodUri());
 
 	// The request from the fast_client should expire within about 25ms, but
 	// the request from the slow_client should still be pending for several
@@ -1186,8 +1206,9 @@ TEST_F(RpcClientTest, MultipleClientInstances) {  // NOLINT
 
 	constexpr size_t REQUESTS_PER_CLIENT = 8;
 	constexpr size_t NUM_INVOCATIONS = NUM_CLIENTS * REQUESTS_PER_CLIENT;
-	using PendingEntry = std::tuple<std::chrono::steady_clock::time_point,
-	                                decltype(clients[0].invokeMethod())>;
+	using PendingEntry =
+	    std::tuple<std::chrono::steady_clock::time_point,
+	               decltype(clients[0].invokeMethod(methodUri()))>;
 	std::vector<PendingEntry> pending;
 	std::array<size_t, NUM_CLIENTS> client_invoke_count{0};
 
@@ -1196,7 +1217,7 @@ TEST_F(RpcClientTest, MultipleClientInstances) {  // NOLINT
 		++client_invoke_count.at(client_index);
 		pending.emplace_back(
 		    std::chrono::steady_clock::now() + timeouts.at(client_index),
-		    clients[client_index].invokeMethod());
+		    clients[client_index].invokeMethod(methodUri()));
 	}
 
 	// Reply to some
@@ -1315,14 +1336,14 @@ TEST_F(RpcClientTest, ParallelAccessSingleClient) {  // NOLINT
 	size_t handle_counter = 0;
 
 	for (auto& worker : workers) {
-		worker = std::thread(
-		    [&call_count, &client, &handles = handles.at(handle_counter++)]() {
-			    for (auto remaining = NUM_REQUESTS_PER_WORKER; remaining > 0;
-			         --remaining) {
-				    handles.emplace_back(client.invokeMethod(
-				        [&call_count](const auto&) { ++call_count; }));
-			    }
-		    });
+		worker = std::thread([&call_count, &client,
+		                      &handles = handles.at(handle_counter++)]() {
+			for (auto remaining = NUM_REQUESTS_PER_WORKER; remaining > 0;
+			     --remaining) {
+				handles.emplace_back(client.invokeMethod(
+				    methodUri(), [&call_count](const auto&) { ++call_count; }));
+			}
+		});
 	}
 
 	for (auto& worker : workers) {
@@ -1361,6 +1382,7 @@ TEST_F(RpcClientTest, ParallelAccessMultipleClients) {  // NOLINT
 		     remaining_requests > 0; --remaining_requests) {
 			auto client = get_client();
 			handle = client.invokeMethod(
+			    methodUri(),
 			    [&discard_calls](const auto&) { ++discard_calls; });
 		}
 	});
@@ -1374,7 +1396,7 @@ TEST_F(RpcClientTest, ParallelAccessMultipleClients) {  // NOLINT
 		auto client = get_client();
 		for (auto remaining_requests = NUM_REQUESTS_PER_WORKER;
 		     remaining_requests > 0; --remaining_requests) {
-			auto future = client.invokeMethod();
+			auto future = client.invokeMethod(methodUri());
 			if (future.valid() && (future.wait_for(std::chrono::milliseconds(
 			                           0)) == std::future_status::ready)) {
 				++abandon_calls;
@@ -1389,10 +1411,10 @@ TEST_F(RpcClientTest, ParallelAccessMultipleClients) {  // NOLINT
 
 	workers.emplace_back([&expire_calls, &broken_promises, &get_client]() {
 		auto client = get_client();
-		std::vector<decltype(client.invokeMethod())> futures;
+		std::vector<decltype(client.invokeMethod(methodUri()))> futures;
 		for (auto remaining_requests = NUM_REQUESTS_PER_WORKER;
 		     remaining_requests > 0; --remaining_requests) {
-			futures.emplace_back(client.invokeMethod());
+			futures.emplace_back(client.invokeMethod(methodUri()));
 		}
 		for (auto& future : futures) {
 			auto is_ready = future.wait_for(std::chrono::seconds(1));
@@ -1426,7 +1448,7 @@ TEST_F(RpcClientTest, ParallelAccessMultipleClients) {  // NOLINT
 		for (auto remaining_requests = NUM_REQUESTS_PER_WORKER;
 		     remaining_requests > 0; --remaining_requests) {
 			auto handle = client.invokeMethod(
-			    [&self_calls](const auto&) { ++self_calls; });
+			    methodUri(), [&self_calls](const auto&) { ++self_calls; });
 			// Attempting this without a request having ever been sent results
 			// in an InvalidUUri exception thrown from a thread. gtest can't
 			// guard for that, so we avoid generating the exception.

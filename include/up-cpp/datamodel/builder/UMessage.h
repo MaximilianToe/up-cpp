@@ -103,6 +103,17 @@ struct UMessageBuilder {
 	/// @returns UMessageBuilder configured to build a "response" message
 	static UMessageBuilder response(const v1::UMessage& request);
 
+	/// @brief Set the method attribute for built messages.
+	///
+	/// @param The method to use when building messages.
+	///
+	/// @throws std::out_of_range when setting a priority lower than CS4
+	///                           for "request" or "response" messages.
+	/// @throws std::out_of_range if the value is outside of the range of
+	///                           v1::UPriority
+	/// @returns A reference to this UMessageBuilder
+	UMessageBuilder& withMethod(const v1::UUri&);
+
 	/// @brief Set the message priority attribute for built messages.
 	///
 	/// If not called, the default value as specified in
