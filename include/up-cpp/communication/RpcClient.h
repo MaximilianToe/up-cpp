@@ -111,7 +111,8 @@ struct RpcClient {
 	///       * A UStatus based on the commstatus received in the response
 	///         message (if not OK).
 	///       * A UMessage containing the response from the RPC target.
-	[[nodiscard]] InvokeHandle invokeMethod(datamodel::builder::Payload&&,
+	[[nodiscard]] InvokeHandle invokeMethod(const v1::UUri&,
+	                                        datamodel::builder::Payload&&,
 	                                        Callback&&);
 
 	/// @brief Invokes an RPC method by sending a request message.
@@ -128,7 +129,8 @@ struct RpcClient {
 	///          * A UStatus based on the commstatus received in the response
 	///            message (if not OK).
 	///          * A UMessage containing the response from the RPC target.
-	[[nodiscard]] InvokeFuture invokeMethod(datamodel::builder::Payload&&);
+	[[nodiscard]] InvokeFuture invokeMethod(const v1::UUri&,
+	                                        datamodel::builder::Payload&&);
 
 	/// @brief Invokes an RPC method by sending a request message.
 	///
@@ -144,7 +146,7 @@ struct RpcClient {
 	///       * A UStatus based on the commstatus received in the response
 	///         message (if not OK).
 	///       * A UMessage containing the response from the RPC target.
-	[[nodiscard]] InvokeHandle invokeMethod(Callback&&);
+	[[nodiscard]] InvokeHandle invokeMethod(const v1::UUri&, Callback&&);
 
 	/// @brief Invokes an RPC method by sending a request message.
 	///
@@ -160,7 +162,7 @@ struct RpcClient {
 	///          * A UStatus based on the commstatus received in the response
 	///            message (if not OK).
 	///          * A UMessage containing the response from the RPC target.
-	[[nodiscard]] InvokeFuture invokeMethod();
+	[[nodiscard]] InvokeFuture invokeMethod(const v1::UUri&);
 
 	/// @brief Default move constructor (defined in RpcClient.cpp)
 	RpcClient(RpcClient&&) noexcept;

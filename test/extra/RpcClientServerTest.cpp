@@ -137,7 +137,7 @@ TEST_F(RpcClientServerTest, SimpleRoundTrip) {  // NOLINT
 	uprotocol::communication::RpcClient::InvokeHandle client_handle;
 	EXPECT_NO_THROW(  // NOLINT
 	    client_handle = client.invokeMethod(
-	        std::move(client_request_payload),
+	        v1::UUri(rpc_service_uuri), std::move(client_request_payload),
 	        [&client_called, &client_capture](auto maybe_response) {
 		        client_called = true;
 		        if (maybe_response.has_value()) {
