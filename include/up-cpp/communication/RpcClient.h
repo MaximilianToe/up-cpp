@@ -100,6 +100,7 @@ struct RpcClient {
 
 	/// @brief Invokes an RPC method by sending a request message.
 	///
+	/// @param The method that will be invoked
 	/// @param A Payload builder containing the payload to be sent with the
 	///        request.
 	/// @param A callback that will be called with the result.
@@ -117,6 +118,7 @@ struct RpcClient {
 
 	/// @brief Invokes an RPC method by sending a request message.
 	///
+	/// @param The method that will be invoked
 	/// @param A Payload builder containing the payload to be sent with the
 	///        request.
 	///
@@ -137,6 +139,7 @@ struct RpcClient {
 	/// Request is sent with an empty payload. Can only be called if no payload
 	/// format was provided at construction time.
 	///
+	/// @param The method that will be invoked
 	/// @param A callback that will be called with the result.
 	///
 	/// @post The provided callback will be called with one of:
@@ -153,6 +156,7 @@ struct RpcClient {
 	/// Request is sent with an empty payload. Can only be called if no payload
 	/// format was provided at construction time.
 	///
+	/// @param The method that will be invoked
 	/// @remarks This is a wrapper around the callback form of invokeMethod.
 	///
 	/// @returns A promised future that can resolve to one of:
